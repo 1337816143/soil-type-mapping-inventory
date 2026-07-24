@@ -69,7 +69,7 @@ var PDF_ICON = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="curren
 var isLocal = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 if(isLocal) document.getElementById('localNote').style.display = 'block';
 
-var BASE = isLocal ? 'file:///E:/土壤类型制图成果/新数据' : '';
+var BASE = isLocal ? 'file:///E:/土壤类型制图成果/新数据' : './data';
 
 var cities = [
   {
