@@ -33,11 +33,10 @@ tbody tr:hover{background:var(--bg2)}
 .district-link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .district-link .icon{display:inline-block;width:14px;height:14px;flex-shrink:0}
 .district-group{position:relative;display:inline-flex}
-.district-group:hover{z-index:100}
-.district-group .group-label{display:inline-flex;align-items:center;gap:4px;font-size:.82rem;background:#f1f5f9;color:var(--ink);padding:3px 10px;border-radius:4px;border:1px solid var(--rule);cursor:pointer;transition:all .15s}
-.district-group:hover .group-label{background:var(--accent);color:#fff;border-color:var(--accent)}
-.district-group .doc-btns{display:none;position:absolute;top:calc(100% + 4px);left:0;z-index:101;background:#fff;border:1px solid var(--rule);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.12);padding:6px 8px;min-width:120px;flex-direction:column;gap:4px}
-.district-group:hover .doc-btns{display:flex}
+.district-group .group-label{display:inline-flex;align-items:center;gap:4px;font-size:.82rem;background:#f1f5f9;color:var(--ink);padding:3px 10px;border-radius:4px;border:1px solid var(--rule);cursor:pointer;transition:all .15s;-webkit-user-select:none;user-select:none}
+.district-group .group-label:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.district-group .doc-btns{opacity:0;visibility:hidden;pointer-events:none;position:fixed;z-index:9999;background:#fff;border:1px solid var(--rule);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.12);padding:6px 8px;min-width:120px;flex-direction:column;gap:4px;transition:opacity .15s,visibility 0s .15s}
+.district-group .doc-btns.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .15s,visibility 0s 0s}
 .doc-btn{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--accent);text-decoration:none;padding:4px 8px;border-radius:4px;white-space:nowrap;transition:background .15s}
 .doc-btn:hover{background:var(--bg2)}
 .doc-btn .icon{width:14px;height:14px;flex-shrink:0}
@@ -324,6 +323,37 @@ cities.forEach(function(city) {
 });
 
 document.getElementById('content').innerHTML = html;
+
+// 点击触发下拉菜单，解决遮挡和悬停缝隙问题
+document.querySelectorAll('.group-label').forEach(function(label) {
+  label.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var group = this.parentElement;
+    var dropdown = group.querySelector('.doc-btns');
+    var isOpen = dropdown.classList.contains('open');
+
+    // 关闭其他已打开的下拉菜单
+    document.querySelectorAll('.doc-btns.open').forEach(function(d) {
+      if (d !== dropdown) d.classList.remove('open');
+    });
+
+    if (!isOpen) {
+      var rect = this.getBoundingClientRect();
+      dropdown.style.top = (rect.bottom + 4) + 'px';
+      dropdown.style.left = rect.left + 'px';
+      dropdown.classList.add('open');
+    }
+  });
+});
+
+// 点击页面其他区域关闭下拉菜单
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.district-group')) {
+    document.querySelectorAll('.doc-btns.open').forEach(function(d) {
+      d.classList.remove('open');
+    });
+  }
+});
 })();
 </script>
 
