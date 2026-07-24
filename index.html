@@ -305,12 +305,12 @@ cities.forEach(function(city) {
     html += '<tr><td>' + unit.name + '</td><td><div class="district-list">';
     unit.districts.forEach(function(d) {
       if(d.docs.length === 1) {
-        var url = isLocal ? BASE + '/' + d.docs[0].file : '#';
+        var url = BASE + '/' + d.docs[0].file;
         html += '<a class="district-link" href="' + url + '" target="_blank">' + d.label + ' ' + PDF_ICON + '</a>';
       } else {
         html += '<div class="district-group"><span class="group-label">' + d.label + ' ▾</span><div class="doc-btns">';
         d.docs.forEach(function(doc) {
-          var url = isLocal ? BASE + '/' + doc.file : '#';
+          var url = BASE + '/' + doc.file;
           html += '<a class="doc-btn" href="' + url + '" target="_blank">' + PDF_ICON + ' ' + doc.batch + '</a>';
         });
         html += '</div></div>';
