@@ -78,6 +78,15 @@ footer img{max-height:60px;width:auto}
 .toast{position:fixed;bottom:24px;right:24px;background:#065f46;color:#fff;padding:12px 20px;border-radius:8px;font-size:.85rem;z-index:10001;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.error{background:#991b1b}
+.upload-progress-container{margin-top:6px;padding:8px 10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;max-width:280px}
+.upload-progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.upload-progress-name{font-size:.75rem;color:#0369a1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.upload-progress-status{font-size:.7rem;font-weight:600;color:#0369a1;white-space:nowrap}
+.upload-progress-bar{width:100%;height:8px;background:#e0f2fe;border-radius:4px;overflow:hidden}
+.upload-progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#0ea5e9);border-radius:4px;transition:width .2s;width:0%}
+.upload-progress-fill.error{background:#ef4444}
+.upload-progress-fill.success{background:#16a34a}
+.upload-progress-detail{font-size:.68rem;color:var(--muted);margin-top:3px}
 @media(max-width:768px){.container{padding:0 12px}header{padding:20px 0 0}header h1{font-size:1.1rem}.tab{padding:9px 14px;font-size:.82rem}.summary-bar{gap:8px}.summary-card{flex:1 1 100px;padding:10px 8px}.summary-card .num{font-size:1.3rem}table{font-size:.75rem}thead th,tbody td{padding:6px 7px}}
 </style>
 </head>
@@ -2997,41 +3006,124 @@ function confirmUploadFile() {
   var time = getNow();
   var ext = selectedFile.name.split('.').pop();
   var newFileName = currentUpload.key + '_整改答复_' + time + '.' + ext;
+  var path = 'replies/' + newFileName;
 
-  // 显示上传中
-  document.getElementById('confirmUpload').disabled = true;
-  document.getElementById('confirmUpload').textContent = '上传中...';
+  // 关闭弹窗，在按钮位置显示进度条
+  closeUploadModal();
+  var progressEl = showUploadProgress(currentUpload.key, currentUpload.district, selectedFile);
 
-  // 读取文件并通过 API 上传到 GitHub
+  // 读取文件并通过 XMLHttpRequest 上传到 GitHub（可获取真实进度）
   var reader = new FileReader();
   reader.onload = function(e) {
     var base64 = e.target.result.split(',')[1];
-    var url = REPLY_BASE + '/' + newFileName;
-    var path = 'replies/' + newFileName;
+    var url = 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/' + path;
+    var body = JSON.stringify({ message: '整改答复: ' + currentUpload.key, content: base64 });
+    var totalSize = body.length;
 
-    fetch('https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/' + path, {
-      method: 'PUT',
-      headers: { 'Authorization': 'token ' + getGitHubToken(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: '整改答复: ' + currentUpload.key, content: base64 })
-    }).then(function(r) {
-      if (r.ok) {
-        replyIndex[currentUpload.key] = { file: newFileName, time: time };
-        refreshAllTabs();
-        closeUploadModal();
-        showToast('上传成功');
-      } else {
-        r.json().then(function(err) {
-          showToast('上传失败: ' + (err.message || ''), true);
-        });
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', url, true);
+    xhr.setRequestHeader('Authorization', 'token ' + getGitHubToken());
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    // 真实上传进度
+    xhr.upload.addEventListener('progress', function(evt) {
+      if (evt.lengthComputable) {
+        var pct = Math.round((evt.loaded / evt.total) * 100);
+        updateUploadProgress(progressEl, pct, selectedFile.size);
       }
-    }).catch(function(err) {
-      showToast('上传失败: ' + err.message, true);
-    }).finally(function() {
-      document.getElementById('confirmUpload').textContent = '确认上传';
-      document.getElementById('confirmUpload').disabled = false;
     });
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // 延迟一点让进度条到达 100%
+          updateUploadProgress(progressEl, 100, selectedFile.size, 'success');
+          setTimeout(function() {
+            replyIndex[currentUpload.key] = { file: newFileName, time: time };
+            refreshAllTabs();
+            showToast('上传成功');
+            removeUploadProgress(progressEl, 1500);
+          }, 400);
+        } else {
+          var errMsg = '上传失败';
+          try { var errData = JSON.parse(xhr.responseText); errMsg = '上传失败: ' + (errData.message || ''); } catch(ex) {}
+          updateUploadProgress(progressEl, 0, selectedFile.size, 'error', errMsg);
+          showToast(errMsg, true);
+          removeUploadProgress(progressEl, 4000);
+        }
+      }
+    };
+
+    xhr.onerror = function() {
+      updateUploadProgress(progressEl, 0, selectedFile.size, 'error', '网络错误');
+      showToast('上传失败: 网络错误', true);
+      removeUploadProgress(progressEl, 4000);
+    };
+
+    xhr.send(body);
   };
   reader.readAsDataURL(selectedFile);
+}
+
+// ========== 进度条管理 ==========
+function showUploadProgress(key, districtLabel, file) {
+  // 找到该区县的上传按钮或整改答复单元格
+  var btn = document.querySelector('.upload-btn[data-key="' + key + '"]');
+  var cell = null;
+  if (!btn) {
+    var replaceBtn = document.querySelector('.replace-btn[data-key="' + key + '"]');
+    if (replaceBtn) btn = replaceBtn;
+  }
+  if (btn) {
+    cell = btn.closest('.reply-cell');
+    if (!cell) cell = btn.parentElement;
+  }
+  if (!cell) cell = document.body;
+
+  var container = document.createElement('div');
+  container.className = 'upload-progress-container';
+  container.id = 'progress-' + Date.now();
+  var sizeStr = file.size > 1048576 ? (file.size / 1048576).toFixed(2) + ' MB' : (file.size / 1024).toFixed(1) + ' KB';
+  container.innerHTML =
+    '<div class="upload-progress-header">' +
+      '<span class="upload-progress-name">' + districtLabel + '</span>' +
+      '<span class="upload-progress-status">0%</span>' +
+    '</div>' +
+    '<div class="upload-progress-bar"><div class="upload-progress-fill"></div></div>' +
+    '<div class="upload-progress-detail">' + sizeStr + ' · 准备上传...</div>';
+  cell.appendChild(container);
+  return container;
+}
+
+function updateUploadProgress(el, pct, fileSize, status, msg) {
+  if (!el) return;
+  var fill = el.querySelector('.upload-progress-fill');
+  var statusEl = el.querySelector('.upload-progress-status');
+  var detailEl = el.querySelector('.upload-progress-detail');
+  fill.style.width = pct + '%';
+  statusEl.textContent = pct + '%';
+  var sizeStr = fileSize > 1048576 ? (fileSize / 1048576).toFixed(2) + ' MB' : (fileSize / 1024).toFixed(1) + ' KB';
+
+  if (status === 'success') {
+    fill.classList.add('success');
+    statusEl.textContent = '完成';
+    detailEl.textContent = sizeStr + ' · 上传成功';
+  } else if (status === 'error') {
+    fill.classList.add('error');
+    statusEl.textContent = '失败';
+    detailEl.textContent = msg || '上传失败';
+  } else {
+    var loaded = Math.round(fileSize * pct / 100);
+    var loadedStr = loaded > 1048576 ? (loaded / 1048576).toFixed(2) + ' MB' : (loaded / 1024).toFixed(1) + ' KB';
+    detailEl.textContent = loadedStr + ' / ' + sizeStr;
+  }
+}
+
+function removeUploadProgress(el, delay) {
+  if (!el) return;
+  setTimeout(function() {
+    if (el.parentNode) el.parentNode.removeChild(el);
+  }, delay || 2000);
 }
 
 function getGitHubToken() {
