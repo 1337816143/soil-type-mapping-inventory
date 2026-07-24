@@ -121,6 +121,23 @@ footer img{max-height:60px;width:auto}
   </div>
 </div>
 
+<!-- Token配置弹窗 -->
+<div class="upload-modal" id="tokenModal">
+  <div class="upload-modal-content">
+    <h3>配置上传权限</h3>
+    <div class="upload-info" style="margin-bottom:16px">
+      上传文件需要 GitHub Personal Access Token。<br>
+      请前往 <a href="https://github.com/settings/tokens/new?scopes=repo&description=soil-type-mapping-upload" target="_blank" style="color:var(--accent)">GitHub 创建 Token</a>，勾选 <strong>repo</strong> 权限，然后粘贴到下方。
+    </div>
+    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;font-size:.85rem;margin-bottom:16px;box-sizing:border-box">
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:16px">Token 仅保存在您的浏览器本地，不会上传到任何服务器。</div>
+    <div class="upload-modal-actions">
+      <button class="btn btn-secondary" onclick="closeTokenModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveToken()">保存</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2968,6 +2985,15 @@ function handleFileSelect(file) {
 
 function confirmUploadFile() {
   if (!selectedFile || !currentUpload) return;
+  
+  // 检查Token
+  var token = getGitHubToken();
+  if (!token) {
+    closeUploadModal();
+    openTokenModal();
+    return;
+  }
+  
   var time = getNow();
   var ext = selectedFile.name.split('.').pop();
   var newFileName = currentUpload.key + '_整改答复_' + time + '.' + ext;
@@ -3013,6 +3039,26 @@ function getGitHubToken() {
   return localStorage.getItem('gh_token') || '';
 }
 
+function openTokenModal() {
+  document.getElementById('tokenInput').value = getGitHubToken();
+  document.getElementById('tokenModal').classList.add('show');
+}
+
+function closeTokenModal() {
+  document.getElementById('tokenModal').classList.remove('show');
+}
+
+function saveToken() {
+  var token = document.getElementById('tokenInput').value.trim();
+  if (!token) {
+    showToast('请输入Token', true);
+    return;
+  }
+  localStorage.setItem('gh_token', token);
+  closeTokenModal();
+  showToast('Token已保存，请重新点击上传');
+}
+
 function refreshAllTabs() {
   for (var key in tabData) {
     var el = document.querySelector('#tab-' + key + ' .content');
@@ -3031,6 +3077,9 @@ function showToast(msg, isError) {
 // 点击弹窗外关闭
 document.getElementById('uploadModal').addEventListener('click', function(e) {
   if (e.target === this) closeUploadModal();
+});
+document.getElementById('tokenModal').addEventListener('click', function(e) {
+  if (e.target === this) closeTokenModal();
 });
 </script>
 
