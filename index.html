@@ -121,23 +121,6 @@ footer img{max-height:60px;width:auto}
   </div>
 </div>
 
-<!-- Token配置弹窗 -->
-<div class="upload-modal" id="tokenModal">
-  <div class="upload-modal-content">
-    <h3>配置上传权限</h3>
-    <div class="upload-info" style="margin-bottom:16px">
-      上传文件需要 GitHub Personal Access Token。<br>
-      请前往 <a href="https://github.com/settings/tokens/new?scopes=repo&description=soil-type-mapping-upload" target="_blank" style="color:var(--accent)">GitHub 创建 Token</a>，勾选 <strong>repo</strong> 权限，然后粘贴到下方。
-    </div>
-    <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx" style="width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;font-size:.85rem;margin-bottom:16px;box-sizing:border-box">
-    <div style="font-size:.78rem;color:var(--muted);margin-bottom:16px">Token 仅保存在您的浏览器本地，不会上传到任何服务器。</div>
-    <div class="upload-modal-actions">
-      <button class="btn btn-secondary" onclick="closeTokenModal()">取消</button>
-      <button class="btn btn-primary" onclick="saveToken()">保存</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -176,7 +159,7 @@ var soilTypeData = [
         "name": "沧州华江工程勘察设计有限公司",
         "districts": [
           {
-            "label": "合并区(130902、130903合并区)",
+            "label": "合并区",
             "docs": [
               {
                 "batch": "第一批",
@@ -492,7 +475,7 @@ var soilTypeData = [
             ]
           },
           {
-            "label": "河北省土壤类型图成果质控意见_石家庄市市（市级）",
+            "label": "石家庄市市（市级）",
             "docs": [
               {
                 "batch": "第二批补充",
@@ -1006,7 +989,7 @@ var soilTypeData = [
             ]
           },
           {
-            "label": "邯郸市(1)",
+            "label": "邯郸市（市级）",
             "docs": [
               {
                 "batch": "第三批",
@@ -1020,20 +1003,11 @@ var soilTypeData = [
         "name": "河北鑫发地理信息工程有限公司",
         "districts": [
           {
-            "label": "2广平县",
+            "label": "广平县",
             "docs": [
               {
                 "batch": "第一批",
                 "file": "质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市1304532广平县.pdf"
-              }
-            ]
-          },
-          {
-            "label": "4魏县",
-            "docs": [
-              {
-                "batch": "第一批",
-                "file": "质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市1304534魏县.pdf"
               }
             ]
           },
@@ -1043,6 +1017,15 @@ var soilTypeData = [
               {
                 "batch": "第一批",
                 "file": "质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130424成安县.pdf"
+              }
+            ]
+          },
+          {
+            "label": "魏县",
+            "docs": [
+              {
+                "batch": "第一批",
+                "file": "质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市1304534魏县.pdf"
               }
             ]
           }
@@ -2011,7 +1994,7 @@ var farmlandData = [
         "name": "河北平普数政科技有限公司",
         "districts": [
           {
-            "label": "合并区docx",
+            "label": "合并区",
             "docs": [
               {
                 "batch": "第二批",
@@ -2470,7 +2453,7 @@ var farmlandData = [
         "name": "威县农业农村局",
         "districts": [
           {
-            "label": "邢台市130533威县耕评质控",
+            "label": "威县",
             "docs": [
               {
                 "batch": "第一批",
@@ -2655,7 +2638,7 @@ var farmlandData = [
         "name": "河北科沃生态科技有限公司",
         "districts": [
           {
-            "label": "合并区（复兴区等）",
+            "label": "合并区",
             "docs": [
               {
                 "batch": "第一批",
@@ -2826,13 +2809,19 @@ function renderReplyCell(city, unit, district) {
 }
 
 function renderCities(cities) {
-  var totalUnits = 0, totalDistricts = 0;
+  var totalUnits = 0, totalDistricts = 0, totalMunicipal = 0;
   cities.forEach(function(city) {
-    totalUnits += city.units.length;
     city.units.forEach(function(u) {
+      var hasNonMunicipal = false;
       u.districts.forEach(function(d) {
-        if(d.label.indexOf('市级') < 0) totalDistricts++;
+        if(d.label.indexOf('市级') >= 0) {
+          totalMunicipal++;
+        } else {
+          totalDistricts++;
+          hasNonMunicipal = true;
+        }
       });
+      if(hasNonMunicipal) totalUnits++;
     });
   });
 
@@ -2840,28 +2829,38 @@ function renderCities(cities) {
   html += '<div class="summary-card"><div class="num">' + cities.length + '</div><div class="label">市</div></div>';
   html += '<div class="summary-card"><div class="num">' + totalUnits + '</div><div class="label">作业单位</div></div>';
   html += '<div class="summary-card"><div class="num">' + totalDistricts + '</div><div class="label">区县（含合并区）</div></div>';
-  html += '<div class="summary-card"><div class="num">3</div><div class="label">批次</div></div>';
+  html += '<div class="summary-card"><div class="num">' + totalMunicipal + '</div><div class="label">市级</div></div>';
   html += '</div>';
 
   cities.forEach(function(city) {
-    var unitCount = city.units.length;
+    var unitCount = 0;
     var distCount = 0;
+    var municipalDocs = [];
     city.units.forEach(function(u) {
+      var hasNonMunicipal = false;
       u.districts.forEach(function(d) {
-        if(d.label.indexOf('市级') < 0) distCount++;
+        if(d.label.indexOf('市级') >= 0) {
+          d.docs.forEach(function(doc) { municipalDocs.push({unit: u.name, label: d.label, doc: doc}); });
+        } else {
+          distCount++;
+          hasNonMunicipal = true;
+        }
       });
+      if(hasNonMunicipal) unitCount++;
     });
-    html += '<section class="city-section"><h2>' + city.name + ' <span class="badge">' + unitCount + ' 家单位 · ' + distCount + ' 区县</span></h2>';
+    html += '<section class="city-section"><h2>' + city.name + ' <span class="badge">' + unitCount + ' 家单位 · ' + distCount + ' 区县（含合并区）</span></h2>';
     html += '<div class="table-wrap"><table><thead><tr><th>作业单位</th><th>区县</th><th>批次</th><th>整改答复</th></tr></thead><tbody>';
     city.units.forEach(function(unit) {
+      var nonMunicipal = unit.districts.filter(function(d) { return d.label.indexOf('市级') < 0; });
+      if(nonMunicipal.length === 0) return;
       var batches = [];
-      unit.districts.forEach(function(d) {
+      nonMunicipal.forEach(function(d) {
         d.docs.forEach(function(doc) {
           if(batches.indexOf(doc.batch) < 0) batches.push(doc.batch);
         });
       });
       html += '<tr><td>' + unit.name + '</td><td><div class="district-list">';
-      unit.districts.forEach(function(d) {
+      nonMunicipal.forEach(function(d) {
         if(d.docs.length === 1) {
           var url = BASE + '/' + d.docs[0].file;
           html += '<a class="district-link" href="' + url + '" target="_blank">' + d.label + ' ' + PDF_ICON + '</a>';
@@ -2877,14 +2876,24 @@ function renderCities(cities) {
       html += '</div></td><td>';
       batches.forEach(function(b) { html += '<span class="batch-tag ' + (batchClass[b]||'') + '">' + b + '</span>'; });
       html += '</td><td class="reply-cell">';
-      unit.districts.forEach(function(d) {
-        if(d.label.indexOf('市级') < 0) {
-          html += '<div style="margin-bottom:4px">' + d.label + ': ' + renderReplyCell(city.name, unit.name, d.label) + '</div>';
-        }
+      nonMunicipal.forEach(function(d) {
+        html += '<div style="margin-bottom:4px">' + d.label + ': ' + renderReplyCell(city.name, unit.name, d.label) + '</div>';
       });
       html += '</td></tr>';
     });
-    html += '</tbody></table></div></section>';
+    html += '</tbody></table></div>';
+    // 市级单独列出
+    if(municipalDocs.length > 0) {
+      html += '<div style="margin-top:10px;padding:10px 14px;background:#f0f9ff;border-radius:6px;border:1px solid #bae6fd">';
+      html += '<div style="font-size:.85rem;font-weight:600;color:#0369a1;margin-bottom:6px">市级成果</div>';
+      html += '<div class="district-list">';
+      municipalDocs.forEach(function(item) {
+        var url = BASE + '/' + item.doc.file;
+        html += '<a class="district-link" href="' + url + '" target="_blank" style="background:#e0f2fe;border-color:#7dd3fc">' + item.label + ' ' + PDF_ICON + '</a>';
+      });
+      html += '</div></div>';
+    }
+    html += '</section>';
   });
   return html;
 }
@@ -2985,15 +2994,6 @@ function handleFileSelect(file) {
 
 function confirmUploadFile() {
   if (!selectedFile || !currentUpload) return;
-  
-  // 检查Token
-  var token = getGitHubToken();
-  if (!token) {
-    closeUploadModal();
-    openTokenModal();
-    return;
-  }
-  
   var time = getNow();
   var ext = selectedFile.name.split('.').pop();
   var newFileName = currentUpload.key + '_整改答复_' + time + '.' + ext;
@@ -3039,26 +3039,6 @@ function getGitHubToken() {
   return localStorage.getItem('gh_token') || '';
 }
 
-function openTokenModal() {
-  document.getElementById('tokenInput').value = getGitHubToken();
-  document.getElementById('tokenModal').classList.add('show');
-}
-
-function closeTokenModal() {
-  document.getElementById('tokenModal').classList.remove('show');
-}
-
-function saveToken() {
-  var token = document.getElementById('tokenInput').value.trim();
-  if (!token) {
-    showToast('请输入Token', true);
-    return;
-  }
-  localStorage.setItem('gh_token', token);
-  closeTokenModal();
-  showToast('Token已保存，请重新点击上传');
-}
-
 function refreshAllTabs() {
   for (var key in tabData) {
     var el = document.querySelector('#tab-' + key + ' .content');
@@ -3077,9 +3057,6 @@ function showToast(msg, isError) {
 // 点击弹窗外关闭
 document.getElementById('uploadModal').addEventListener('click', function(e) {
   if (e.target === this) closeUploadModal();
-});
-document.getElementById('tokenModal').addEventListener('click', function(e) {
-  if (e.target === this) closeTokenModal();
 });
 </script>
 
