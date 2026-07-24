@@ -56,6 +56,7 @@ tbody tr:hover{background:var(--bg2)}
 .reply-file .replace-btn{font-size:.7rem;color:var(--warn);cursor:pointer;text-decoration:underline;margin-left:4px}
 .reply-file .replace-btn:hover{color:#d97706}
 footer{text-align:center;color:var(--muted);font-size:.8rem;padding:28px 0 20px;border-top:1px solid var(--rule);margin-top:16px}
+footer img{max-height:60px;width:auto}
 .upload-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:10000;justify-content:center;align-items:center}
 .upload-modal.show{display:flex}
 .upload-modal-content{background:#fff;border-radius:12px;padding:32px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -100,7 +101,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem;padding:28px 0 20px;
 </div>
 
 <footer>
-  <div class="container">数据来源：中国农业大学</div>
+  <div class="container"><img src="./assets/logo.jpg" alt="中国农业大学"></div>
 </footer>
 
 <!-- 上传弹窗 -->
@@ -876,20 +877,6 @@ var soilTypeData = [
         ]
       },
       {
-        "name": "未标明单位",
-        "districts": [
-          {
-            "label": "邯郸市(1)",
-            "docs": [
-              {
-                "batch": "第三批",
-                "file": "质控意见反馈_2026年第三批/土壤类型图成果质控意见/邯郸市_土壤类型图/河北省土壤类型图成果质控意见_邯郸市(1).pdf"
-              }
-            ]
-          }
-        ]
-      },
-      {
         "name": "河北九华勘查测绘有限责任公司",
         "districts": [
           {
@@ -998,6 +985,15 @@ var soilTypeData = [
               {
                 "batch": "第一批",
                 "file": "质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130402邯山区.pdf"
+              }
+            ]
+          },
+          {
+            "label": "邯郸市(1)",
+            "docs": [
+              {
+                "batch": "第三批",
+                "file": "质控意见反馈_2026年第三批/土壤类型图成果质控意见/邯郸市_土壤类型图/河北省土壤类型图成果质控意见_邯郸市(1).pdf"
               }
             ]
           }
