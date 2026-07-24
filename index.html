@@ -3003,22 +3003,25 @@ function handleFileSelect(file) {
 
 function confirmUploadFile() {
   if (!selectedFile || !currentUpload) return;
+  // 先保存所有需要的值，因为 closeUploadModal 会清空 currentUpload 和 selectedFile
+  var uploadKey = currentUpload.key;
+  var uploadDistrict = currentUpload.district;
+  var file = selectedFile;
   var time = getNow();
-  var ext = selectedFile.name.split('.').pop();
-  var newFileName = currentUpload.key + '_整改答复_' + time + '.' + ext;
+  var ext = file.name.split('.').pop();
+  var newFileName = uploadKey + '_整改答复_' + time + '.' + ext;
   var path = 'replies/' + newFileName;
 
   // 关闭弹窗，在按钮位置显示进度条
   closeUploadModal();
-  var progressEl = showUploadProgress(currentUpload.key, currentUpload.district, selectedFile);
+  var progressEl = showUploadProgress(uploadKey, uploadDistrict, file);
 
   // 读取文件并通过 XMLHttpRequest 上传到 GitHub（可获取真实进度）
   var reader = new FileReader();
   reader.onload = function(e) {
     var base64 = e.target.result.split(',')[1];
     var url = 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/' + path;
-    var body = JSON.stringify({ message: '整改答复: ' + currentUpload.key, content: base64 });
-    var totalSize = body.length;
+    var body = JSON.stringify({ message: '整改答复: ' + uploadKey, content: base64 });
 
     var xhr = new XMLHttpRequest();
     xhr.open('PUT', url, true);
@@ -3029,25 +3032,24 @@ function confirmUploadFile() {
     xhr.upload.addEventListener('progress', function(evt) {
       if (evt.lengthComputable) {
         var pct = Math.round((evt.loaded / evt.total) * 100);
-        updateUploadProgress(progressEl, pct, selectedFile.size);
+        updateUploadProgress(progressEl, pct, file.size);
       }
     });
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
-          // 延迟一点让进度条到达 100%
-          updateUploadProgress(progressEl, 100, selectedFile.size, 'success');
+          updateUploadProgress(progressEl, 100, file.size, 'success');
+          // 延迟刷新，让用户看到 100% 完成状态
           setTimeout(function() {
-            replyIndex[currentUpload.key] = { file: newFileName, time: time };
+            replyIndex[uploadKey] = { file: newFileName, time: time };
             refreshAllTabs();
             showToast('上传成功');
-            removeUploadProgress(progressEl, 1500);
-          }, 400);
+          }, 600);
         } else {
           var errMsg = '上传失败';
           try { var errData = JSON.parse(xhr.responseText); errMsg = '上传失败: ' + (errData.message || ''); } catch(ex) {}
-          updateUploadProgress(progressEl, 0, selectedFile.size, 'error', errMsg);
+          updateUploadProgress(progressEl, 0, file.size, 'error', errMsg);
           showToast(errMsg, true);
           removeUploadProgress(progressEl, 4000);
         }
@@ -3055,14 +3057,14 @@ function confirmUploadFile() {
     };
 
     xhr.onerror = function() {
-      updateUploadProgress(progressEl, 0, selectedFile.size, 'error', '网络错误');
+      updateUploadProgress(progressEl, 0, file.size, 'error', '网络错误');
       showToast('上传失败: 网络错误', true);
       removeUploadProgress(progressEl, 4000);
     };
 
     xhr.send(body);
   };
-  reader.readAsDataURL(selectedFile);
+  reader.readAsDataURL(file);
 }
 
 // ========== 进度条管理 ==========
