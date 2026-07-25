@@ -30,23 +30,31 @@ jobs:
           fetch-depth: 1
           sparse-checkout: |
             index.html
+            upload-config.js
             assets
             data
             replies
           sparse-checkout-cone-mode: false
 
-      - name: Validate dashboard statistics version
+      - name: Validate dashboard and upload frontend
         shell: bash
         run: |
           set -euo pipefail
           grep -q "calculateDashboardStats(dataKey)" index.html
           grep -q "var municipalCities" index.html
           grep -q "实际值必须命中主清单中的唯一任务单元" index.html
+          grep -q 'upload-config.js' index.html
+          grep -q 'SOIL_UPLOAD_API_URL' index.html
+          test -f upload-config.js
           if grep -q "已有数据（从 tabData 统计" index.html; then
             echo "旧版直接计数逻辑仍然存在，停止部署。"
             exit 1
           fi
-          echo "统计修复版本校验通过。"
+          if grep -q "getGitHubToken" index.html; then
+            echo "前端仍包含 Token 输入逻辑，停止部署。"
+            exit 1
+          fi
+          echo "统计与 Worker 上传前端校验通过。"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
