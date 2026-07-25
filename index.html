@@ -154,7 +154,7 @@ var masterList = [
     {unit:"天津华勘检验测试有限公司",contact:"李月华",phone:"18622609953",districts:["合并区","抚宁区","昌黎县","卢龙县","青龙县"]}
   ]},
   {city:"保定市", items:[
-    {unit:"河北满山红农业科技有限公司",contact:"朱子龙",phone:"15175366505",districts:["徐水区","满城区","合并区"]},
+    {unit:"河北满山红农业科技有限公司",contact:"朱子龙",phone:"15175366505",districts:["徐水区","满城区","合并区","市级汇总"]},
     {unit:"河北平普数政科技有限公司",contact:"邱志鹏",phone:"18131153987",districts:["安国市","博野县","蠡县"]},
     {unit:"河北农业大学",contact:"周亚鹏",phone:"13603125122",districts:["阜平县","曲阳县","唐县"]},
     {unit:"河北盛超环保科技有限公司",contact:"刘姗姗",phone:"15931875263",districts:["高碑店市","涿州市","涞水县"]},
@@ -243,6 +243,14 @@ function collectSubmittedDistricts(dataKey) {
   return result;
 }
 
+// 合并区子区映射（当 tabData 中用子区名代替"合并区"时使用）
+var mergeSubDistricts = {
+  '石家庄市': ['桥西区','新华区','长安区','裕华区','井陉矿区'],
+  '秦皇岛市': ['海港区','北戴河区','山海关区'],
+  '邢台市': ['襄都区'],
+  '张家口市': ['桥东区','桥西区','经开区','下花园区']
+};
+
 // 模糊匹配：master 区县名是否在已提交列表中
 function isDistrictMatched(masterDistrict, city, submittedKeys) {
   // 先精确匹配
@@ -253,11 +261,19 @@ function isDistrictMatched(masterDistrict, city, submittedKeys) {
   for (var si=0; si<suffixes.length; si++) { var suf=suffixes[si];
     if (submittedKeys[city + '_' + short + suf]) return true;
   }
-  // 合并区特殊处理：masterList 中的'合并区'，只要该市已提交任意含'合并'的标签即匹配
+  // 合并区特殊处理：masterList 中的'合并区'
   if (masterDistrict.indexOf('合并') >= 0) {
+    // 3a. 检查 submitted 中是否有含'合并'的标签
     for (var k2 in submittedKeys) {
       if (k2.indexOf(city + '_') !== 0) continue;
       if (k2.indexOf('合并') >= 0) return true;
+    }
+    // 3b. 检查 submitted 中是否有该合并区的任意子区
+    var subs = mergeSubDistricts[city];
+    if (subs) {
+      for (var si2 = 0; si2 < subs.length; si2++) {
+        if (submittedKeys[city + '_' + subs[si2]]) return true;
+      }
     }
   }
   // 反向：已提交的区县名去掉后缀是否匹配 master
