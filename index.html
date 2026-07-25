@@ -274,7 +274,7 @@ function isDistrictMatched(masterDistrict, city, submittedKeys) {
 
 // 按当前标签页类型比对缺失，渲染到顶部
 // 暂不统计缺失的市（数据保留在 masterList 中备用）
-var skipMissingCities = ['承德市','保定市','张家口市','秦皇岛市','廊坊市','雄安新区','唐山市'];
+var skipMissingCities = ['承德市','保定市','张家口市','秦皇岛市','廊坊市','雄安新区','唐山市','定州市'];
 
 function renderMissingBanner(dataKey) {
   var submitted = collectSubmittedDistricts(dataKey);
@@ -3045,7 +3045,8 @@ function renderReplyCell(city, unit, district) {
     UPLOAD_ICON + ' 上传</div>';
 }
 
-function renderCities(cities) {
+function renderCities(cities, dataKey) {
+  // ---- 已有数据（从 tabData 统计）----
   var totalUnits = 0, totalDistricts = 0, totalMunicipal = 0;
   cities.forEach(function(city) {
     city.units.forEach(function(u) {
@@ -3062,11 +3063,30 @@ function renderCities(cities) {
     });
   });
 
+  // ---- 应有数据（从 masterList 统计，排除 skip）----
+  var expCities = 0, expUnits = 0, expDistricts = 0, expMunicipal = 0;
+  masterList.forEach(function(city) {
+    if (skipMissingCities.indexOf(city.city) >= 0) return;
+    expCities++;
+    city.items.forEach(function(item) {
+      var hasNonMunicipal = false;
+      item.districts.forEach(function(d) {
+        if (d === city.city) {
+          expMunicipal++;
+        } else {
+          expDistricts++;
+          hasNonMunicipal = true;
+        }
+      });
+      if (hasNonMunicipal) expUnits++;
+    });
+  });
+
   var html = '<div class="summary-bar">';
-  html += '<div class="summary-card"><div class="num">' + cities.length + '</div><div class="label">市</div></div>';
-  html += '<div class="summary-card"><div class="num">' + totalUnits + '</div><div class="label">作业单位</div></div>';
-  html += '<div class="summary-card"><div class="num">' + totalDistricts + '</div><div class="label">区县（含合并区）</div></div>';
-  html += '<div class="summary-card"><div class="num">' + totalMunicipal + '</div><div class="label">市级</div></div>';
+  html += '<div class="summary-card"><div class="num">' + totalDistricts + ' / ' + expDistricts + '</div><div class="label">区县（含合并区）</div></div>';
+  html += '<div class="summary-card"><div class="num">' + totalMunicipal + ' / ' + expMunicipal + '</div><div class="label">市级</div></div>';
+  html += '<div class="summary-card"><div class="num">' + totalUnits + ' / ' + expUnits + '</div><div class="label">作业单位</div></div>';
+  html += '<div class="summary-card"><div class="num">' + (totalDistricts + totalMunicipal) + ' / ' + (expDistricts + expMunicipal) + '</div><div class="label">任务单元</div></div>';
   html += '</div>';
 
   cities.forEach(function(city) {
@@ -3137,7 +3157,7 @@ function renderCities(cities) {
 
 for (var key in tabData) {
   var el = document.querySelector('#tab-' + key + ' .content');
-  if (el) el.innerHTML = renderCities(tabData[key]);
+  if (el) el.innerHTML = renderCities(tabData[key], key);
 }
 
 // 加载已有整改答复索引
@@ -3383,7 +3403,7 @@ function getGitHubToken() {
 function refreshAllTabs() {
   for (var key in tabData) {
     var el = document.querySelector('#tab-' + key + ' .content');
-    if (el) el.innerHTML = renderCities(tabData[key]);
+    if (el) el.innerHTML = renderCities(tabData[key], key);
   }
 }
 
