@@ -3462,6 +3462,12 @@ function uploadDirectToGitHub(context, token) {
       var result = {};
       try { result = JSON.parse(xhr.responseText || '{}'); } catch(ex) {}
       var message = result.message || ('GitHub 返回 HTTP ' + xhr.status);
+      // 冲突错误（多用户同时上传）：等待3秒后重试一次
+      if (xhr.status === 409 && (message.indexOf('SHA') >= 0 || message.indexOf('expected') >= 0)) {
+        showToast('文件冲突，正在自动重试…', true);
+        setTimeout(function() { uploadDirectToGitHub(context, token); }, 3000);
+        return;
+      }
       if (getUploadApiUrl()) {
         showToast('GitHub 直传失败，正在尝试备用上传服务…', true);
         uploadViaWorker(context);
