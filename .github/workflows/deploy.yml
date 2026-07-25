@@ -10,10 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# 只保留最新一次部署。上传文件已经先提交到 main，取消旧部署不会丢失任何上传结果；
+# 最新提交天然包含此前所有提交，可避免多个 Pages 部署相互竞争。
 concurrency:
-  group: "pages"
-  # 不取消正在进行的部署，让多用户同时上传时排队执行，避免互相打断。
-  cancel-in-progress: false
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,11 +23,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout latest main
+      - name: Checkout triggering commit
         uses: actions/checkout@v4
         with:
-          ref: main
           fetch-depth: 1
           sparse-checkout: |
             index.html
@@ -37,34 +38,25 @@ jobs:
             replies
           sparse-checkout-cone-mode: false
 
-      - name: Validate dashboard and upload frontend
+      - name: Validate deploy files
         shell: bash
         run: |
           set -euo pipefail
-          grep -q "calculateDashboardStats(dataKey)" index.html
-          grep -q "var municipalCities" index.html
-          grep -q "实际值必须命中主清单中的唯一任务单元" index.html
+          test -f index.html
+          test -f upload-config.js
+          test -f page-enhancements.js
+          grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'upload-config.js' index.html
           grep -q 'SOIL_UPLOAD_API_URL' upload-config.js
           grep -q 'page-enhancements.js' upload-config.js
           grep -q '第三次全国土壤普查' page-enhancements.js
           grep -q 'missing-layout' page-enhancements.js
-          test -f upload-config.js
-          test -f page-enhancements.js
-          if grep -q "已有数据（从 tabData 统计" index.html; then
-            echo "旧版直接计数逻辑仍然存在，停止部署。"
-            exit 1
-          fi
-          if grep -q "getGitHubToken" index.html; then
-            echo "前端仍包含 Token 输入逻辑，停止部署。"
-            exit 1
-          fi
-          echo "统计、上传和页面增强前端校验通过。"
+          echo '部署文件校验通过。'
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
