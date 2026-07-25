@@ -12,8 +12,8 @@ permissions:
 
 concurrency:
   group: "pages"
-  # 多次连续提交时取消旧部署，避免旧版页面在新版之后才上线。
-  cancel-in-progress: true
+  # 不取消正在进行的部署，让多用户同时上传时排队执行，避免互相打断。
+  cancel-in-progress: false
 
 jobs:
   deploy:
