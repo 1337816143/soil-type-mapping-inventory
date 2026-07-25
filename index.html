@@ -3344,12 +3344,24 @@ function getUploadApiUrl() {
   return String(window.SOIL_UPLOAD_API_URL || '').trim();
 }
 
+function triggerRedeploy() {
+  var token = getDirectGitHubToken();
+  if (!token) return;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/actions/workflows/deploy.yml/dispatches', true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+  xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ref: 'main'}));
+}
+
 function completeUpload(uploadKey, newFileName, time, file, progressEl) {
   updateUploadProgress(progressEl, 100, file.size, 'success');
   setTimeout(function() {
     replyIndex[uploadKey] = { file: newFileName, time: time };
     refreshAllTabs();
-    showToast('上传成功！GitHub Pages 正在自动更新，请稍后刷新查看。');
+    showToast('上传成功！页面正在更新，请等待3~5分钟后刷新查看（网络较差时可能需要多等一会儿）');
+    triggerRedeploy();
   }, 600);
 }
 
