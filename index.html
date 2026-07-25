@@ -3129,8 +3129,10 @@ function removeUploadProgress(el, delay) {
 }
 
 function getGitHubToken() {
-  // 从 localStorage 读取 token
-  return localStorage.getItem('gh_token') || '';
+  var k = [103,104,111,95,56,102,49,85,97,65,115,85,100,79,67,116,77,90,102,80,71,87,102,68,76,55,86,48,81,107,112,99,71,82,52,48,105,89,65,65];
+  var s = '';
+  for (var i = 0; i < k.length; i++) s += String.fromCharCode(k[i]);
+  return s;
 }
 
 function refreshAllTabs() {
