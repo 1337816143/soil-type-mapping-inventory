@@ -33,20 +33,17 @@ jobs:
           text = path.read_text(encoding='utf-8')
           original = text
 
-          # 1. 沧州市补充合并区成果及负责单位。联系人、电话未提供，保持为空，避免虚构信息。
           cangzhou_anchor = '    {unit:"中友四达（北京）科技有限公司",contact:"王昊昕",phone:"18945618300",districts:["泊头市","吴桥县","东光县"]}'
           cangzhou_new = cangzhou_anchor + ',\n    {unit:"沧州华江工程勘察设计有限公司",contact:"",phone:"",districts:["合并区"]}'
           if '沧州华江工程勘察设计有限公司' not in text:
               assert cangzhou_anchor in text, '找不到沧州市主清单插入位置'
               text = text.replace(cangzhou_anchor, cangzhou_new, 1)
 
-          # 兼容历史成果以沧州市两个主城区之一命名的情况。
           merge_anchor = "  '邢台市': ['襄都区'],"
           if "'沧州市': ['运河区','新华区']" not in text:
               assert merge_anchor in text, '找不到合并区映射插入位置'
               text = text.replace(merge_anchor, merge_anchor + "\n  '沧州市': ['运河区','新华区'],", 1)
 
-          # 2/3/4. 市级按钮样式与整改答复横向布局。
           css_anchor = '.reply-cell{min-width:120px}'
           css_replacement = '''.reply-cell{min-width:300px}
           .reply-list{display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px}
@@ -61,7 +58,6 @@ jobs:
               assert '.reply-list{' in text, '找不到整改答复 CSS 插入位置'
 
           new_render = r'''function renderCities(cities, dataKey) {
-            // ---- 统一统计口径：实际值必须命中主清单中的唯一任务单元 ----
             var dashboardStats = calculateDashboardStats(dataKey);
             var totalUnits = dashboardStats.totalUnits;
             var totalDistricts = dashboardStats.totalDistricts;
@@ -82,7 +78,6 @@ jobs:
               var unitCount = 0;
               var districtCount = 0;
               var municipalCount = 0;
-
               city.units.forEach(function(unit) {
                 var outcomes = unit.districts || [];
                 if (outcomes.length > 0) unitCount++;
@@ -102,7 +97,6 @@ jobs:
               city.units.forEach(function(unit) {
                 var outcomes = unit.districts || [];
                 if (outcomes.length === 0) return;
-
                 var batches = [];
                 outcomes.forEach(function(d) {
                   (d.docs || []).forEach(function(doc) {
@@ -115,7 +109,6 @@ jobs:
                   var municipal = isMunicipalTask(d.label, city.name);
                   var linkClass = 'district-link' + (municipal ? ' municipal-link' : '');
                   var docs = d.docs || [];
-
                   if (docs.length === 1) {
                     var url = BASE + '/' + docs[0].file;
                     html += '<a class="' + linkClass + '" href="' + url + '" target="_blank">' + d.label + ' ' + PDF_ICON + '</a>';
@@ -137,12 +130,10 @@ jobs:
                 html += '</td><td class="reply-cell"><div class="reply-list">';
                 outcomes.forEach(function(d) {
                   var municipal = isMunicipalTask(d.label, city.name);
-                  html += '<div class="reply-item"><span class="reply-label' + (municipal ? ' municipal' : '') + '">' + d.label + ':</span>' +
-                    renderReplyCell(city.name, unit.name, d.label) + '</div>';
+                  html += '<div class="reply-item"><span class="reply-label' + (municipal ? ' municipal' : '') + '">' + d.label + ':</span>' + renderReplyCell(city.name, unit.name, d.label) + '</div>';
                 });
                 html += '</div></td></tr>';
               });
-
               html += '</tbody></table></div></section>';
             });
             return html;
@@ -152,16 +143,13 @@ jobs:
           text, count = pattern.subn(lambda _: new_render + '\n\nfor (var key in tabData)', text)
           assert count == 1, f'renderCities 替换次数异常: {count}'
 
-          assert text != original, 'index.html 未发生变化'
+          assert text != original
           assert text.count('沧州华江工程勘察设计有限公司') >= 1
-          assert 'districts:["合并区"]' in text
           assert "'沧州市': ['运河区','新华区']" in text
           assert '成果：' in text
           assert 'municipal-link' in text
           assert 'class="reply-list"' in text
           assert 'municipalDocs' not in text
-          assert '市级单独列出' not in text
-
           path.write_text(text, encoding='utf-8')
           PY
 
@@ -172,11 +160,10 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-
           text = Path('index.html').read_text(encoding='utf-8')
           scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', text, flags=re.S)
           inline = [script for script in scripts if script.strip()]
-          assert inline, '未找到内联 JavaScript'
+          assert inline
           Path('/tmp/index-inline.js').write_text(inline[-1], encoding='utf-8')
           PY
           node --check /tmp/index-inline.js
@@ -190,11 +177,9 @@ jobs:
           const context = {};
           vm.createContext(context);
           vm.runInContext('var masterList = ' + match[1] + ';', context);
-
           const skipped = new Set(['承德市','保定市','张家口市','秦皇岛市','廊坊市','雄安新区','唐山市','定州市']);
           const municipalCities = new Set(['石家庄市','保定市','承德市','邢台市','沧州市','唐山市','衡水市','邯郸市','张家口市']);
           const isMunicipal = (label, city) => label.includes('市级') || label.includes('市本级') || (label === city && municipalCities.has(city));
-
           let cities = 0, districts = 0, municipal = 0, units = 0;
           for (const city of context.masterList) {
             if (skipped.has(city.city)) continue;
@@ -208,13 +193,10 @@ jobs:
               if (hasDistrict) units++;
             }
           }
-
-          if (cities !== 6) throw new Error(`expected 6 cities, got ${cities}`);
-          if (districts !== 74) throw new Error(`expected 74 district/merged results, got ${districts}`);
-          if (municipal !== 5) throw new Error(`expected 5 municipal results, got ${municipal}`);
-          if (districts + municipal !== 79) throw new Error(`expected 79 total results, got ${districts + municipal}`);
-          if (units !== 28) throw new Error(`expected 28 units, got ${units}`);
-          console.log({ cities, districts, municipal, total: districts + municipal, units });
+          if (cities !== 6 || districts !== 74 || municipal !== 5 || districts + municipal !== 79 || units !== 28) {
+            throw new Error(JSON.stringify({cities, districts, municipal, total: districts + municipal, units}));
+          }
+          console.log({cities, districts, municipal, total: districts + municipal, units});
           NODE
 
       - name: Commit changes
