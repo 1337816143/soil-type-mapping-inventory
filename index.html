@@ -147,14 +147,14 @@ footer img{max-height:60px;width:auto}
 var masterList = [
   {city:"石家庄市", items:[
     {unit:"河北湛泸软件开发有限公司",contact:"隋昌宏",phone:"17331141999",districts:["平山县","行唐县","灵寿县","井陉县","元氏县","赞皇县"]},
-    {unit:"河北省通烯科技有限公司",contact:"冯盼想",phone:"15511132111",districts:["赵县","高邑县","栾城区","桥西区","新华区","长安区","裕华区","矿区","石家庄市"]},
+    {unit:"河北省通烯科技有限公司",contact:"冯盼想",phone:"15511132111",districts:["赵县","高邑县","栾城区","合并区","石家庄市"]},
     {unit:"北京元图科技发展有限公司",contact:"胡鲁",phone:"15628987579",districts:["新乐市","正定县","藁城区","无极县","深泽县","晋州市"]}
   ]},
   {city:"秦皇岛市", items:[
-    {unit:"天津华勘检验测试有限公司",contact:"李月华",phone:"18622609953",districts:["海港区","北戴河区","山海关区","抚宁区","昌黎县","卢龙县","青龙县"]}
+    {unit:"天津华勘检验测试有限公司",contact:"李月华",phone:"18622609953",districts:["合并区","抚宁区","昌黎县","卢龙县","青龙县"]}
   ]},
   {city:"保定市", items:[
-    {unit:"河北满山红农业科技有限公司",contact:"朱子龙",phone:"15175366505",districts:["徐水区","满城区"]},
+    {unit:"河北满山红农业科技有限公司",contact:"朱子龙",phone:"15175366505",districts:["徐水区","满城区","合并区"]},
     {unit:"河北平普数政科技有限公司",contact:"邱志鹏",phone:"18131153987",districts:["安国市","博野县","蠡县"]},
     {unit:"河北农业大学",contact:"周亚鹏",phone:"13603125122",districts:["阜平县","曲阳县","唐县"]},
     {unit:"河北盛超环保科技有限公司",contact:"刘姗姗",phone:"15931875263",districts:["高碑店市","涿州市","涞水县"]},
@@ -166,10 +166,10 @@ var masterList = [
     {unit:"承德今图地理信息工程有限公司",contact:"常宝琪",phone:"15324160009",districts:["宽城县","平泉市"]},
     {unit:"张家口广源测绘工程有限公司",contact:"刘明月",phone:"18803030610",districts:["滦平县"]},
     {unit:"河北热点科技股份有限公司",contact:"王磊",phone:"15633826813",districts:["隆化县"]},
-    {unit:"河北科沃生态科技有限公司",contact:"张扬",phone:"15933975010",districts:["承德市","丰宁县"]}
+    {unit:"河北科沃生态科技有限公司",contact:"张扬",phone:"15933975010",districts:["承德市","合并区","丰宁县"]}
   ]},
   {city:"邢台市", items:[
-    {unit:"河北科沃生态科技有限公司",contact:"赵颖健",phone:"16632236600",districts:["邢台市","襄都区"]},
+    {unit:"河北科沃生态科技有限公司",contact:"赵颖健",phone:"16632236600",districts:["邢台市","合并区","内丘县","任泽区"]},
     {unit:"天津市地质研究和海洋地质中心",contact:"鲁庆伟",phone:"18202252297",districts:["临城县","柏乡县","隆尧县"]},
     {unit:"中国煤炭地质总局物测队",contact:"张学奇",phone:"15135120484",districts:["信都区","沙河市","南和区"]},
     {unit:"河北精鼎环境监测有限责任公司",contact:"刘婷婷",phone:"18631922688",districts:["宁晋县","新河县","南宫市"]},
@@ -192,7 +192,7 @@ var masterList = [
     {unit:"北京世纪国源科技科技股份有限公司",contact:"孙洁",phone:"13718626678",districts:["雄县","安新县"]}
   ]},
   {city:"唐山市", items:[
-    {unit:"河北德禹检测技术有限公司",contact:"王雨",phone:"13230397925",districts:["丰南区","丰润区","玉田县","遵化市","迁安市","迁西县","乐亭县","滦南县","曹妃甸区","唐山市"]}
+    {unit:"河北德禹检测技术有限公司",contact:"王雨",phone:"13230397925",districts:["丰南区","丰润区","合并区","玉田县","遵化市","迁安市","迁西县","乐亭县","滦南县","曹妃甸区","唐山市"]}
   ]},
   {city:"廊坊市", items:[
     {unit:"河北平普数政科技有限公司",contact:"代景顺",phone:"17610972180",districts:["三河市","大厂县","香河县"]},
@@ -219,7 +219,7 @@ var masterList = [
     {unit:"河北科沃生态科技有限公司",contact:"张洋",phone:"15933975010",districts:["张家口市","赤城县","沽源县","康保县"]},
     {unit:"河北平普数政科技有限公司",contact:"刘亚敏",phone:"15731313435",districts:["蔚县","阳原县","涿鹿县","怀来县"]},
     {unit:"河北玛恩农业科技有限公司",contact:"常思雯",phone:"13754435644",districts:["张北县","尚义县","万全区","崇礼区"]},
-    {unit:"河北鸿源润泽土地规划设计有限公司",contact:"冯万忠",phone:"15127260310",districts:["怀安县","宣化区"]}
+    {unit:"河北鸿源润泽土地规划设计有限公司",contact:"冯万忠",phone:"15127260310",districts:["怀安县","宣化区","合并区"]}
   ]},
   {city:"辛集市", items:[
     {unit:"河北玛恩农业科技有限公司",contact:"段雅轩",phone:"18332857782",districts:["辛集市"]}
@@ -253,14 +253,21 @@ function isDistrictMatched(masterDistrict, city, submittedKeys) {
   for (var si=0; si<suffixes.length; si++) { var suf=suffixes[si];
     if (submittedKeys[city + '_' + short + suf]) return true;
   }
+  // 合并区特殊处理：masterList 中的'合并区'，只要该市已提交任意含'合并'的标签即匹配
+  if (masterDistrict.indexOf('合并') >= 0) {
+    for (var k2 in submittedKeys) {
+      if (k2.indexOf(city + '_') !== 0) continue;
+      if (k2.indexOf('合并') >= 0) return true;
+    }
+  }
   // 反向：已提交的区县名去掉后缀是否匹配 master
   for (var k in submittedKeys) {
     if (k.indexOf(city + '_') !== 0) continue;
     var submitted = k.substring(city.length + 1);
+    // 已提交的合并区不参与子区匹配（合并区作为一个整体）
+    if (submitted.indexOf('合并') >= 0) continue;
     var submittedShort = submitted.replace(/(自治县|回族[自]?治县|[县市区])$/, '');
     if (masterDistrict.indexOf(submittedShort) >= 0 || submittedShort.indexOf(masterDistrict.replace(/(自治县|回族[自]?治县|[县市区])$/, '')) >= 0) return true;
-    // 合并区特殊处理
-    if (masterDistrict.indexOf('合并') >= 0 && submitted.indexOf('合并') >= 0) return true;
   }
   return false;
 }
