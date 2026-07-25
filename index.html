@@ -3071,7 +3071,7 @@ function confirmUploadFile() {
           setTimeout(function() {
             replyIndex[uploadKey] = { file: newFileName, time: time };
             refreshAllTabs();
-            showToast('上传成功，页面正在更新...');
+            showToast('上传成功！页面正在更新，请等待3~5分钟后刷新查看（网络较差时可能需要多等一会儿）');
             // 触发 GitHub Actions 重新部署 Pages，使新文件可访问
             triggerRedeploy();
           }, 600);
@@ -3138,7 +3138,7 @@ function updateUploadProgress(el, pct, fileSize, status, msg) {
   if (status === 'success') {
     fill.classList.add('success');
     statusEl.textContent = '完成';
-    detailEl.textContent = sizeStr + ' · 上传成功';
+    detailEl.textContent = sizeStr + ' · 上传成功，等待3~5分钟后刷新查看';
   } else if (status === 'error') {
     fill.classList.add('error');
     statusEl.textContent = '失败';
@@ -3185,7 +3185,7 @@ function showToast(msg, isError) {
   toast.textContent = msg;
   toast.className = 'toast' + (isError ? ' error' : '');
   setTimeout(function() { toast.classList.add('show'); }, 10);
-  setTimeout(function() { toast.classList.remove('show'); }, 3000);
+  setTimeout(function() { toast.classList.remove('show'); }, 6000);
 }
 
 // 点击弹窗外关闭
