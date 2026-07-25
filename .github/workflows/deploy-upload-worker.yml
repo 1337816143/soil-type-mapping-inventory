@@ -74,8 +74,10 @@ jobs:
 
           response="$(curl -fsS \
             "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/subdomain" \
-            -H "Authorization: Bearer ${CLOUDFLLARE_API_TOKEN}")"
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}")"
+          success="$(printf '%s' "$response" | jq -r '.success // false')"
           subdomain="$(printf '%s' "$response" | jq -r '.result.subdomain // empty')"
+          test "$success" = "true" || { echo "无法读取 Cloudflare workers.dev 子域名"; exit 1; }
           test -n "$subdomain" || { echo "Cloudflare 账户尚未设置 workers.dev 子域名"; exit 1; }
 
           worker_url="https://${script_name}.${subdomain}.workers.dev"
