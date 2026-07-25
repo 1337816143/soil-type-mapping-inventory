@@ -3062,9 +3062,10 @@ function renderReplyCell(city, unit, district) {
 }
 
 function renderCities(cities, dataKey) {
-  // ---- 已有数据（从 tabData 统计）----
+  // ---- 已有数据（从 tabData 统计，排除 skip）----
   var totalUnits = 0, totalDistricts = 0, totalMunicipal = 0;
   cities.forEach(function(city) {
+    if (skipMissingCities.indexOf(city.name) >= 0) return;
     city.units.forEach(function(u) {
       var hasNonMunicipal = false;
       u.districts.forEach(function(d) {
