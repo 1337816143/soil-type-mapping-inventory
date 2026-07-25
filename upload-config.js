@@ -46,18 +46,23 @@ window.SOIL_UPLOAD_API_URL = '';
       window.mergeSubDistricts['沧州市'] = ['运河区', '新华区'];
     }
 
-    // 注入市级按钮和横向整改答复样式。
+    // 注入全宽布局、市级/合并区按钮和横向整改答复样式。
     if (!document.getElementById('city-result-enhancement-style')) {
       var style = document.createElement('style');
       style.id = 'city-result-enhancement-style';
       style.textContent =
+        '.container{max-width:none!important;width:100%;padding-left:16px!important;padding-right:16px!important}' +
         '.reply-cell{min-width:300px}' +
         '.reply-list{display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px}' +
         '.reply-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}' +
         '.reply-label{font-size:.76rem;color:var(--muted);font-weight:500}' +
+        '.reply-label.merged{color:#2563eb;font-weight:650}' +
         '.reply-label.municipal{color:#1e3a8a;font-weight:700}' +
+        '.district-link.merged-link,.district-group.merged .group-label{background:#3b82f6;color:#fff;border-color:#2563eb;font-weight:600}' +
+        '.district-link.merged-link:hover,.district-group.merged .group-label:hover{background:#2563eb;color:#fff;border-color:#1d4ed8}' +
         '.district-link.municipal-link,.district-group.municipal .group-label{background:#1e40af;color:#fff;border-color:#1e3a8a;font-weight:600}' +
-        '.district-link.municipal-link:hover,.district-group.municipal .group-label:hover{background:#172554;color:#fff;border-color:#172554}';
+        '.district-link.municipal-link:hover,.district-group.municipal .group-label:hover{background:#172554;color:#fff;border-color:#172554}' +
+        '@media(max-width:768px){.container{padding-left:10px!important;padding-right:10px!important}.reply-cell{min-width:240px}}';
       document.head.appendChild(style);
     }
 
@@ -113,14 +118,16 @@ window.SOIL_UPLOAD_API_URL = '';
           html += '<tr><td>' + unit.name + '</td><td><div class="district-list">';
           outcomes.forEach(function(d) {
             var municipal = window.isMunicipalTask(d.label, city.name);
-            var linkClass = 'district-link' + (municipal ? ' municipal-link' : '');
+            var merged = !municipal && String(d.label || '').indexOf('合并区') >= 0;
+            var linkClass = 'district-link' + (municipal ? ' municipal-link' : (merged ? ' merged-link' : ''));
+            var groupClass = 'district-group' + (municipal ? ' municipal' : (merged ? ' merged' : ''));
             var docs = d.docs || [];
 
             if (docs.length === 1) {
               var url = window.BASE + '/' + docs[0].file;
               html += '<a class="' + linkClass + '" href="' + url + '" target="_blank">' + d.label + ' ' + window.PDF_ICON + '</a>';
             } else if (docs.length > 1) {
-              html += '<div class="district-group' + (municipal ? ' municipal' : '') + '"><span class="group-label">' + d.label + ' ▾</span><div class="doc-btns">';
+              html += '<div class="' + groupClass + '"><span class="group-label">' + d.label + ' ▾</span><div class="doc-btns">';
               docs.forEach(function(doc) {
                 var url = window.BASE + '/' + doc.file;
                 html += '<a class="doc-btn" href="' + url + '" target="_blank">' + window.PDF_ICON + ' ' + doc.batch + '</a>';
@@ -137,7 +144,9 @@ window.SOIL_UPLOAD_API_URL = '';
           html += '</td><td class="reply-cell"><div class="reply-list">';
           outcomes.forEach(function(d) {
             var municipal = window.isMunicipalTask(d.label, city.name);
-            html += '<div class="reply-item"><span class="reply-label' + (municipal ? ' municipal' : '') + '">' + d.label + ':</span>' +
+            var merged = !municipal && String(d.label || '').indexOf('合并区') >= 0;
+            var replyLabelClass = 'reply-label' + (municipal ? ' municipal' : (merged ? ' merged' : ''));
+            html += '<div class="reply-item"><span class="' + replyLabelClass + '">' + d.label + ':</span>' +
               window.renderReplyCell(city.name, unit.name, d.label) + '</div>';
           });
           html += '</div></td></tr>';
