@@ -1,0 +1,377 @@
+name: One-time dashboard repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-dashboard.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch dashboard logic
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          original = text
+
+          # Correct two master-list names against the authoritative tender list.
+          text = text.replace('河北省通烯科技有限公司', '河北通烯科技有限公司')
+          text = text.replace('石家庄兄弟土地环境技术服务有限公司', '石家庄师兄弟土地环境技术服务有限公司')
+
+          matching_logic = r'''// 从 tabData 中提取各任务单元标签的集合（用于匹配）
+          function collectSubmittedDistricts(dataKey) {
+            var data = tabData[dataKey];
+            if (!data) return {};
+            var result = {}; // key: "市_任务单元" -> true
+            data.forEach(function(city) {
+              city.units.forEach(function(unit) {
+                unit.districts.forEach(function(d) {
+                  if (!d || !d.label) return;
+                  result[city.name + '_' + d.label] = true;
+                });
+              });
+            });
+            return result;
+          }
+
+          // 只有地级市的本级成果才属于“市级”；辛集、定州是县级市，应计入区县。
+          var municipalCities = ['石家庄市','保定市','承德市','邢台市','沧州市','唐山市','衡水市','邯郸市','张家口市'];
+
+          function isMunicipalTask(label, city) {
+            label = String(label || '').replace(/\s+/g, '');
+            city = String(city || '').replace(/\s+/g, '');
+            if (!label) return false;
+            if (label.indexOf('市级') >= 0 || label.indexOf('市本级') >= 0) return true;
+            return label === city && municipalCities.indexOf(city) >= 0;
+          }
+
+          function normalizeDistrictName(name) {
+            return String(name || '')
+              .replace(/\s+/g, '')
+              .replace(/^\d{6}(?:[、,，]\d{6})*/, '')
+              .replace(/[（(].*?[）)]/g, '')
+              .replace(/(满族蒙古族自治县|蒙古族满族自治县|回族满族自治县|回族自治县|满族自治县|蒙古族自治县|自治县|县|区|市)$/, '');
+          }
+
+          // 合并区子区映射（历史文件可能使用子区名称，而不是“合并区”）
+          var mergeSubDistricts = {
+            '石家庄市': ['桥西区','新华区','长安区','裕华区','井陉矿区'],
+            '秦皇岛市': ['海港区','北戴河区','山海关区'],
+            '邢台市': ['襄都区'],
+            '张家口市': ['桥东区','桥西区','经开区','下花园区']
+          };
+
+          // 严格匹配任务单元，避免“沧县”误把“沧州市”等短名称判定为已提交。
+          function isDistrictMatched(masterDistrict, city, submittedKeys) {
+            var prefix = city + '_';
+
+            // 市级成果按任务类型匹配，不与县级市混淆。
+            if (isMunicipalTask(masterDistrict, city)) {
+              for (var municipalKey in submittedKeys) {
+                if (municipalKey.indexOf(prefix) !== 0) continue;
+                if (isMunicipalTask(municipalKey.substring(prefix.length), city)) return true;
+              }
+              return false;
+            }
+
+            // 合并区作为一个任务单元；兼容历史文件中的合并区名称或子区名称。
+            if (String(masterDistrict).indexOf('合并') >= 0) {
+              for (var mergeKey in submittedKeys) {
+                if (mergeKey.indexOf(prefix) !== 0) continue;
+                var mergeLabel = mergeKey.substring(prefix.length);
+                if (mergeLabel.indexOf('合并') >= 0) return true;
+              }
+              var subs = mergeSubDistricts[city] || [];
+              for (var i = 0; i < subs.length; i++) {
+                var normalizedSub = normalizeDistrictName(subs[i]);
+                for (var subKey in submittedKeys) {
+                  if (subKey.indexOf(prefix) !== 0) continue;
+                  var subLabel = subKey.substring(prefix.length);
+                  if (!isMunicipalTask(subLabel, city) && normalizeDistrictName(subLabel) === normalizedSub) return true;
+                }
+              }
+              return false;
+            }
+
+            var normalizedMaster = normalizeDistrictName(masterDistrict);
+            for (var key in submittedKeys) {
+              if (key.indexOf(prefix) !== 0) continue;
+              var submitted = key.substring(prefix.length);
+              if (isMunicipalTask(submitted, city) || submitted.indexOf('合并') >= 0) continue;
+              if (submitted === masterDistrict || normalizeDistrictName(submitted) === normalizedMaster) return true;
+            }
+            return false;
+          }
+
+          // 仪表盘的“实际”统一按主清单中的任务单元匹配，排除重复、额外和暂不统计城市。
+          function calculateDashboardStats(dataKey) {
+            var submitted = collectSubmittedDistricts(dataKey);
+            var stats = {
+              totalUnits: 0, totalDistricts: 0, totalMunicipal: 0,
+              expCities: 0, expUnits: 0, expDistricts: 0, expMunicipal: 0
+            };
+
+            masterList.forEach(function(city) {
+              if (skipMissingCities.indexOf(city.city) >= 0) return;
+              stats.expCities++;
+              city.items.forEach(function(item) {
+                var expectedNonMunicipal = false;
+                var matchedNonMunicipal = false;
+                item.districts.forEach(function(d) {
+                  var municipal = isMunicipalTask(d, city.city);
+                  var matched = isDistrictMatched(d, city.city, submitted);
+                  if (municipal) {
+                    stats.expMunicipal++;
+                    if (matched) stats.totalMunicipal++;
+                  } else {
+                    stats.expDistricts++;
+                    expectedNonMunicipal = true;
+                    if (matched) {
+                      stats.totalDistricts++;
+                      matchedNonMunicipal = true;
+                    }
+                  }
+                });
+                if (expectedNonMunicipal) stats.expUnits++;
+                if (matchedNonMunicipal) stats.totalUnits++;
+              });
+            });
+            return stats;
+          }
+
+          // 按当前标签页类型比对缺失，渲染到顶部'''
+
+          pattern = re.compile(r'// 从 tabData 中提取各区县标签的集合（用于匹配）.*?// 按当前标签页类型比对缺失，渲染到顶部', re.S)
+          text, count = pattern.subn(lambda _: matching_logic, text)
+          assert count == 1, f'matching logic replacement count: {count}'
+
+          # Replace raw tab-data counting with one master-list-based calculation.
+          stats_block = r'''  // ---- 统一统计口径：实际值必须命中主清单中的唯一任务单元 ----
+            var dashboardStats = calculateDashboardStats(dataKey);
+            var totalUnits = dashboardStats.totalUnits;
+            var totalDistricts = dashboardStats.totalDistricts;
+            var totalMunicipal = dashboardStats.totalMunicipal;
+            var expCities = dashboardStats.expCities;
+            var expUnits = dashboardStats.expUnits;
+            var expDistricts = dashboardStats.expDistricts;
+            var expMunicipal = dashboardStats.expMunicipal;
+
+          '''
+          pattern = re.compile(r'  // ---- 已有数据（从 tabData 统计，排除 skip）----.*?(?=  var html = \'<div class="summary-bar">\';)', re.S)
+          text, count = pattern.subn(lambda _: stats_block, text)
+          assert count == 1, f'dashboard stats replacement count: {count}'
+
+          # Use the same municipal classification everywhere in rendering.
+          text = text.replace("if(d.label.indexOf('市级') >= 0) {", "if (isMunicipalTask(d.label, city.name)) {")
+          text = text.replace("if (d === city.city) {", "if (isMunicipalTask(d, city.city)) {")
+          text = text.replace("var nonMunicipal = unit.districts.filter(function(d) { return d.label.indexOf('市级') < 0; });", "var nonMunicipal = unit.districts.filter(function(d) { return !isMunicipalTask(d.label, city.name); });")
+
+          reply_loader = r'''// 页面加载时动态获取 replies 目录索引
+          var ALLOWED_REPLY_EXTENSIONS = ['pdf','doc','docx','xlsx','xls','zip','rar'];
+
+          function loadReplyIndex() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/replies', true);
+            xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState !== 4) return;
+              var loadedIndex = {};
+              if (xhr.status === 200) {
+                try {
+                  var files = JSON.parse(xhr.responseText);
+                  files.forEach(function(f) {
+                    if (!f.name) return;
+                    // 文件名格式: 市名_单位名_区县名_整改答复_时间.扩展名
+                    var m = f.name.match(/^(.*)_整改答复_([0-9]+)\.([a-z0-9]+)$/i);
+                    if (!m || ALLOWED_REPLY_EXTENSIONS.indexOf(m[3].toLowerCase()) < 0) return;
+                    var existing = loadedIndex[m[1]];
+                    // 同一任务存在多次上传时，始终显示时间戳最新的文件。
+                    if (!existing || m[2] > existing.time) {
+                      loadedIndex[m[1]] = { file: f.name, time: m[2] };
+                    }
+                  });
+                } catch(e) {
+                  console.error('整改答复索引解析失败', e);
+                }
+              }
+              replyIndex = loadedIndex;
+              refreshAllTabs();
+            };
+            xhr.send();
+          }
+
+          var PDF_ICON'''
+          pattern = re.compile(r'// 页面加载时动态获取 replies 目录索引.*?var PDF_ICON', re.S)
+          text, count = pattern.subn(lambda _: reply_loader, text)
+          assert count == 1, f'reply loader replacement count: {count}'
+
+          # Add seconds to upload timestamps so repeated uploads in one minute do not collide.
+          time_helpers = r'''function getNow() {
+            var d = new Date();
+            var y = d.getFullYear();
+            var m = String(d.getMonth()+1).padStart(2,'0');
+            var day = String(d.getDate()).padStart(2,'0');
+            var h = String(d.getHours()).padStart(2,'0');
+            var mi = String(d.getMinutes()).padStart(2,'0');
+            var s = String(d.getSeconds()).padStart(2,'0');
+            return y + m + day + h + mi + s;
+          }
+
+          function formatTime(t) {
+            if (!t || t.length < 8) return t;
+            var result = t.substring(0,4) + '-' + t.substring(4,6) + '-' + t.substring(6,8);
+            if (t.length >= 12) result += ' ' + t.substring(8,10) + ':' + t.substring(10,12);
+            if (t.length >= 14) result += ':' + t.substring(12,14);
+            return result;
+          }
+
+          function renderReplyCell'''
+          pattern = re.compile(r'function getNow\(\) \{.*?function renderReplyCell', re.S)
+          text, count = pattern.subn(lambda _: time_helpers, text)
+          assert count == 1, f'time helper replacement count: {count}'
+
+          file_select = r'''function handleFileSelect(file) {
+            var ext = (file.name.split('.').pop() || '').toLowerCase();
+            if (ALLOWED_REPLY_EXTENSIONS.indexOf(ext) < 0) {
+              selectedFile = null;
+              document.getElementById('confirmUpload').disabled = true;
+              showToast('不支持该文件类型，请上传 PDF、Word、Excel、ZIP 或 RAR 文件', true);
+              return;
+            }
+            if (file.size > 50 * 1024 * 1024) {
+              selectedFile = null;
+              document.getElementById('confirmUpload').disabled = true;
+              showToast('文件不能超过 50 MB', true);
+              return;
+            }
+            selectedFile = file;
+            document.getElementById('dropText').textContent = '✓ ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+            document.getElementById('dropText').className = 'selected';
+            document.getElementById('confirmUpload').disabled = false;
+          }
+
+          function confirmUploadFile'''
+          pattern = re.compile(r'function handleFileSelect\(file\) \{.*?function confirmUploadFile', re.S)
+          text, count = pattern.subn(lambda _: file_select, text)
+          assert count == 1, f'file selection replacement count: {count}'
+
+          # Request a user-supplied fine-grained token per browser session; never embed credentials in public source.
+          token_helper = r'''function getGitHubToken() {
+            var token = sessionStorage.getItem('githubUploadToken') || '';
+            if (!token) {
+              token = window.prompt('请输入具有本仓库 Contents 写入权限的 GitHub fine-grained token。令牌仅保存在当前浏览器会话中，不会写入网页源码。') || '';
+              token = token.trim();
+              if (token) sessionStorage.setItem('githubUploadToken', token);
+            }
+            return token;
+          }
+
+          function refreshAllTabs'''
+          pattern = re.compile(r'function getGitHubToken\(\) \{.*?function refreshAllTabs', re.S)
+          text, count = pattern.subn(lambda _: token_helper, text)
+          assert count == 1, f'token helper replacement count: {count}'
+
+          # Obtain the token before closing the modal and reuse it for the request.
+          text = text.replace(
+            "function confirmUploadFile() {\n  if (!selectedFile || !currentUpload) return;",
+            "function confirmUploadFile() {\n  if (!selectedFile || !currentUpload) return;\n  var githubToken = getGitHubToken();\n  if (!githubToken) { showToast('未提供 GitHub 令牌，上传已取消', true); return; }"
+          )
+          text = text.replace("xhr.setRequestHeader('Authorization', 'token ' + getGitHubToken());", "xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);")
+
+          # A Contents API commit already triggers deploy.yml on push; the extra workflow dispatch was redundant
+          # and required broader token permissions.
+          text = text.replace("            // 触发 GitHub Actions 重新部署 Pages，使新文件可访问\n            triggerRedeploy();\n", "")
+          text = text.replace("showToast('上传成功！页面正在更新，请等待3~5分钟后刷新查看（网络较差时可能需要多等一会儿）');", "showToast('上传成功！GitHub Pages 正在自动更新，请稍后刷新查看。');")
+          text = text.replace("detailEl.textContent = sizeStr + ' · 上传成功，等待3~5分钟后刷新查看';", "detailEl.textContent = sizeStr + ' · 上传成功，页面正在自动更新';")
+          pattern = re.compile(r'\nfunction triggerRedeploy\(\) \{.*?\n\}\n\nfunction getGitHubToken', re.S)
+          text, count = pattern.subn('\nfunction getGitHubToken', text)
+          assert count == 1, f'redeploy removal count: {count}'
+
+          # Reset the drop-text class when opening the modal.
+          text = text.replace("document.getElementById('dropText').textContent = '点击或拖拽文件到此处';", "document.getElementById('dropText').textContent = '点击或拖拽文件到此处';\n  document.getElementById('dropText').className = '';")
+
+          assert text != original, 'index.html was not changed'
+          assert 'var k = [103,104,111' not in text, 'embedded token still present'
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate repaired dashboard
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const src = fs.readFileSync('index.html', 'utf8');
+
+          function assert(condition, message) {
+            if (!condition) throw new Error(message);
+          }
+
+          const masterMatch = src.match(/var masterList = (\[[\s\S]*?\n\]);/);
+          assert(masterMatch, 'masterList not found');
+          const context = {};
+          vm.createContext(context);
+          vm.runInContext('var masterList = ' + masterMatch[1] + ';', context);
+
+          const skipped = new Set(['承德市','保定市','张家口市','秦皇岛市','廊坊市','雄安新区','唐山市','定州市']);
+          const municipalCities = new Set(['石家庄市','保定市','承德市','邢台市','沧州市','唐山市','衡水市','邯郸市','张家口市']);
+          const isMunicipal = (label, city) => label.includes('市级') || label.includes('市本级') || (label === city && municipalCities.has(city));
+
+          let cityCount = 0, districtCount = 0, municipalCount = 0, unitCount = 0;
+          for (const city of context.masterList) {
+            if (skipped.has(city.city)) continue;
+            cityCount++;
+            for (const item of city.items) {
+              let hasDistrict = false;
+              for (const district of item.districts) {
+                if (isMunicipal(district, city.city)) municipalCount++;
+                else { districtCount++; hasDistrict = true; }
+              }
+              if (hasDistrict) unitCount++;
+            }
+          }
+
+          assert(cityCount === 6, `expected 6 cities, got ${cityCount}`);
+          assert(districtCount === 73, `expected 73 districts/merged areas, got ${districtCount}`);
+          assert(municipalCount === 5, `expected 5 municipal tasks, got ${municipalCount}`);
+          assert(districtCount + municipalCount === 78, 'expected 78 total task units');
+          assert(unitCount === 27, `expected 27 awarded units, got ${unitCount}`);
+          assert(!isMunicipal('辛集市', '辛集市'), '辛集市 must be a county-level task');
+          assert(!isMunicipal('定州市', '定州市'), '定州市 must be a county-level task');
+          assert(isMunicipal('石家庄市', '石家庄市'), '石家庄市本级 must be municipal');
+
+          assert(src.includes('calculateDashboardStats(dataKey)'), 'centralized dashboard stats missing');
+          assert(src.includes("sessionStorage.getItem('githubUploadToken')"), 'session token flow missing');
+          assert(!src.includes('var k = [103,104,111'), 'hard-coded GitHub token remains');
+          assert(src.includes("ALLOWED_REPLY_EXTENSIONS = ['pdf','doc','docx','xlsx','xls','zip','rar']"), 'reply extension support missing');
+          assert(src.includes('if (!existing || m[2] > existing.time)'), 'latest-reply selection missing');
+          assert(!src.includes('function triggerRedeploy()'), 'redundant workflow dispatch remains');
+
+          console.log({cityCount, districtCount, municipalCount, totalTasks: districtCount + municipalCount, unitCount});
+          NODE
+
+      - name: Commit repaired files
+        shell: bash
+        run: |
+          rm -f .github/workflows/repair-dashboard.yml
+          git config user.name "dashboard-repair-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html .github/workflows/repair-dashboard.yml
+          git commit -m "fix: correct dashboard statistics and secure uploads"
+          git push origin HEAD:main
