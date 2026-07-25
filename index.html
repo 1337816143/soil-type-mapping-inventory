@@ -77,7 +77,16 @@ footer img{max-height:60px;width:auto}
 .btn-secondary:hover{background:#e2e8f0}
 .toast{position:fixed;bottom:24px;right:24px;background:#065f46;color:#fff;padding:12px 20px;border-radius:8px;font-size:.85rem;z-index:10001;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
-.toast.error{background:#991b1b}
+.toast.error{background:#991b1b}.missing-banner{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:14px 18px;margin-bottom:20px}
+.missing-banner h3{font-size:.95rem;font-weight:600;color:#92400e;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.missing-banner h3 .warn-icon{display:inline-block;width:16px;height:16px;flex-shrink:0}
+.missing-list{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.82rem;line-height:1.8}
+.missing-item{background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.missing-item .city{font-weight:600;color:#78350f;margin-right:2px}
+.missing-item .unit{color:#b45309}
+.missing-item .sep{color:#d97706;margin:0 1px}
+.missing-empty{color:#16a34a;font-size:.82rem;padding:4px 0}
+
 .upload-progress-container{margin-top:6px;padding:8px 10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;max-width:280px}
 .upload-progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
 .upload-progress-name{font-size:.75rem;color:#0369a1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
@@ -104,6 +113,7 @@ footer img{max-height:60px;width:auto}
 </header>
 
 <div class="container">
+  <div id="missingBanner" class="missing-banner" style="display:none"></div>
   <div id="tab-soilType" class="tab-content active"><div class="content"></div></div>
   <div id="tab-soilAttr" class="tab-content"><div class="content"></div></div>
   <div id="tab-farmland" class="tab-content"><div class="content"></div></div>
@@ -133,6 +143,164 @@ footer img{max-height:60px;width:auto}
 <div class="toast" id="toast"></div>
 
 <script>
+// ========== 中标单位底层数据（全量区县清单）==========
+var masterList = [
+  {city:"石家庄市", items:[
+    {unit:"河北湛泸软件开发有限公司",contact:"隋昌宏",phone:"17331141999",districts:["平山县","行唐县","灵寿县","井陉县","元氏县","赞皇县"]},
+    {unit:"河北省通烯科技有限公司",contact:"冯盼想",phone:"15511132111",districts:["赵县","高邑县","栾城区","桥西区","新华区","长安区","裕华区","矿区","石家庄市"]},
+    {unit:"北京元图科技发展有限公司",contact:"胡鲁",phone:"15628987579",districts:["新乐市","正定县","藁城区","无极县","深泽县","晋州市"]}
+  ]},
+  {city:"秦皇岛市", items:[
+    {unit:"天津华勘检验测试有限公司",contact:"李月华",phone:"18622609953",districts:["海港区","北戴河区","山海关区","抚宁区","昌黎县","卢龙县","青龙县"]}
+  ]},
+  {city:"保定市", items:[
+    {unit:"河北满山红农业科技有限公司",contact:"朱子龙",phone:"15175366505",districts:["徐水区","满城区"]},
+    {unit:"河北平普数政科技有限公司",contact:"邱志鹏",phone:"18131153987",districts:["安国市","博野县","蠡县"]},
+    {unit:"河北农业大学",contact:"周亚鹏",phone:"13603125122",districts:["阜平县","曲阳县","唐县"]},
+    {unit:"河北盛超环保科技有限公司",contact:"刘姗姗",phone:"15931875263",districts:["高碑店市","涿州市","涞水县"]},
+    {unit:"北京元图科技发展有限公司",contact:"杜慎远",phone:"13070117365",districts:["望都县","清苑区","高阳县"]},
+    {unit:"中国农业大学",contact:"周紫薇",phone:"18866141203",districts:["涞源县","易县","定兴县","顺平县"]}
+  ]},
+  {city:"承德市", items:[
+    {unit:"河北蓝拓环保科技有限公司",contact:"陈娟",phone:"13103290365",districts:["承德县","兴隆县"]},
+    {unit:"承德今图地理信息工程有限公司",contact:"常宝琪",phone:"15324160009",districts:["宽城县","平泉市"]},
+    {unit:"张家口广源测绘工程有限公司",contact:"刘明月",phone:"18803030610",districts:["滦平县"]},
+    {unit:"河北热点科技股份有限公司",contact:"王磊",phone:"15633826813",districts:["隆化县"]},
+    {unit:"河北科沃生态科技有限公司",contact:"张扬",phone:"15933975010",districts:["承德市","丰宁县"]}
+  ]},
+  {city:"邢台市", items:[
+    {unit:"河北科沃生态科技有限公司",contact:"赵颖健",phone:"16632236600",districts:["邢台市","襄都区"]},
+    {unit:"天津市地质研究和海洋地质中心",contact:"鲁庆伟",phone:"18202252297",districts:["临城县","柏乡县","隆尧县"]},
+    {unit:"中国煤炭地质总局物测队",contact:"张学奇",phone:"15135120484",districts:["信都区","沙河市","南和区"]},
+    {unit:"河北精鼎环境监测有限责任公司",contact:"刘婷婷",phone:"18631922688",districts:["宁晋县","新河县","南宫市"]},
+    {unit:"石家庄商胜信息技术有限公司",contact:"王瑶",phone:"18532115625",districts:["巨鹿县","广宗县","平乡县"]},
+    {unit:"河北诚秀科技有限公司",contact:"王思雨",phone:"13624222437",districts:["威县","清河县","临西县"]}
+  ]},
+  {city:"沧州市", items:[
+    {unit:"河北平普数政科技有限公司",contact:"张江伟",phone:"15031116584",districts:["沧州市","沧县","青县"]},
+    {unit:"河北正态环境检测有限公司",contact:"祝瑞娇",phone:"13126119941",districts:["献县","肃宁县"]},
+    {unit:"河北利古工程勘察设计有限公司",contact:"刘江龙",phone:"18833173722",districts:["河间市","任丘市"]},
+    {unit:"河北太维地理信息技术有限公司",contact:"殷其强",phone:"13731721175",districts:["盐山县","孟村县"]},
+    {unit:"河北玛恩农业科技有限公司",contact:"李晶",phone:"18531250383",districts:["黄骅市","海兴县"]},
+    {unit:"中友四达（北京）科技有限公司",contact:"王昊昕",phone:"18945618300",districts:["泊头市","吴桥县","东光县"]}
+  ]},
+  {city:"定州市", items:[
+    {unit:"北京世纪国源科技科技股份有限公司",contact:"张洁",phone:"15032634941",districts:["定州市"]}
+  ]},
+  {city:"雄安新区", items:[
+    {unit:"河北平普数政科技有限公司",contact:"邱志鹏",phone:"18131153987",districts:["雄安新区","容城县"]},
+    {unit:"北京世纪国源科技科技股份有限公司",contact:"孙洁",phone:"13718626678",districts:["雄县","安新县"]}
+  ]},
+  {city:"唐山市", items:[
+    {unit:"河北德禹检测技术有限公司",contact:"王雨",phone:"13230397925",districts:["丰南区","丰润区","玉田县","遵化市","迁安市","迁西县","乐亭县","滦南县","曹妃甸区","唐山市"]}
+  ]},
+  {city:"廊坊市", items:[
+    {unit:"河北平普数政科技有限公司",contact:"代景顺",phone:"17610972180",districts:["三河市","大厂县","香河县"]},
+    {unit:"河北科沃生态科技有限公司",contact:"张洋",phone:"15933975010",districts:["广阳区","安次区"]},
+    {unit:"河北精鼎环境监测有限责任公司",contact:"孔繁婷",phone:"18831945566",districts:["固安县","霸州市"]},
+    {unit:"河北华勃市场调查有限公司",contact:"刘玉",phone:"15001248767",districts:["文安县","大城县"]}
+  ]},
+  {city:"衡水市", items:[
+    {unit:"河北满山红农业科技有限公司",contact:"闫良育",phone:"18332540102",districts:["桃城区","冀州区"]},
+    {unit:"河北平普数政科技有限公司",contact:"王立伟",phone:"17717110121",districts:["衡水市","武邑县"]},
+    {unit:"河北德禹检测技术有限公司",contact:"李硕",phone:"15369592869",districts:["安平县","饶阳县"]},
+    {unit:"中勘大地工程技术有限公司",contact:"张杏卫",phone:"15373660188",districts:["深州市","武强县"]},
+    {unit:"河北玛恩农业科技有限公司",contact:"常思雯",phone:"13754435644",districts:["阜城县","景县"]},
+    {unit:"河北中科晟源科技有限公司",contact:"刘丽君",phone:"13137904817",districts:["枣强县","故城县"]}
+  ]},
+  {city:"邯郸市", items:[
+    {unit:"河北精鼎环境监测有限责任公司",contact:"李薇薇",phone:"15830939719",districts:["武安市","鸡泽县","曲周县"]},
+    {unit:"河北合众恩规划管理有限公司",contact:"郭婷婷",phone:"13731597136",districts:["涉县","磁县","临漳县"]},
+    {unit:"石家庄兄弟土地环境技术服务有限公司",contact:"冯菲",phone:"15200083329",districts:["魏县","成安县","广平县"]},
+    {unit:"石家庄商胜信息技术有限公司",contact:"卢光",phone:"19131122681",districts:["大名县","馆陶县","邱县"]},
+    {unit:"河北科沃生态科技有限公司",contact:"张洋",phone:"15933975010",districts:["邯山区","肥乡区","邯郸市"]}
+  ]},
+  {city:"张家口市", items:[
+    {unit:"河北科沃生态科技有限公司",contact:"张洋",phone:"15933975010",districts:["张家口市","赤城县","沽源县","康保县"]},
+    {unit:"河北平普数政科技有限公司",contact:"刘亚敏",phone:"15731313435",districts:["蔚县","阳原县","涿鹿县","怀来县"]},
+    {unit:"河北玛恩农业科技有限公司",contact:"常思雯",phone:"13754435644",districts:["张北县","尚义县","万全区","崇礼区"]},
+    {unit:"河北鸿源润泽土地规划设计有限公司",contact:"冯万忠",phone:"15127260310",districts:["怀安县","宣化区"]}
+  ]},
+  {city:"辛集市", items:[
+    {unit:"河北玛恩农业科技有限公司",contact:"段雅轩",phone:"18332857782",districts:["辛集市"]}
+  ]}
+];
+
+// 从 tabData 中提取各区县标签的集合（用于匹配）
+function collectSubmittedDistricts(dataKey) {
+  var data = tabData[dataKey];
+  if (!data) return {};
+  var result = {}; // key: "市_区县" -> true
+  data.forEach(function(city) {
+    city.units.forEach(function(unit) {
+      unit.districts.forEach(function(d) {
+        if (d.label.indexOf('市级') >= 0) return;
+        var key = city.name + '_' + d.label;
+        result[key] = true;
+      });
+    });
+  });
+  return result;
+}
+
+// 模糊匹配：master 区县名是否在已提交列表中
+function isDistrictMatched(masterDistrict, city, submittedKeys) {
+  // 先精确匹配
+  if (submittedKeys[city + '_' + masterDistrict]) return true;
+  // 去掉"县/区/市/自治县"后缀再匹配
+  var short = masterDistrict.replace(/(自治县|回族[自]?治县|[县市区])$/, '');
+  var suffixes = ['县','区','市','自治县'];
+  for (var si=0; si<suffixes.length; si++) { var suf=suffixes[si];
+    if (submittedKeys[city + '_' + short + suf]) return true;
+  }
+  // 反向：已提交的区县名去掉后缀是否匹配 master
+  for (var k in submittedKeys) {
+    if (k.indexOf(city + '_') !== 0) continue;
+    var submitted = k.substring(city.length + 1);
+    var submittedShort = submitted.replace(/(自治县|回族[自]?治县|[县市区])$/, '');
+    if (masterDistrict.indexOf(submittedShort) >= 0 || submittedShort.indexOf(masterDistrict.replace(/(自治县|回族[自]?治县|[县市区])$/, '')) >= 0) return true;
+    // 合并区特殊处理
+    if (masterDistrict.indexOf('合并') >= 0 && submitted.indexOf('合并') >= 0) return true;
+  }
+  return false;
+}
+
+// 按当前标签页类型比对缺失，渲染到顶部
+function renderMissingBanner(dataKey) {
+  var submitted = collectSubmittedDistricts(dataKey);
+  var missing = [];
+  var typeNames = {soilType:'土壤类型图', soilAttr:'土壤属性图', farmland:'耕地质量评价'};
+  var typeName = typeNames[dataKey] || '';
+
+  masterList.forEach(function(city) {
+    city.items.forEach(function(item) {
+      item.districts.forEach(function(d) {
+        if (!isDistrictMatched(d, city.city, submitted)) {
+          missing.push({city: city.city, unit: item.unit, contact: item.contact, phone: item.phone, district: d});
+        }
+      });
+    });
+  });
+
+  var banner = document.getElementById('missingBanner');
+  if (!banner) return;
+  if (missing.length === 0) {
+    banner.style.display = 'none';
+    return;
+  }
+  banner.style.display = 'block';
+  var totalDistricts = 0;
+  masterList.forEach(function(c) { c.items.forEach(function(i) { totalDistricts += i.districts.length; }); });
+  var html = '<h3><svg class="warn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
+    typeName + ' 缺失 ' + missing.length + ' 个区县</h3>';
+  html += '<div class="missing-list">';
+  missing.forEach(function(m) {
+    html += '<span class="missing-item"><span class="city">' + m.city + '</span><span class="sep">|</span>' + m.district + '<span class="sep">|</span><span class="unit">' + m.unit + '</span> ' + m.contact + ' ' + m.phone + '</span>';
+  });
+  html += '</div>';
+  banner.innerHTML = html;
+}
+
 var soilTypeData = [
   {
     "name": "沧州市",
@@ -2938,6 +3106,8 @@ for (var key in tabData) {
 
 // 加载已有整改答复索引
 loadReplyIndex();
+// 渲染当前标签页的缺失清单
+renderMissingBanner('soilType');
 
 // 标签切换
 document.querySelectorAll('.tab').forEach(function(tab) {
@@ -2948,6 +3118,7 @@ document.querySelectorAll('.tab').forEach(function(tab) {
     this.classList.add('active');
     document.getElementById('tab-' + tabKey).classList.add('active');
     document.querySelectorAll('.doc-btns.open').forEach(function(d) { d.classList.remove('open'); });
+    renderMissingBanner(tabKey);
   });
 });
 
