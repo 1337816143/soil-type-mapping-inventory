@@ -46,29 +46,31 @@ window.SOIL_UPLOAD_API_URL = '';
       window.mergeSubDistricts['沧州市'] = ['运河区', '新华区'];
     }
 
-    // 注入全宽、优先单行、市级/合并区按钮和横向整改答复样式。
+    // 注入全宽、桌面端单行优先、市级/合并区按钮和响应式样式。
     if (!document.getElementById('city-result-enhancement-style')) {
       var style = document.createElement('style');
       style.id = 'city-result-enhancement-style';
       style.textContent =
-        '.container{max-width:none!important;width:100%;padding-left:8px!important;padding-right:8px!important}' +
-        '.city-section h2{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}' +
-        '.city-section h2 .badge{margin-left:0;white-space:nowrap}' +
-        '.table-wrap{overflow-x:auto;overscroll-behavior-x:contain}' +
-        'table{width:100%;min-width:1180px;table-layout:auto}' +
-        'thead th{width:auto!important}' +
-        'thead th:first-child{width:18%!important;min-width:220px}' +
-        'thead th:nth-child(2){width:34%!important;min-width:360px}' +
-        'thead th:nth-child(3){width:8%!important;min-width:90px}' +
-        'thead th:last-child{width:40%!important;min-width:430px}' +
-        'thead th,tbody td{padding-left:8px!important;padding-right:8px!important}' +
-        'tbody td:first-child{white-space:nowrap}' +
-        '.district-list{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:4px}' +
-        '.district-link,.district-group{flex:0 0 auto}' +
-        '.batch-tag{white-space:nowrap;margin-bottom:0}' +
-        '.reply-cell{min-width:430px}' +
-        '.reply-list{display:flex;flex-wrap:nowrap;align-items:center;gap:6px 12px}' +
-        '.reply-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;flex:0 0 auto}' +
+        '.container{max-width:none!important;width:100%;padding-left:4px!important;padding-right:4px!important}' +
+        '.city-section h2{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;white-space:nowrap}' +
+        '.city-section h2 .badge{margin-left:0;white-space:nowrap;flex:0 0 auto}' +
+        '.table-wrap{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}' +
+        'table{width:max-content;min-width:100%;table-layout:auto}' +
+        'thead th{width:auto!important;white-space:nowrap}' +
+        'thead th:first-child{min-width:210px}' +
+        'thead th:nth-child(2){min-width:340px}' +
+        'thead th:nth-child(3){min-width:84px}' +
+        'thead th:last-child{min-width:420px}' +
+        'thead th,tbody td{padding-left:6px!important;padding-right:6px!important}' +
+        'tbody td{vertical-align:middle;white-space:nowrap}' +
+        '.district-list{display:flex;flex-wrap:nowrap;align-items:center;gap:4px;white-space:nowrap}' +
+        '.district-link,.district-group{flex:0 0 auto;white-space:nowrap}' +
+        '.batch-tag{display:inline-flex;white-space:nowrap;margin:0 3px 0 0}' +
+        '.reply-cell{min-width:420px;white-space:nowrap}' +
+        '.reply-list{display:flex;flex-wrap:nowrap;align-items:center;gap:4px 9px;white-space:nowrap}' +
+        '.reply-item{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;flex:0 0 auto}' +
+        '.reply-file{display:inline-flex!important;align-items:center!important;gap:5px!important;flex-wrap:nowrap!important;white-space:nowrap}' +
+        '.reply-file .time,.upload-btn,.replace-btn{white-space:nowrap}' +
         '.reply-label{font-size:.76rem;color:var(--muted);font-weight:500}' +
         '.reply-label.merged{color:#2563eb;font-weight:650}' +
         '.reply-label.municipal{color:#1e3a8a;font-weight:700}' +
@@ -76,20 +78,21 @@ window.SOIL_UPLOAD_API_URL = '';
         '.district-link.merged-link:hover,.district-group.merged .group-label:hover{background:#2563eb;color:#fff;border-color:#1d4ed8}' +
         '.district-link.municipal-link,.district-group.municipal .group-label{background:#1e40af;color:#fff;border-color:#1e3a8a;font-weight:600}' +
         '.district-link.municipal-link:hover,.district-group.municipal .group-label:hover{background:#172554;color:#fff;border-color:#172554}' +
-        '@media(max-width:1400px){' +
-          'table{min-width:1080px}' +
-          'thead th:first-child{min-width:190px}' +
-          'thead th:nth-child(2){min-width:300px}' +
-          'thead th:last-child{min-width:350px}' +
-          '.district-list,.reply-list{flex-wrap:wrap}' +
-          '.reply-cell{min-width:320px}' +
+        '@media(max-width:1200px){' +
+          '.container{padding-left:6px!important;padding-right:6px!important}' +
+          'thead th,tbody td{padding-left:5px!important;padding-right:5px!important}' +
+          '.district-list{gap:3px}' +
+          '.reply-list{gap:4px 7px}' +
+          '.district-link,.group-label,.batch-tag,.reply-item{font-size:.78rem}' +
         '}' +
-        '@media(max-width:900px){' +
-          '.container{padding-left:10px!important;padding-right:10px!important}' +
-          '.city-section h2{flex-wrap:wrap}' +
-          'table{min-width:900px}' +
+        '@media(max-width:760px){' +
+          '.container{padding-left:8px!important;padding-right:8px!important}' +
+          '.city-section h2{flex-wrap:wrap;white-space:normal}' +
+          '.city-section h2 .badge{white-space:normal}' +
+          'table{width:100%;min-width:820px}' +
           'tbody td:first-child{white-space:normal}' +
-          '.reply-cell{min-width:260px}' +
+          '.district-list,.reply-list{flex-wrap:wrap;white-space:normal}' +
+          '.reply-cell{min-width:280px;white-space:normal}' +
         '}';
       document.head.appendChild(style);
     }
