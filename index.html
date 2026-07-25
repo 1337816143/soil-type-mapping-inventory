@@ -3044,7 +3044,9 @@ function confirmUploadFile() {
           setTimeout(function() {
             replyIndex[uploadKey] = { file: newFileName, time: time };
             refreshAllTabs();
-            showToast('上传成功');
+            showToast('上传成功，页面正在更新...');
+            // 触发 GitHub Actions 重新部署 Pages，使新文件可访问
+            triggerRedeploy();
           }, 600);
         } else {
           var errMsg = '上传失败';
@@ -3126,6 +3128,15 @@ function removeUploadProgress(el, delay) {
   setTimeout(function() {
     if (el.parentNode) el.parentNode.removeChild(el);
   }, delay || 2000);
+}
+
+function triggerRedeploy() {
+  // 上传文件到仓库后，GitHub Pages 不会自动刷新，需要触发 Actions 重新部署
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/actions/workflows/deploy.yml/dispatches', true);
+  xhr.setRequestHeader('Authorization', 'token ' + getGitHubToken());
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({ref: 'main'}));
 }
 
 function getGitHubToken() {
