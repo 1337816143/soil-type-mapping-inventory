@@ -31,6 +31,7 @@ jobs:
           sparse-checkout: |
             index.html
             upload-config.js
+            page-enhancements.js
             assets
             data
             replies
@@ -44,8 +45,12 @@ jobs:
           grep -q "var municipalCities" index.html
           grep -q "实际值必须命中主清单中的唯一任务单元" index.html
           grep -q 'upload-config.js' index.html
-          grep -q 'SOIL_UPLOAD_API_URL' index.html
+          grep -q 'SOIL_UPLOAD_API_URL' upload-config.js
+          grep -q 'page-enhancements.js' upload-config.js
+          grep -q '第三次全国土壤普查' page-enhancements.js
+          grep -q 'missing-layout' page-enhancements.js
           test -f upload-config.js
+          test -f page-enhancements.js
           if grep -q "已有数据（从 tabData 统计" index.html; then
             echo "旧版直接计数逻辑仍然存在，停止部署。"
             exit 1
@@ -54,7 +59,7 @@ jobs:
             echo "前端仍包含 Token 输入逻辑，停止部署。"
             exit 1
           fi
-          echo "统计与 Worker 上传前端校验通过。"
+          echo "统计、上传和页面增强前端校验通过。"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
