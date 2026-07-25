@@ -9,3 +9,156 @@
 
 // 备用方案：Cloudflare Worker 地址。未部署时保持为空。
 window.SOIL_UPLOAD_API_URL = '';
+
+// 页面增强：补充沧州合并区、统一成果计数、市级成果并入公司行、整改答复横向排列。
+(function() {
+  function installCityResultEnhancements() {
+    if (!window.masterList || !window.renderCities || !window.calculateDashboardStats) return;
+
+    // 1. 补充沧州市合并区成果。联系人和电话未提供，保持为空。
+    var cangzhou = null;
+    for (var i = 0; i < window.masterList.length; i++) {
+      if (window.masterList[i].city === '沧州市') {
+        cangzhou = window.masterList[i];
+        break;
+      }
+    }
+    if (cangzhou) {
+      var exists = false;
+      for (var j = 0; j < cangzhou.items.length; j++) {
+        if (cangzhou.items[j].unit === '沧州华江工程勘察设计有限公司') {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) {
+        cangzhou.items.push({
+          unit: '沧州华江工程勘察设计有限公司',
+          contact: '',
+          phone: '',
+          districts: ['合并区']
+        });
+      }
+    }
+
+    // 兼容历史成果以运河区或新华区命名的情况。
+    if (window.mergeSubDistricts) {
+      window.mergeSubDistricts['沧州市'] = ['运河区', '新华区'];
+    }
+
+    // 注入市级按钮和横向整改答复样式。
+    if (!document.getElementById('city-result-enhancement-style')) {
+      var style = document.createElement('style');
+      style.id = 'city-result-enhancement-style';
+      style.textContent =
+        '.reply-cell{min-width:300px}' +
+        '.reply-list{display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px}' +
+        '.reply-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}' +
+        '.reply-label{font-size:.76rem;color:var(--muted);font-weight:500}' +
+        '.reply-label.municipal{color:#1e3a8a;font-weight:700}' +
+        '.district-link.municipal-link,.district-group.municipal .group-label{background:#1e40af;color:#fff;border-color:#1e3a8a;font-weight:600}' +
+        '.district-link.municipal-link:hover,.district-group.municipal .group-label:hover{background:#172554;color:#fff;border-color:#172554}';
+      document.head.appendChild(style);
+    }
+
+    // 2/3/4. 统一渲染：市级成果不再单独列出，和区县成果放在所属公司同一行。
+    window.renderCities = function(cities, dataKey) {
+      var dashboardStats = window.calculateDashboardStats(dataKey);
+      var totalUnits = dashboardStats.totalUnits;
+      var totalDistricts = dashboardStats.totalDistricts;
+      var totalMunicipal = dashboardStats.totalMunicipal;
+      var expUnits = dashboardStats.expUnits;
+      var expDistricts = dashboardStats.expDistricts;
+      var expMunicipal = dashboardStats.expMunicipal;
+
+      var html = '<div class="summary-bar">';
+      html += '<div class="summary-card"><div class="num">' + totalDistricts + ' / ' + expDistricts + '</div><div class="label">区县（含合并区）</div></div>';
+      html += '<div class="summary-card"><div class="num">' + totalMunicipal + ' / ' + expMunicipal + '</div><div class="label">市级</div></div>';
+      html += '<div class="summary-card"><div class="num">' + totalUnits + ' / ' + expUnits + '</div><div class="label">作业单位</div></div>';
+      html += '<div class="summary-card"><div class="num">' + (totalDistricts + totalMunicipal) + ' / ' + (expDistricts + expMunicipal) + '</div><div class="label">任务单元</div></div>';
+      html += '</div>';
+
+      cities.forEach(function(city) {
+        var unitCount = 0;
+        var districtCount = 0;
+        var municipalCount = 0;
+
+        city.units.forEach(function(unit) {
+          var outcomes = unit.districts || [];
+          if (outcomes.length > 0) unitCount++;
+          outcomes.forEach(function(d) {
+            if (window.isMunicipalTask(d.label, city.name)) municipalCount++;
+            else districtCount++;
+          });
+        });
+
+        var resultCount = districtCount + municipalCount;
+        html += '<section class="city-section"><h2>' + city.name +
+          ' <span class="badge">' + unitCount + ' 家单位 · ' + resultCount +
+          ' 成果：' + municipalCount + ' 市级 | ' + districtCount +
+          ' 区县（含合并区）</span></h2>';
+        html += '<div class="table-wrap"><table><thead><tr><th>作业单位</th><th>成果</th><th>批次</th><th>整改答复</th></tr></thead><tbody>';
+
+        city.units.forEach(function(unit) {
+          var outcomes = unit.districts || [];
+          if (outcomes.length === 0) return;
+
+          var batches = [];
+          outcomes.forEach(function(d) {
+            (d.docs || []).forEach(function(doc) {
+              if (batches.indexOf(doc.batch) < 0) batches.push(doc.batch);
+            });
+          });
+
+          html += '<tr><td>' + unit.name + '</td><td><div class="district-list">';
+          outcomes.forEach(function(d) {
+            var municipal = window.isMunicipalTask(d.label, city.name);
+            var linkClass = 'district-link' + (municipal ? ' municipal-link' : '');
+            var docs = d.docs || [];
+
+            if (docs.length === 1) {
+              var url = window.BASE + '/' + docs[0].file;
+              html += '<a class="' + linkClass + '" href="' + url + '" target="_blank">' + d.label + ' ' + window.PDF_ICON + '</a>';
+            } else if (docs.length > 1) {
+              html += '<div class="district-group' + (municipal ? ' municipal' : '') + '"><span class="group-label">' + d.label + ' ▾</span><div class="doc-btns">';
+              docs.forEach(function(doc) {
+                var url = window.BASE + '/' + doc.file;
+                html += '<a class="doc-btn" href="' + url + '" target="_blank">' + window.PDF_ICON + ' ' + doc.batch + '</a>';
+              });
+              html += '</div></div>';
+            } else {
+              html += '<span class="' + linkClass + '">' + d.label + '</span>';
+            }
+          });
+          html += '</div></td><td>';
+          batches.forEach(function(batch) {
+            html += '<span class="batch-tag ' + (window.batchClass[batch] || '') + '">' + batch + '</span>';
+          });
+          html += '</td><td class="reply-cell"><div class="reply-list">';
+          outcomes.forEach(function(d) {
+            var municipal = window.isMunicipalTask(d.label, city.name);
+            html += '<div class="reply-item"><span class="reply-label' + (municipal ? ' municipal' : '') + '">' + d.label + ':</span>' +
+              window.renderReplyCell(city.name, unit.name, d.label) + '</div>';
+          });
+          html += '</div></td></tr>';
+        });
+
+        html += '</tbody></table></div></section>';
+      });
+      return html;
+    };
+
+    // 立即刷新三个标签页和当前缺失统计。
+    if (window.refreshAllTabs) window.refreshAllTabs();
+    var activeTab = document.querySelector('.tab.active');
+    if (activeTab && window.renderMissingBanner) {
+      window.renderMissingBanner(activeTab.getAttribute('data-tab'));
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', installCityResultEnhancements);
+  } else {
+    installCityResultEnhancements();
+  }
+})();
