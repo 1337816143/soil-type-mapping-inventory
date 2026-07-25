@@ -3334,85 +3334,170 @@ function handleFileSelect(file) {
   document.getElementById('confirmUpload').disabled = false;
 }
 
+function getDirectGitHubToken() {
+  var token = String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim();
+  if (!token || token === 'REPLACE_WITH_NEW_FINE_GRAINED_TOKEN') return '';
+  return token;
+}
+
 function getUploadApiUrl() {
   return String(window.SOIL_UPLOAD_API_URL || '').trim();
 }
 
-function confirmUploadFile() {
-  if (!selectedFile || !currentUpload) return;
+function completeUpload(uploadKey, newFileName, time, file, progressEl) {
+  updateUploadProgress(progressEl, 100, file.size, 'success');
+  setTimeout(function() {
+    replyIndex[uploadKey] = { file: newFileName, time: time };
+    refreshAllTabs();
+    showToast('上传成功！GitHub Pages 正在自动更新，请稍后刷新查看。');
+  }, 600);
+}
 
+function failUpload(progressEl, file, message) {
+  var errMsg = '上传失败: ' + message;
+  updateUploadProgress(progressEl, 0, file.size, 'error', errMsg);
+  showToast(errMsg, true);
+  removeUploadProgress(progressEl, 5000);
+}
+
+function uploadViaWorker(context) {
   var uploadApiUrl = getUploadApiUrl();
   if (!uploadApiUrl) {
-    showToast('上传服务尚未完成部署，请联系管理员配置 Cloudflare Worker', true);
+    failUpload(context.progressEl, context.file, 'GitHub 直传失败，备用上传服务尚未配置');
     return;
   }
 
-  // 先保存所有需要的值，因为 closeUploadModal 会清空 currentUpload 和 selectedFile
-  var uploadKey = currentUpload.key;
-  var uploadCity = currentUpload.city;
-  var uploadUnit = currentUpload.unit;
-  var uploadDistrict = currentUpload.district;
-  var file = selectedFile;
-
-  // 关闭弹窗，在按钮位置显示进度条
-  closeUploadModal();
-  var progressEl = showUploadProgress(uploadKey, uploadDistrict, file);
-
   var form = new FormData();
-  form.append('file', file, file.name);
-  form.append('key', uploadKey);
-  form.append('city', uploadCity);
-  form.append('unit', uploadUnit);
-  form.append('district', uploadDistrict);
+  form.append('file', context.file, context.file.name);
+  form.append('key', context.uploadKey);
+  form.append('city', context.uploadCity);
+  form.append('unit', context.uploadUnit);
+  form.append('district', context.uploadDistrict);
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', uploadApiUrl, true);
+  xhr.timeout = 180000;
 
-  // 浏览器到 Worker 的真实上传进度
   xhr.upload.addEventListener('progress', function(evt) {
     if (evt.lengthComputable) {
-      var pct = Math.round((evt.loaded / evt.total) * 100);
-      updateUploadProgress(progressEl, pct, file.size);
+      updateUploadProgress(context.progressEl, Math.round((evt.loaded / evt.total) * 100), context.file.size);
     }
   });
 
   xhr.onreadystatechange = function() {
     if (xhr.readyState !== 4) return;
-
     var result = {};
     try { result = JSON.parse(xhr.responseText || '{}'); } catch(ex) {}
-
     if (xhr.status >= 200 && xhr.status < 300 && result.ok) {
-      var newFileName = result.file;
-      var time = result.time || getNow();
-      updateUploadProgress(progressEl, 100, file.size, 'success');
-      setTimeout(function() {
-        replyIndex[uploadKey] = { file: newFileName, time: time };
-        refreshAllTabs();
-        showToast('上传成功！页面正在自动更新，请稍后刷新查看。');
-      }, 600);
+      completeUpload(context.uploadKey, result.file, result.time || getNow(), context.file, context.progressEl);
     } else {
-      var errMsg = '上传失败: ' + (result.message || ('服务返回 HTTP ' + xhr.status));
-      updateUploadProgress(progressEl, 0, file.size, 'error', errMsg);
-      showToast(errMsg, true);
-      removeUploadProgress(progressEl, 5000);
+      failUpload(context.progressEl, context.file, result.message || ('备用服务返回 HTTP ' + xhr.status));
     }
   };
 
   xhr.onerror = function() {
-    updateUploadProgress(progressEl, 0, file.size, 'error', '网络错误或上传服务不可用');
-    showToast('上传失败: 网络错误或上传服务不可用', true);
-    removeUploadProgress(progressEl, 5000);
+    failUpload(context.progressEl, context.file, '备用上传服务网络错误');
   };
-
   xhr.ontimeout = function() {
-    updateUploadProgress(progressEl, 0, file.size, 'error', '上传超时');
-    showToast('上传失败: 上传超时，请重试', true);
-    removeUploadProgress(progressEl, 5000);
+    failUpload(context.progressEl, context.file, '备用上传服务超时');
+  };
+  xhr.send(form);
+}
+
+function uploadDirectToGitHub(context, token) {
+  var reader = new FileReader();
+  reader.onerror = function() {
+    failUpload(context.progressEl, context.file, '无法读取本地文件');
+  };
+  reader.onload = function(e) {
+    var base64 = String(e.target.result || '').split(',')[1] || '';
+    if (!base64) {
+      failUpload(context.progressEl, context.file, '文件编码失败');
+      return;
+    }
+
+    var extension = (context.file.name.split('.').pop() || '').toLowerCase();
+    var time = getNow();
+    var newFileName = context.uploadKey + '_整改答复_' + time + '.' + extension;
+    var url = 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/replies/' + encodeURIComponent(newFileName);
+    var body = JSON.stringify({
+      message: '整改答复: ' + context.uploadKey,
+      content: base64,
+      branch: 'main'
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', url, true);
+    xhr.timeout = 180000;
+    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+    xhr.setRequestHeader('X-GitHub-Api-Version', '2022-11-28');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.upload.addEventListener('progress', function(evt) {
+      if (evt.lengthComputable) {
+        updateUploadProgress(context.progressEl, Math.round((evt.loaded / evt.total) * 100), context.file.size);
+      }
+    });
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status >= 200 && xhr.status < 300) {
+        completeUpload(context.uploadKey, newFileName, time, context.file, context.progressEl);
+        return;
+      }
+
+      var result = {};
+      try { result = JSON.parse(xhr.responseText || '{}'); } catch(ex) {}
+      var message = result.message || ('GitHub 返回 HTTP ' + xhr.status);
+      if (getUploadApiUrl()) {
+        showToast('GitHub 直传失败，正在尝试备用上传服务…', true);
+        uploadViaWorker(context);
+      } else {
+        failUpload(context.progressEl, context.file, message);
+      }
+    };
+
+    xhr.onerror = function() {
+      if (getUploadApiUrl()) {
+        showToast('GitHub 直传网络错误，正在尝试备用上传服务…', true);
+        uploadViaWorker(context);
+      } else {
+        failUpload(context.progressEl, context.file, '连接 GitHub 失败');
+      }
+    };
+    xhr.ontimeout = function() {
+      if (getUploadApiUrl()) uploadViaWorker(context);
+      else failUpload(context.progressEl, context.file, '连接 GitHub 超时');
+    };
+    xhr.send(body);
+  };
+  reader.readAsDataURL(context.file);
+}
+
+function confirmUploadFile() {
+  if (!selectedFile || !currentUpload) return;
+
+  var context = {
+    uploadKey: currentUpload.key,
+    uploadCity: currentUpload.city,
+    uploadUnit: currentUpload.unit,
+    uploadDistrict: currentUpload.district,
+    file: selectedFile,
+    progressEl: null
   };
 
-  xhr.timeout = 180000;
-  xhr.send(form);
+  closeUploadModal();
+  context.progressEl = showUploadProgress(context.uploadKey, context.uploadDistrict, context.file);
+
+  var token = getDirectGitHubToken();
+  if (token) {
+    uploadDirectToGitHub(context, token);
+  } else if (getUploadApiUrl()) {
+    uploadViaWorker(context);
+  } else {
+    failUpload(context.progressEl, context.file, '上传凭证与备用服务均未配置');
+  }
 }
 
 // ========== 进度条管理 ==========
