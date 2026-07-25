@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  # 多次连续提交时取消旧部署，避免旧版页面在新版之后才上线。
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,16 +23,30 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: main
+          fetch-depth: 1
           sparse-checkout: |
             index.html
             assets
             data
             replies
           sparse-checkout-cone-mode: false
+
+      - name: Validate dashboard statistics version
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "calculateDashboardStats(dataKey)" index.html
+          grep -q "var municipalCities" index.html
+          grep -q "实际值必须命中主清单中的唯一任务单元" index.html
+          if grep -q "已有数据（从 tabData 统计" index.html; then
+            echo "旧版直接计数逻辑仍然存在，停止部署。"
+            exit 1
+          fi
+          echo "统计修复版本校验通过。"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
