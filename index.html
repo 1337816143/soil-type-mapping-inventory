@@ -2772,7 +2772,31 @@ var farmlandData = [
 ];
 
 var REPLY_BASE = './replies';
-var replyIndex = {"沧州市_易景科技（天津）股份有限公司_孟村回族自治县": {"file": "沧州市_易景科技（天津）股份有限公司_孟村回族自治县_整改答复_20260724.pdf", "time": "20260724"}, "沧州市_沧州华江工程勘察设计有限公司_沧县": {"file": "沧州市_沧州华江工程勘察设计有限公司_沧县_整改答复_20260724.pdf", "time": "20260724"}, "沧州市_河北司南地理信息工程有限公司_东光县": {"file": "沧州市_河北司南地理信息工程有限公司_东光县_整改答复_20260724.pdf", "time": "20260724"}};
+var replyIndex = {};
+
+// 页面加载时动态获取 replies 目录索引
+function loadReplyIndex() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/1337816143/soil-type-mapping-inventory/contents/replies', true);
+  xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      try {
+        var files = JSON.parse(xhr.responseText);
+        files.forEach(function(f) {
+          if (!f.name || !f.name.endsWith('.pdf')) return;
+          // 文件名格式: 市名_单位名_区县名_整改答复_时间.pdf
+          var m = f.name.match(/^(.*)_整改答复_([0-9]+)\.pdf$/);
+          if (m) {
+            replyIndex[m[1]] = { file: f.name, time: m[2] };
+          }
+        });
+      } catch(e) {}
+      refreshAllTabs();
+    }
+  };
+  xhr.send();
+}
 
 var PDF_ICON = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
 var UPLOAD_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
@@ -2911,6 +2935,9 @@ for (var key in tabData) {
   var el = document.querySelector('#tab-' + key + ' .content');
   if (el) el.innerHTML = renderCities(tabData[key]);
 }
+
+// 加载已有整改答复索引
+loadReplyIndex();
 
 // 标签切换
 document.querySelectorAll('.tab').forEach(function(tab) {
