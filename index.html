@@ -266,6 +266,9 @@ function isDistrictMatched(masterDistrict, city, submittedKeys) {
 }
 
 // 按当前标签页类型比对缺失，渲染到顶部
+// 暂不统计缺失的市（数据保留在 masterList 中备用）
+var skipMissingCities = ['承德市','保定市','张家口市','秦皇岛市','廊坊市','雄安新区'];
+
 function renderMissingBanner(dataKey) {
   var submitted = collectSubmittedDistricts(dataKey);
   var missing = [];
@@ -273,6 +276,7 @@ function renderMissingBanner(dataKey) {
   var typeName = typeNames[dataKey] || '';
 
   masterList.forEach(function(city) {
+    if (skipMissingCities.indexOf(city.city) >= 0) return;
     city.items.forEach(function(item) {
       item.districts.forEach(function(d) {
         if (!isDistrictMatched(d, city.city, submitted)) {
