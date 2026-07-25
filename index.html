@@ -278,37 +278,62 @@ var skipMissingCities = ['承德市','保定市','张家口市','秦皇岛市','
 
 function renderMissingBanner(dataKey) {
   var submitted = collectSubmittedDistricts(dataKey);
-  var missing = [];
   var typeNames = {soilType:'土壤类型图', soilAttr:'土壤属性图', farmland:'耕地质量评价'};
   var typeName = typeNames[dataKey] || '';
+  // 按市统计：{city, total, matched, missing: [{district,unit,contact,phone}]}
+  var cityStats = [];
+  var allMissing = [];
+  var totalExpected = 0, totalMatched = 0;
 
   masterList.forEach(function(city) {
     if (skipMissingCities.indexOf(city.city) >= 0) return;
+    var cityExpected = 0, cityMatched = 0, cityMissing = [];
     city.items.forEach(function(item) {
       item.districts.forEach(function(d) {
-        if (!isDistrictMatched(d, city.city, submitted)) {
-          missing.push({city: city.city, unit: item.unit, contact: item.contact, phone: item.phone, district: d});
+        cityExpected++;
+        if (isDistrictMatched(d, city.city, submitted)) {
+          cityMatched++;
+        } else {
+          cityMissing.push({district:d, unit:item.unit, contact:item.contact, phone:item.phone});
+          allMissing.push({city:city.city, district:d, unit:item.unit, contact:item.contact, phone:item.phone});
         }
       });
     });
+    totalExpected += cityExpected;
+    totalMatched += cityMatched;
+    cityStats.push({city:city.city, total:cityExpected, matched:cityMatched, missing:cityMissing});
   });
 
   var banner = document.getElementById('missingBanner');
   if (!banner) return;
-  if (missing.length === 0) {
-    banner.style.display = 'none';
-    return;
-  }
+  // 即使无缺失也显示统计表
   banner.style.display = 'block';
-  var totalDistricts = 0;
-  masterList.forEach(function(c) { c.items.forEach(function(i) { totalDistricts += i.districts.length; }); });
+  var totalMissing = totalExpected - totalMatched;
   var html = '<h3><svg class="warn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>' +
-    typeName + ' 缺失 ' + missing.length + ' 个区县</h3>';
-  html += '<div class="missing-list">';
-  missing.forEach(function(m) {
-    html += '<span class="missing-item"><span class="city">' + m.city + '</span><span class="sep">|</span>' + m.district + '<span class="sep">|</span><span class="unit">' + m.unit + '</span> ' + m.contact + ' ' + m.phone + '</span>';
+    typeName + ' 收缴进度：应有 ' + totalExpected + ' 个，实际 ' + totalMatched + ' 个' + (totalMissing > 0 ? '，<span style="color:#dc2626;font-weight:700">缺失 ' + totalMissing + ' 个</span>' : '，<span style="color:#16a34a;font-weight:700">已全部收缴</span>') + '</h3>';
+  // 汇总表
+  html += '<table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:' + (allMissing.length > 0 ? '14' : '0') + 'px"><thead><tr><th style="text-align:left;padding:6px 10px;border-bottom:2px solid #e2e8f0;background:#f5f7fa">市</th><th style="text-align:center;padding:6px 10px;border-bottom:2px solid #e2e8f0;background:#f5f7fa">应有</th><th style="text-align:center;padding:6px 10px;border-bottom:2px solid #e2e8f0;background:#f5f7fa">实际</th><th style="text-align:center;padding:6px 10px;border-bottom:2px solid #e2e8f0;background:#f5f7fa">缺失</th></tr></thead><tbody>';
+  cityStats.forEach(function(cs) {
+    var miss = cs.total - cs.matched;
+    var color = miss > 0 ? 'color:#dc2626' : 'color:#16a34a';
+    html += '<tr><td style="padding:5px 10px;border-bottom:1px solid #e2e8f0;font-weight:600">' + cs.city + '</td>';
+    html += '<td style="text-align:center;padding:5px 10px;border-bottom:1px solid #e2e8f0">' + cs.total + '</td>';
+    html += '<td style="text-align:center;padding:5px 10px;border-bottom:1px solid #e2e8f0">' + cs.matched + '</td>';
+    html += '<td style="text-align:center;padding:5px 10px;border-bottom:1px solid #e2e8f0;' + color + ';font-weight:700">' + miss + '</td></tr>';
   });
-  html += '</div>';
+  html += '<tr style="font-weight:700;background:#f5f7fa"><td style="padding:6px 10px;border-top:2px solid #e2e8f0">合计</td>';
+  html += '<td style="text-align:center;padding:6px 10px;border-top:2px solid #e2e8f0">' + totalExpected + '</td>';
+  html += '<td style="text-align:center;padding:6px 10px;border-top:2px solid #e2e8f0">' + totalMatched + '</td>';
+  html += '<td style="text-align:center;padding:6px 10px;border-top:2px solid #e2e8f0;color:' + (totalMissing > 0 ? '#dc2626' : '#16a34a') + '">' + totalMissing + '</td></tr>';
+  html += '</tbody></table>';
+  // 缺失详情
+  if (allMissing.length > 0) {
+    html += '<div class="missing-list">';
+    allMissing.forEach(function(m) {
+      html += '<span class="missing-item"><span class="city">' + m.city + '</span><span class="sep">|</span>' + m.district + '<span class="sep">|</span><span class="unit">' + m.unit + '</span> ' + m.contact + ' ' + m.phone + '</span>';
+    });
+    html += '</div>';
+  }
   banner.innerHTML = html;
 }
 
