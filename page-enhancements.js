@@ -9,6 +9,31 @@
     });
   }
 
+  function loadReleaseStagedUpload() {
+    var NativeMutationObserver = window.MutationObserver;
+    var used = false;
+
+    if (typeof NativeMutationObserver !== 'function') {
+      return loadScript('./release-staged-upload.js?v=20260726-2');
+    }
+
+    function OneShotMutationObserver(callback) {
+      if (used) return new NativeMutationObserver(callback);
+      used = true;
+      return new NativeMutationObserver(function (records, observer) {
+        observer.disconnect();
+        callback(records, observer);
+      });
+    }
+
+    OneShotMutationObserver.prototype = NativeMutationObserver.prototype;
+    window.MutationObserver = OneShotMutationObserver;
+
+    return loadScript('./release-staged-upload.js?v=20260726-2').finally(function () {
+      window.MutationObserver = NativeMutationObserver;
+    });
+  }
+
   loadScript('./page-enhancements-core.js')
     .then(function () { return loadScript('./dashboard-extension.js'); })
     .then(function () { return loadScript('./reference-library.js'); })
@@ -20,6 +45,6 @@
     .then(function () { return loadScript('./upload-auth-reply-batch.js'); })
     .then(function () { return loadScript('./upload-token-default.js'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
-    .then(function () { return loadScript('./release-staged-upload.js'); })
+    .then(loadReleaseStagedUpload)
     .catch(function (error) { console.error(error); });
 })();
