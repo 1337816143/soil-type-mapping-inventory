@@ -13,26 +13,36 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  script.src = './page-enhancements.js?v=20260725-2';
+  script.src = './page-enhancements.js?v=20260725-3';
   script.async = false;
-  document.head.appendChild(script);
 
-  // 三普 Logo 必须保持原始比例，固定为正方形显示，禁止任何方向拉伸。
-  var style = document.createElement('style');
-  style.id = 'soil-survey-logo-ratio-fix';
-  style.textContent =
-    '.footer-brand.survey img{' +
-      'width:68px!important;height:68px!important;' +
-      'min-width:68px!important;max-width:68px!important;' +
-      'min-height:68px!important;max-height:68px!important;' +
-      'aspect-ratio:1/1!important;object-fit:contain!important;' +
-      'display:block!important;flex:0 0 68px!important;' +
-    '}' +
-    '@media(max-width:640px){.footer-brand.survey img{' +
-      'width:56px!important;height:56px!important;' +
-      'min-width:56px!important;max-width:56px!important;' +
-      'min-height:56px!important;max-height:56px!important;' +
-      'flex-basis:56px!important;' +
-    '}}';
-  document.head.appendChild(style);
+  // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。
+  script.onload = function() {
+    var oldStyle = document.getElementById('soil-survey-logo-ratio-fix');
+    if (oldStyle) oldStyle.remove();
+
+    var style = document.createElement('style');
+    style.id = 'soil-survey-logo-ratio-fix';
+    style.textContent =
+      '.footer-brand.survey{flex:0 0 auto!important;min-width:0!important}' +
+      '.footer-brand.survey img{' +
+        'display:block!important;' +
+        'width:68px!important;height:68px!important;' +
+        'min-width:68px!important;max-width:68px!important;' +
+        'min-height:68px!important;max-height:68px!important;' +
+        'aspect-ratio:1 / 1!important;' +
+        'object-fit:contain!important;object-position:center!important;' +
+        'flex-grow:0!important;flex-shrink:0!important;flex-basis:68px!important;' +
+        'border-radius:0!important;' +
+      '}' +
+      '@media(max-width:640px){.footer-brand.survey img{' +
+        'width:56px!important;height:56px!important;' +
+        'min-width:56px!important;max-width:56px!important;' +
+        'min-height:56px!important;max-height:56px!important;' +
+        'flex-basis:56px!important;' +
+      '}}';
+    document.head.appendChild(style);
+  };
+
+  document.head.appendChild(script);
 })();
