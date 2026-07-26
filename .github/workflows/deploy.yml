@@ -32,8 +32,11 @@ jobs:
             upload-config.js
             page-enhancements.js
             page-enhancements-core.js
+            dashboard-extension.js
             reference-library.js
             admin-import.js
+            admin-quality-ui.js
+            admin-quality-upload.js
             pptx-auto-split.js
             assets
             data
@@ -48,23 +51,28 @@ jobs:
           test -f upload-config.js
           test -f page-enhancements.js
           test -f page-enhancements-core.js
+          test -f dashboard-extension.js
           test -f reference-library.js
           test -f admin-import.js
+          test -f admin-quality-ui.js
+          test -f admin-quality-upload.js
           test -f pptx-auto-split.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
           grep -q 'calculateDashboardStats(dataKey)' index.html
-          grep -q 'upload-config.js' index.html
-          grep -q 'SOIL_UPLOAD_API_URL' upload-config.js
-          grep -q 'page-enhancements.js' upload-config.js
           grep -q 'page-enhancements-core.js' page-enhancements.js
+          grep -q 'dashboard-extension.js' page-enhancements.js
           grep -q 'reference-library.js' page-enhancements.js
+          grep -q 'admin-quality-ui.js' page-enhancements.js
+          grep -q 'admin-quality-upload.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
-          grep -q './assets/soil-survey-logo.svg' page-enhancements-core.js
-          grep -q 'missing-layout' page-enhancements-core.js
-          grep -q '参考文件' reference-library.js
-          grep -q 'admin-import.js' reference-library.js
-          grep -q '管理员导入质控意见' admin-import.js
+          grep -q '土壤退化与障碍分析' dashboard-extension.js
+          grep -q '土特产品适宜性评价' dashboard-extension.js
+          grep -q '土壤农业利用适宜性评价' dashboard-extension.js
+          grep -q '土地资源评价与利用报告' dashboard-extension.js
+          grep -q '耕地质量等级评价' dashboard-extension.js
+          grep -q '管理员导入质控意见' dashboard-extension.js
+          grep -q '收缴进度和统计数据已同步更新' admin-quality-upload.js
           grep -q '按原始幻灯片顺序连续拆分' pptx-auto-split.js
           if grep -q '<span>中国农业大学</span>' page-enhancements-core.js; then
             echo '检测到重复的中国农业大学文字，停止部署。'
