@@ -34,6 +34,7 @@ jobs:
             page-enhancements-core.js
             reference-library.js
             admin-import.js
+            pptx-auto-split.js
             assets
             data
             replies
@@ -49,6 +50,7 @@ jobs:
           test -f page-enhancements-core.js
           test -f reference-library.js
           test -f admin-import.js
+          test -f pptx-auto-split.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
           grep -q 'calculateDashboardStats(dataKey)' index.html
@@ -57,11 +59,13 @@ jobs:
           grep -q 'page-enhancements.js' upload-config.js
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'reference-library.js' page-enhancements.js
+          grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q './assets/soil-survey-logo.svg' page-enhancements-core.js
           grep -q 'missing-layout' page-enhancements-core.js
           grep -q '参考文件' reference-library.js
           grep -q 'admin-import.js' reference-library.js
           grep -q '管理员导入质控意见' admin-import.js
+          grep -q '按原始幻灯片顺序连续拆分' pptx-auto-split.js
           if grep -q '<span>中国农业大学</span>' page-enhancements-core.js; then
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1

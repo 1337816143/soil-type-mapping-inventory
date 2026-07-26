@@ -11,5 +11,6 @@
 
   loadScript('./page-enhancements-core.js')
     .then(function () { return loadScript('./reference-library.js'); })
+    .then(function () { return loadScript('./pptx-auto-split.js'); })
     .catch(function (error) { console.error(error); });
 })();
