@@ -20,5 +20,6 @@
     .then(function () { return loadScript('./upload-auth-reply-batch.js'); })
     .then(function () { return loadScript('./upload-token-default.js'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
+    .then(function () { return loadScript('./release-staged-upload.js'); })
     .catch(function (error) { console.error(error); });
 })();
