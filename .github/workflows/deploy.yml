@@ -38,6 +38,46 @@ jobs:
             replies
           sparse-checkout-cone-mode: false
 
+      - name: Normalize footer branding
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import re
+
+          js_path = Path('page-enhancements.js')
+          text = js_path.read_text(encoding='utf-8')
+          assets = Path('assets')
+          assets.mkdir(exist_ok=True)
+          logo_path = assets / 'soil-survey-logo.jpg'
+
+          embedded = re.search(r"var SOIL_SURVEY_LOGO = 'data:image/jpeg;base64,([^']+)';", text)
+          if embedded:
+              logo_path.write_bytes(base64.b64decode(embedded.group(1)))
+              text = re.sub(
+                  r"var SOIL_SURVEY_LOGO = 'data:image/jpeg;base64,[^']+';",
+                  "var SOIL_SURVEY_LOGO = './assets/soil-survey-logo.jpg';",
+                  text,
+                  count=1,
+              )
+
+          text = text.replace(
+              "'<div class=\"footer-brand cau\"><img src=\"' + cauSrc + '\" alt=\"中国农业大学\"><span>中国农业大学</span></div>' +",
+              "'<div class=\"footer-brand cau\"><img src=\"' + cauSrc + '\" alt=\"中国农业大学\"></div>' +",
+          )
+          text = text.replace(
+              ".footer-brand.survey img{height:68px;max-height:68px;border-radius:50%}",
+              ".footer-brand.survey img{height:58px;max-height:58px;width:58px;object-fit:contain;border-radius:0;flex:0 0 58px}",
+          )
+          text = text.replace(
+              ".footer-brand.survey img{height:56px;max-height:56px}",
+              ".footer-brand.survey img{height:50px;max-height:50px;width:50px;flex-basis:50px}",
+          )
+          js_path.write_text(text, encoding='utf-8')
+          PY
+
       - name: Validate deploy files
         shell: bash
         run: |
@@ -45,13 +85,19 @@ jobs:
           test -f index.html
           test -f upload-config.js
           test -f page-enhancements.js
+          test -f assets/soil-survey-logo.jpg
           grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'upload-config.js' index.html
           grep -q 'SOIL_UPLOAD_API_URL' upload-config.js
           grep -q 'page-enhancements.js' upload-config.js
+          grep -q "./assets/soil-survey-logo.jpg" page-enhancements.js
           grep -q '第三次全国土壤普查' page-enhancements.js
           grep -q 'missing-layout' page-enhancements.js
-          echo '部署文件校验通过。'
+          if grep -q '<span>中国农业大学</span>' page-enhancements.js; then
+            echo '仍存在重复的中国农业大学文字，停止部署。'
+            exit 1
+          fi
+          echo '部署文件和页脚品牌校验通过。'
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
