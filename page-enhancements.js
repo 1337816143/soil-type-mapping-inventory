@@ -7,6 +7,8 @@
     style.id = 'page-enhancements-style';
     style.textContent =
       '.container{max-width:none!important;width:100%;padding-left:4px!important;padding-right:4px!important}' +
+      'header h1.page-title-with-logo{display:flex;align-items:center;gap:10px}' +
+      'header h1 .page-title-logo{display:block;width:40px;height:40px;min-width:40px;max-width:40px;object-fit:contain;flex:0 0 40px}' +
       '.city-section h2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}' +
       '.city-section h2 .badge{margin-left:0;white-space:nowrap;flex:0 0 auto}' +
       '.city-section .table-wrap{overflow:visible!important;width:100%}' +
@@ -37,7 +39,7 @@
       '.footer-brand{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:.95rem;font-weight:600;flex:0 0 auto}' +
       '.footer-brand img{display:block;width:auto;object-fit:contain;flex:0 0 auto}' +
       '.footer-brand.survey span{font-size:.84rem;font-weight:600;white-space:nowrap}' +
-      '.footer-brand.survey img{width:48px;height:48px;min-width:48px;max-width:48px;min-height:48px;max-height:48px;aspect-ratio:1/1;object-fit:contain;border-radius:0;flex:0 0 48px}' +
+      '.footer-brand.survey img{width:44px;height:44px;min-width:44px;max-width:44px;min-height:44px;max-height:44px;aspect-ratio:1/1;object-fit:contain;border-radius:0;flex:0 0 44px}' +
       '.footer-brand.cau img{height:68px;max-height:68px}' +
       '.missing-layout{display:grid;grid-template-columns:minmax(500px,1.35fr) minmax(300px,.65fr);gap:18px;align-items:stretch}' +
       '.missing-stats-panel,.missing-details-panel{min-width:0}' +
@@ -51,9 +53,20 @@
       '.missing-details-panel .missing-item{white-space:normal;width:100%}' +
       '@media(max-width:1200px){.city-section thead th,.city-section tbody td{padding-left:5px!important;padding-right:5px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:21%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:34%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:10%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:35%!important}}' +
       '@media(max-width:980px){.missing-layout{grid-template-columns:1fr}.missing-details-panel{border-left:0;border-top:1px solid #fde68a;padding-left:0;padding-top:12px}}' +
-      '@media(max-width:760px){.container{padding-left:8px!important;padding-right:8px!important}.city-section h2 .badge{white-space:normal}.city-section thead th,.city-section tbody td{padding-left:4px!important;padding-right:4px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:24%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:31%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:12%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:33%!important}.reply-item{white-space:normal;flex-wrap:wrap}}' +
-      '@media(max-width:640px){.footer-brands{gap:16px}.footer-brand{gap:7px}.footer-brand.survey span{font-size:.78rem}.footer-brand.survey img{width:42px;height:42px;min-width:42px;max-width:42px;min-height:42px;max-height:42px;flex-basis:42px}.footer-brand.cau img{height:56px;max-height:56px}}';
+      '@media(max-width:760px){.container{padding-left:8px!important;padding-right:8px!important}header h1.page-title-with-logo{gap:8px}header h1 .page-title-logo{width:32px;height:32px;min-width:32px;max-width:32px;flex-basis:32px}.city-section h2 .badge{white-space:normal}.city-section thead th,.city-section tbody td{padding-left:4px!important;padding-right:4px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:24%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:31%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:12%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:33%!important}.reply-item{white-space:normal;flex-wrap:wrap}}' +
+      '@media(max-width:640px){.footer-brands{gap:16px}.footer-brand{gap:7px}.footer-brand.survey span{font-size:.78rem}.footer-brand.survey img{width:38px;height:38px;min-width:38px;max-width:38px;min-height:38px;max-height:38px;flex-basis:38px}.footer-brand.cau img{height:56px;max-height:56px}}';
     document.head.appendChild(style);
+  }
+
+  function enhanceHeader() {
+    var title = document.querySelector('header h1');
+    if (!title || title.querySelector('.page-title-logo')) return;
+    title.classList.add('page-title-with-logo');
+    var logo = document.createElement('img');
+    logo.className = 'page-title-logo';
+    logo.src = SOIL_SURVEY_LOGO;
+    logo.alt = '第三次全国土壤普查';
+    title.insertBefore(logo, title.firstChild);
   }
 
   function enhanceFooter() {
@@ -76,7 +89,7 @@
     if (!brands || !surveyImg || !surveyText || !cauImg) return;
 
     var mobile = window.matchMedia('(max-width:640px)').matches;
-    var surveySize = mobile ? '42px' : '48px';
+    var surveySize = mobile ? '38px' : '44px';
     var cauHeight = mobile ? '56px' : '68px';
 
     brands.style.setProperty('gap', mobile ? '16px' : '26px', 'important');
@@ -123,6 +136,7 @@
   function install() {
     if (!window.masterList || !window.renderCities || !window.calculateDashboardStats) return;
     addStyles();
+    enhanceHeader();
     enhanceFooter();
     setTimeout(balanceFooterBrands, 0);
     if (!window.__footerBrandBalanceBound) {
