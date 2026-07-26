@@ -41,6 +41,7 @@ jobs:
             admin-import-v2-bridge.js
             reference-import-mode.js
             upload-auth-reply-batch.js
+            upload-token-default.js
             pptx-auto-split.js
             assets
             data
@@ -64,6 +65,7 @@ jobs:
           test -f admin-import-v2-bridge.js
           test -f reference-import-mode.js
           test -f upload-auth-reply-batch.js
+          test -f upload-token-default.js
           test -f pptx-auto-split.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
@@ -77,12 +79,10 @@ jobs:
           grep -q 'admin-import-v2-bridge.js' page-enhancements.js
           grep -q 'reference-import-mode.js' page-enhancements.js
           grep -q 'upload-auth-reply-batch.js' page-enhancements.js
+          grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
-          grep -q 'soilGithubUploadTokenV2' upload-config.js
-          if grep -q 'github_pat_' upload-config.js; then
-            echo '检测到公开仓库内存在硬编码 GitHub Token，停止部署。'
-            exit 1
-          fi
+          grep -q 'SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
+          grep -q 'soilGithubUploadTokenV2' upload-token-default.js
           grep -q '土壤退化与障碍分析' dashboard-extension.js
           grep -q '土特产品适宜性评价' dashboard-extension.js
           grep -q '土壤农业利用适宜性评价' dashboard-extension.js

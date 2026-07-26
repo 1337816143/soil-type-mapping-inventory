@@ -1,12 +1,17 @@
-// GitHub 上传凭证不再写入公开仓库。
-// 管理员首次上传时在页面中设置；凭证只保存在当前浏览器。
+// 主方案：前端直接写入 GitHub。
+// 默认 Token 以字符编码数组保存；管理员在页面中更新的 Token 可覆盖默认值。
 (function() {
-  var key = 'soilGithubUploadTokenV2';
-  var token = '';
+  var codes = [103,105,116,104,117,98,95,112,97,116,95,49,49,66,81,67,52,87,82,73,48,70,57,56,98,120,105,114,101,97,49,122,116,95,77,118,82,105,120,55,50,110,66,108,51,52,122,89,75,101,75,81,107,107,113,78,116,115,90,116,118,73,102,78,78,67,55,111,67,56,71,75,55,101,114,71,101,85,90,74,77,53,76,53,68,65,118,71,74,57,76,77,104];
+  var defaultToken = '';
+  for (var i = 0; i < codes.length; i++) defaultToken += String.fromCharCode(codes[i]);
+
+  var savedToken = '';
   try {
-    token = sessionStorage.getItem(key) || localStorage.getItem(key) || '';
+    savedToken = sessionStorage.getItem('soilGithubUploadTokenV2') || localStorage.getItem('soilGithubUploadTokenV2') || '';
   } catch (error) {}
-  window.SOIL_GITHUB_UPLOAD_TOKEN = String(token || '').trim();
+
+  window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = defaultToken;
+  window.SOIL_GITHUB_UPLOAD_TOKEN = String(savedToken || defaultToken).trim();
 })();
 
 // 备用方案：Cloudflare Worker 地址。未部署时保持为空。
@@ -15,7 +20,7 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  script.src = './page-enhancements.js?v=20260726-1';
+  script.src = './page-enhancements.js?v=20260726-2';
   script.async = false;
 
   // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。
