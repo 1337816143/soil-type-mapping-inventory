@@ -33,6 +33,7 @@ jobs:
             page-enhancements.js
             page-enhancements-core.js
             reference-library.js
+            admin-import.js
             assets
             data
             replies
@@ -47,7 +48,9 @@ jobs:
           test -f page-enhancements.js
           test -f page-enhancements-core.js
           test -f reference-library.js
+          test -f admin-import.js
           test -f assets/soil-survey-logo.svg
+          test -f data/admin-import-index.json
           grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'upload-config.js' index.html
           grep -q 'SOIL_UPLOAD_API_URL' upload-config.js
@@ -57,7 +60,8 @@ jobs:
           grep -q './assets/soil-survey-logo.svg' page-enhancements-core.js
           grep -q 'missing-layout' page-enhancements-core.js
           grep -q '参考文件' reference-library.js
-          grep -q 'third-soil-survey' reference-library.js
+          grep -q 'admin-import.js' reference-library.js
+          grep -q '管理员导入质控意见' admin-import.js
           if grep -q '<span>中国农业大学</span>' page-enhancements-core.js; then
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1
