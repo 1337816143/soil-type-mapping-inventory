@@ -40,6 +40,7 @@ jobs:
             admin-import-v2.js
             admin-import-v2-bridge.js
             reference-import-mode.js
+            upload-auth-reply-batch.js
             pptx-auto-split.js
             assets
             data
@@ -62,6 +63,7 @@ jobs:
           test -f admin-import-v2.js
           test -f admin-import-v2-bridge.js
           test -f reference-import-mode.js
+          test -f upload-auth-reply-batch.js
           test -f pptx-auto-split.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
@@ -74,7 +76,13 @@ jobs:
           grep -q 'admin-import-v2.js' page-enhancements.js
           grep -q 'admin-import-v2-bridge.js' page-enhancements.js
           grep -q 'reference-import-mode.js' page-enhancements.js
+          grep -q 'upload-auth-reply-batch.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
+          grep -q 'soilGithubUploadTokenV2' upload-config.js
+          if grep -q 'github_pat_' upload-config.js; then
+            echo '检测到公开仓库内存在硬编码 GitHub Token，停止部署。'
+            exit 1
+          fi
           grep -q '土壤退化与障碍分析' dashboard-extension.js
           grep -q '土特产品适宜性评价' dashboard-extension.js
           grep -q '土壤农业利用适宜性评价' dashboard-extension.js
@@ -86,6 +94,8 @@ jobs:
           grep -q '不同批次独立保存' admin-import-v2.js
           grep -q 'sourcePath' admin-import-v2-bridge.js
           grep -q '识别归档目录' reference-import-mode.js
+          grep -q '对应质控批次' upload-auth-reply-batch.js
+          grep -q '更新GitHub上传凭证' upload-auth-reply-batch.js
           grep -q '按原始幻灯片顺序连续拆分' pptx-auto-split.js
           if grep -q '<span>中国农业大学</span>' page-enhancements-core.js; then
             echo '检测到重复的中国农业大学文字，停止部署。'
