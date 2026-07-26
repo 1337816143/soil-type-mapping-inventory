@@ -33,10 +33,12 @@
       '.district-link.merged-link:hover,.district-group.merged .group-label:hover{background:#2563eb;color:#fff;border-color:#1d4ed8}' +
       '.district-link.municipal-link,.district-group.municipal .group-label{background:#1e40af;color:#fff;border-color:#1e3a8a;font-weight:600}' +
       '.district-link.municipal-link:hover,.district-group.municipal .group-label:hover{background:#172554;color:#fff;border-color:#172554}' +
-      '.footer-brands{display:flex;justify-content:center;align-items:center;gap:52px;flex-wrap:wrap}' +
-      '.footer-brand{display:flex;align-items:center;gap:12px;color:var(--ink);font-size:.95rem;font-weight:600;flex:0 0 auto}' +
-      '.footer-brand img{display:block;height:58px;max-height:58px;width:auto;object-fit:contain;flex:0 0 auto}' +
-      '.footer-brand.survey img{width:58px;height:58px;min-width:58px;max-width:58px;min-height:58px;max-height:58px;aspect-ratio:1/1;object-fit:contain;border-radius:0;flex:0 0 58px}' +
+      '.footer-brands{display:flex;justify-content:center;align-items:center;gap:26px;flex-wrap:wrap}' +
+      '.footer-brand{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:.95rem;font-weight:600;flex:0 0 auto}' +
+      '.footer-brand img{display:block;width:auto;object-fit:contain;flex:0 0 auto}' +
+      '.footer-brand.survey span{font-size:.84rem;font-weight:600;white-space:nowrap}' +
+      '.footer-brand.survey img{width:48px;height:48px;min-width:48px;max-width:48px;min-height:48px;max-height:48px;aspect-ratio:1/1;object-fit:contain;border-radius:0;flex:0 0 48px}' +
+      '.footer-brand.cau img{height:68px;max-height:68px}' +
       '.missing-layout{display:grid;grid-template-columns:minmax(500px,1.35fr) minmax(300px,.65fr);gap:18px;align-items:stretch}' +
       '.missing-stats-panel,.missing-details-panel{min-width:0}' +
       '.missing-panel-title{font-size:.82rem;font-weight:700;color:#92400e;margin-bottom:7px}' +
@@ -50,7 +52,7 @@
       '@media(max-width:1200px){.city-section thead th,.city-section tbody td{padding-left:5px!important;padding-right:5px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:21%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:34%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:10%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:35%!important}}' +
       '@media(max-width:980px){.missing-layout{grid-template-columns:1fr}.missing-details-panel{border-left:0;border-top:1px solid #fde68a;padding-left:0;padding-top:12px}}' +
       '@media(max-width:760px){.container{padding-left:8px!important;padding-right:8px!important}.city-section h2 .badge{white-space:normal}.city-section thead th,.city-section tbody td{padding-left:4px!important;padding-right:4px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:24%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:31%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:12%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:33%!important}.reply-item{white-space:normal;flex-wrap:wrap}}' +
-      '@media(max-width:640px){.footer-brands{gap:24px}.footer-brand{font-size:.86rem}.footer-brand img{height:50px;max-height:50px}.footer-brand.survey img{width:50px;height:50px;min-width:50px;max-width:50px;min-height:50px;max-height:50px;flex-basis:50px}}';
+      '@media(max-width:640px){.footer-brands{gap:16px}.footer-brand{gap:7px}.footer-brand.survey span{font-size:.78rem}.footer-brand.survey img{width:42px;height:42px;min-width:42px;max-width:42px;min-height:42px;max-height:42px;flex-basis:42px}.footer-brand.cau img{height:56px;max-height:56px}}';
     document.head.appendChild(style);
   }
 
@@ -63,6 +65,36 @@
       '<div class="footer-brand survey"><img src="' + SOIL_SURVEY_LOGO + '" alt="第三次全国土壤普查"><span>第三次全国土壤普查</span></div>' +
       '<div class="footer-brand cau"><img src="' + cauSrc + '" alt="中国农业大学"></div>' +
       '</div>';
+  }
+
+  function balanceFooterBrands() {
+    var brands = document.querySelector('.footer-brands');
+    var survey = document.querySelector('.footer-brand.survey');
+    var surveyImg = survey && survey.querySelector('img');
+    var surveyText = survey && survey.querySelector('span');
+    var cauImg = document.querySelector('.footer-brand.cau img');
+    if (!brands || !surveyImg || !surveyText || !cauImg) return;
+
+    var mobile = window.matchMedia('(max-width:640px)').matches;
+    var surveySize = mobile ? '42px' : '48px';
+    var cauHeight = mobile ? '56px' : '68px';
+
+    brands.style.setProperty('gap', mobile ? '16px' : '26px', 'important');
+    survey.style.setProperty('gap', mobile ? '7px' : '8px', 'important');
+    surveyText.style.setProperty('font-size', mobile ? '.78rem' : '.84rem', 'important');
+    surveyText.style.setProperty('white-space', 'nowrap', 'important');
+
+    ['width','height','min-width','max-width','min-height','max-height','flex-basis'].forEach(function(prop) {
+      surveyImg.style.setProperty(prop, surveySize, 'important');
+    });
+    surveyImg.style.setProperty('object-fit', 'contain', 'important');
+    surveyImg.style.setProperty('flex-grow', '0', 'important');
+    surveyImg.style.setProperty('flex-shrink', '0', 'important');
+
+    cauImg.style.setProperty('height', cauHeight, 'important');
+    cauImg.style.setProperty('max-height', cauHeight, 'important');
+    cauImg.style.setProperty('width', 'auto', 'important');
+    cauImg.style.setProperty('object-fit', 'contain', 'important');
   }
 
   function splitMissingBanner() {
@@ -92,6 +124,11 @@
     if (!window.masterList || !window.renderCities || !window.calculateDashboardStats) return;
     addStyles();
     enhanceFooter();
+    setTimeout(balanceFooterBrands, 0);
+    if (!window.__footerBrandBalanceBound) {
+      window.addEventListener('resize', balanceFooterBrands);
+      window.__footerBrandBalanceBound = true;
+    }
 
     var cangzhou = null;
     for (var i = 0; i < window.masterList.length; i++) {
