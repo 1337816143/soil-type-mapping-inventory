@@ -1,0 +1,83 @@
+name: Fix footer branding
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-footer-branding.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Replace embedded logo and remove duplicate CAU text
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import re
+
+          js_path = Path('page-enhancements.js')
+          text = js_path.read_text(encoding='utf-8')
+
+          match = re.search(r"var SOIL_SURVEY_LOGO = 'data:image/jpeg;base64,([^']+)';", text)
+          if not match:
+              raise SystemExit('未找到内嵌三普 Logo')
+
+          logo_bytes = base64.b64decode(match.group(1))
+          assets = Path('assets')
+          assets.mkdir(exist_ok=True)
+          (assets / 'soil-survey-logo.jpg').write_bytes(logo_bytes)
+
+          text = re.sub(
+              r"var SOIL_SURVEY_LOGO = 'data:image/jpeg;base64,[^']+';",
+              "var SOIL_SURVEY_LOGO = './assets/soil-survey-logo.jpg';",
+              text,
+              count=1,
+          )
+
+          old_cau = "'<div class=\"footer-brand cau\"><img src=\"' + cauSrc + '\" alt=\"中国农业大学\"><span>中国农业大学</span></div>' +"
+          new_cau = "'<div class=\"footer-brand cau\"><img src=\"' + cauSrc + '\" alt=\"中国农业大学\"></div>' +"
+          if old_cau not in text:
+              raise SystemExit('未找到农大重复文字结构')
+          text = text.replace(old_cau, new_cau, 1)
+
+          text = text.replace(
+              ".footer-brand.survey img{height:68px;max-height:68px;border-radius:50%}",
+              ".footer-brand.survey img{height:58px;max-height:58px;width:58px;object-fit:contain;border-radius:0;flex:0 0 58px}",
+          )
+          text = text.replace(
+              ".footer-brand.survey img{height:56px;max-height:56px}",
+              ".footer-brand.survey img{height:50px;max-height:50px;width:50px;flex-basis:50px}",
+          )
+          js_path.write_text(text, encoding='utf-8')
+
+          config_path = Path('upload-config.js')
+          config = config_path.read_text(encoding='utf-8')
+          config = re.sub(r"page-enhancements\.js\?v=[^']+", "page-enhancements.js?v=20260726-1", config, count=1)
+          config_path.write_text(config, encoding='utf-8')
+          PY
+
+      - name: Remove one-time workflow and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/fix-footer-branding.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add page-enhancements.js upload-config.js assets/soil-survey-logo.jpg .github/workflows/fix-footer-branding.yml
+          git commit -m "fix: use real soil survey logo and remove duplicate CAU text"
+          git push origin HEAD:main
