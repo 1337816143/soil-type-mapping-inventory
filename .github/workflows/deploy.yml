@@ -38,6 +38,7 @@ jobs:
             admin-quality-ui.js
             admin-quality-upload.js
             admin-import-v2.js
+            admin-import-v2-bridge.js
             pptx-auto-split.js
             assets
             data
@@ -58,6 +59,7 @@ jobs:
           test -f admin-quality-ui.js
           test -f admin-quality-upload.js
           test -f admin-import-v2.js
+          test -f admin-import-v2-bridge.js
           test -f pptx-auto-split.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
@@ -68,6 +70,7 @@ jobs:
           grep -q 'admin-quality-ui.js' page-enhancements.js
           grep -q 'admin-quality-upload.js' page-enhancements.js
           grep -q 'admin-import-v2.js' page-enhancements.js
+          grep -q 'admin-import-v2-bridge.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q '土壤退化与障碍分析' dashboard-extension.js
           grep -q '土特产品适宜性评价' dashboard-extension.js
@@ -78,6 +81,7 @@ jobs:
           grep -q '新增批次' admin-import-v2.js
           grep -q '自动归档与预览' admin-import-v2.js
           grep -q '不同批次独立保存' admin-import-v2.js
+          grep -q 'sourcePath' admin-import-v2-bridge.js
           grep -q '按原始幻灯片顺序连续拆分' pptx-auto-split.js
           if grep -q '<span>中国农业大学</span>' page-enhancements-core.js; then
             echo '检测到重复的中国农业大学文字，停止部署。'
