@@ -1,0 +1,49 @@
+name: Test hybrid uploader
+
+on:
+  push:
+    branches: [fix-smart-upload-threshold]
+    paths:
+      - '.github/workflows/test-hybrid-upload.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-smart-upload-threshold
+          fetch-depth: 0
+
+      - name: Validate JavaScript and workflow syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check hybrid-staged-upload.js
+          node --check page-enhancements.js
+          node --check release-staged-upload.js
+          node --check upload-config.js
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/import-chunked.yml'); YAML.load_file('.github/workflows/deploy.yml')"
+          grep -q 'SINGLE_BLOB_LIMIT = 39 \* 1024 \* 1024' hybrid-staged-upload.js
+          grep -q 'CHUNK_SIZE = 39 \* 1024 \* 1024' hybrid-staged-upload.js
+          grep -q "storage: item.file.size <= SINGLE_BLOB_LIMIT ? 'whole' : 'chunked'" hybrid-staged-upload.js
+          grep -q "record.storage === 'whole'" hybrid-staged-upload.js
+          grep -q "storage == 'whole'" .github/workflows/import-chunked.yml
+          grep -q "storage == 'chunked'" .github/workflows/import-chunked.yml
+          if grep -q 'chunked-staged-upload.js' page-enhancements.js; then
+            echo '页面仍加载全量分块上传器。'
+            exit 1
+          fi
+          printf 'hybrid uploader validation passed\n' > hybrid-syntax-test-result.txt
+
+      - name: Record successful validation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hybrid-syntax-test-result.txt
+          git commit -m "test: record hybrid uploader validation"
+          git push origin HEAD:fix-smart-upload-threshold
