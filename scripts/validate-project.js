@@ -19,6 +19,8 @@ const releaseUi = read('app-release-ui.js');
 const loader = read('page-enhancements.js');
 const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
+const dashboard = read('dashboard-extension.js');
+const deleteManager = read('admin-delete-manager.js');
 
 if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('upload-config.js 版本号与 VERSION 不一致');
 if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js 版本号与 VERSION 不一致');
@@ -29,7 +31,7 @@ const requiredCategories = [
   '土壤属性图',
   '耕地质量等级评价',
   '土壤退化与障碍分析',
-  '土特产品适宜性评价',
+  '土特产品土壤适宜性评价',
   '土壤农业利用适宜性评价',
   '土地资源评价与利用报告'
 ];
@@ -48,6 +50,13 @@ if (!regional.includes('expectedUnitKeys:new Set()') || !regional.includes('rece
   fail('作业单位统计未采用集合去重');
 }
 if (!regional.includes('作业单位（去重）')) fail('页面未明确标注作业单位去重口径');
+if (!regional.includes('土特产品土壤适宜性评价') || !dashboard.includes('土特产品土壤适宜性评价')) fail('土特产品成果名称未统一');
+const categoryBlock = reference.slice(reference.indexOf('var CATEGORY_ORDER'), reference.indexOf('];', reference.indexOf('var CATEGORY_ORDER')));
+if (categoryBlock.includes("'土特产品适宜性评价'")) fail('参考文件仍包含旧的多余标准分组');
+if (!reference.includes("compact.indexOf('土特产品适宜性评价')")) fail('旧参考目录未兼容归入新分组');
+if (!deleteManager.includes('sha:null') || !deleteManager.includes('data/admin-import-index.json')) fail('管理员删除未实现事务删除与索引同步');
+if (!deleteManager.includes('质控意见') || !deleteManager.includes('整改答复') || !deleteManager.includes('参考文件')) fail('管理员删除类型不完整');
+if (!loader.includes('admin-delete-manager.js?v=1.0.1')) fail('管理员删除脚本未加载');
 
 const banner = {style:{}, innerHTML:''};
 const documentStub = {
