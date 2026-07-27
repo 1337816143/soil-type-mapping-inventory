@@ -1,0 +1,65 @@
+[
+  {
+    "raw_mib": 40,
+    "raw_bytes": 41943040,
+    "request_bytes": 55924090,
+    "request_mib": 53.333,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 50,
+    "raw_bytes": 52428800,
+    "request_bytes": 69905102,
+    "request_mib": 66.667,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 64,
+    "raw_bytes": 67108864,
+    "request_bytes": 89478522,
+    "request_mib": 85.333,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 72,
+    "raw_bytes": 75497472,
+    "request_bytes": 100663330,
+    "request_mib": 96.0,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 80,
+    "raw_bytes": 83886080,
+    "request_bytes": 111848142,
+    "request_mib": 106.667,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 90,
+    "raw_bytes": 94371840,
+    "request_bytes": 125829154,
+    "request_mib": 120.0,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  },
+  {
+    "raw_mib": 95,
+    "raw_bytes": 99614720,
+    "request_bytes": 132819662,
+    "request_mib": 126.667,
+    "status": 422,
+    "ok": false,
+    "message": "Sorry, your input was too large to process. Consider creating the blob in a local clone of the repository and then pushing it to GitHub."
+  }
+]
