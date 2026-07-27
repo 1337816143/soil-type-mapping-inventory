@@ -91,8 +91,6 @@ jobs:
           test -f release-upload-reliability.js
           test -f release-staged-upload.js
           test -f scripts/validate-project.js
-          test -f scripts/logo-v1.0.2.part0
-          test -f scripts/logo-v1.0.2.part1
           test -f data/admin-import-index.json
 
           node --check upload-config.js
@@ -121,9 +119,7 @@ jobs:
           grep -q 'page-title-logo-frame' app-release-ui.js
           grep -q 'app-version-badge' app-release-ui.js
           grep -q 'group.open = false' app-release-ui.js
-          grep -q 'logo-v1.0.2.part0' soil-survey-logo-v1.0.2.js
-          grep -q 'logo-v1.0.2.part1' soil-survey-logo-v1.0.2.js
-          grep -q 'data:image/png;base64' soil-survey-logo-v1.0.2.js
+          grep -q 'data:image/png;base64,iVBORw0KGgo' soil-survey-logo-v1.0.2.js
           grep -q 'transform:none!important' soil-survey-logo-v1.0.2.js
 
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
@@ -175,6 +171,7 @@ jobs:
 
           python3 <<'PY'
           from pathlib import Path
+          import re
 
           script = Path('regional-progress-dashboard.js').read_text(encoding='utf-8')
           heading = script.index("esc(name) + '收缴进度</h3>'")
@@ -203,8 +200,9 @@ jobs:
           if "'土特产品适宜性评价'" in block:
               raise SystemExit('参考文件仍存在旧的多余标准分组')
 
-          base64_text = (Path('scripts/logo-v1.0.2.part0').read_text() + Path('scripts/logo-v1.0.2.part1').read_text()).strip().replace('\n', '')
-          if not base64_text.startswith('iVBORw0KGgo') or len(base64_text) < 10000:
+          logo = Path('soil-survey-logo-v1.0.2.js').read_text(encoding='utf-8')
+          match = re.search(r'data:image/png;base64,([A-Za-z0-9+/=]+)', logo)
+          if not match or not match.group(1).startswith('iVBORw0KGgo') or len(match.group(1)) < 8000:
               raise SystemExit('三普PNG Logo资源不完整')
           PY
 
