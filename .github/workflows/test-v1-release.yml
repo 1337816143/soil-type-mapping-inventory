@@ -1,0 +1,133 @@
+name: Test v1.0.0 release
+
+on:
+  push:
+    branches: [release-v1.0.0-ui-data-quality]
+    paths:
+      - '.github/workflows/test-v1-release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release-v1.0.0-ui-data-quality
+          fetch-depth: 0
+
+      - name: Install DOM dependency
+        run: npm install --no-save --no-package-lock jsdom@24
+
+      - name: Run permanent and browser tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-project.js
+          node --check regional-progress-dashboard.js
+          node --check app-release-ui.js
+          node --check page-enhancements.js
+          node --check upload-config.js
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/deploy.yml'); YAML.load_file('.github/workflows/test-v1-release.yml')"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const {JSDOM} = require('jsdom');
+
+          const dom = new JSDOM(`<!doctype html><html><head></head><body>
+            <header><h1 class="page-title-with-logo"><img class="page-title-logo" src="./assets/soil-survey-logo.svg">河北省第三次全国土壤普查成果编制平台</h1></header>
+            <div id="missingBanner"></div>
+            <div id="ref-root"><details class="ref-cat" open><summary>土壤类型图</summary></details></div>
+            <footer><div class="container"><div class="footer-brands"></div></div></footer>
+          </body></html>`, {runScripts:'outside-only', url:'https://example.test/'});
+          const window = dom.window;
+          const context = dom.getInternalVMContext();
+          Object.defineProperty(window.document, 'readyState', {value:'complete', configurable:true});
+          vm.runInContext(fs.readFileSync('app-release-ui.js', 'utf8'), context);
+
+          const frame = window.document.querySelector('.page-title-logo-frame');
+          const logo = window.document.querySelector('.page-title-logo-frame .page-title-logo');
+          const badge = window.document.querySelector('.app-version-badge');
+          const footerVersion = window.document.querySelector('.app-version-footer');
+          if (!frame || !logo) throw new Error('页首Logo未建立裁切容器');
+          if (!badge || badge.textContent.trim() !== 'v1.0.0') throw new Error('页首版本号缺失');
+          if (!footerVersion || !footerVersion.textContent.includes('v1.0.0')) throw new Error('页脚版本号缺失');
+          const style = window.document.getElementById('app-release-ui-style').textContent;
+          if (!style.includes('width:58px') || !style.includes('width:74px') || !style.includes('overflow:hidden')) {
+            throw new Error('Logo放大或裁切样式不完整');
+          }
+          if (window.document.querySelector('.ref-cat').open) throw new Error('参考文件分组初始状态未收起');
+
+          const root = window.document.getElementById('ref-root');
+          root.innerHTML = '<details class="ref-cat" open><summary>土壤属性图</summary></details>';
+          setTimeout(() => {
+            if (root.querySelector('.ref-cat').open) throw new Error('参考文件重新渲染后未自动收起');
+            fs.writeFileSync('v1-ui-dom-result.txt', 'v1 UI DOM validation passed\n');
+          }, 20);
+          NODE
+
+          for i in $(seq 1 30); do
+            test -f v1-ui-dom-result.txt && break
+            sleep 1
+          done
+          test -f v1-ui-dom-result.txt
+
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const {JSDOM} = require('jsdom');
+          const html = fs.readFileSync('index.html', 'utf8');
+
+          function extract(startText, endText) {
+            const start = html.indexOf(startText);
+            const end = html.indexOf(endText, start);
+            if (start < 0 || end < 0) throw new Error('无法定位数据段：' + startText);
+            return html.slice(start, end);
+          }
+
+          const dom = new JSDOM('<!doctype html><html><head></head><body><div class="tab active" data-tab="soilType"></div><div id="missingBanner"></div></body></html>', {runScripts:'outside-only'});
+          const context = dom.getInternalVMContext();
+          const window = dom.window;
+          Object.defineProperty(window.document, 'readyState', {value:'complete', configurable:true});
+          window.refreshAllTabs = function(){};
+          window.renderCities = function(){ return ''; };
+
+          vm.runInContext(extract('var masterList = [', '// 从 tabData'), context);
+          vm.runInContext(extract('function collectSubmittedDistricts', 'var soilTypeData = ['), context);
+          vm.runInContext(extract('var soilTypeData = [', '\nvar soilAttrData = ['), context);
+          window.tabData = {soilType:window.soilTypeData};
+          vm.runInContext(fs.readFileSync('task-unit-mappings.js', 'utf8'), context);
+          vm.runInContext(fs.readFileSync('regional-progress-dashboard.js', 'utf8'), context);
+
+          const result = window.SoilRegionalProgress.calculate('soilType');
+          if (!(result.overall.expUnits < 52)) {
+            throw new Error('真实清单作业单位未去重，去重后应小于旧的52条映射记录');
+          }
+          if (result.overall.totalUnits > result.overall.expUnits) throw new Error('作业单位已收数超过应有数');
+          if (!window.document.getElementById('missingBanner').innerHTML.includes('区县')) throw new Error('片区摘要缺少区县块');
+          const chips = (window.document.getElementById('missingBanner').innerHTML.match(/regional-progress-chip/g) || []).length;
+          if (chips !== 8) throw new Error('南北片区统计块总数应为8');
+
+          fs.writeFileSync('v1-real-data-result.json', JSON.stringify({
+            version:'v1.0.0',
+            expectedUnitsDeduplicated:result.overall.expUnits,
+            receivedUnitsDeduplicated:result.overall.totalUnits,
+            expectedTasks:result.overall.expTasks,
+            receivedTasks:result.overall.totalTasks,
+            northDistricts:[result.regions.north.totalDistricts,result.regions.north.expDistricts],
+            southDistricts:[result.regions.south.totalDistricts,result.regions.south.expDistricts]
+          }, null, 2) + '\n');
+          NODE
+
+      - name: Record validation results
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v1-ui-dom-result.txt v1-real-data-result.json
+          git commit -m "test: record v1.0.0 release validation"
+          git push origin HEAD:release-v1.0.0-ui-data-quality
