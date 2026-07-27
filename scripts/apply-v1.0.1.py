@@ -1,0 +1,82 @@
+from pathlib import Path
+
+
+def patch(path, replacements):
+    file = Path(path)
+    text = file.read_text(encoding='utf-8')
+    for old, new in replacements:
+        if old not in text:
+            raise SystemExit(f'{path}: 找不到待替换内容：{old[:120]}')
+        text = text.replace(old, new)
+    file.write_text(text, encoding='utf-8')
+
+
+Path('VERSION').write_text('v1.0.1\n', encoding='utf-8')
+
+changelog = Path('CHANGELOG.md').read_text(encoding='utf-8')
+section = '''## v1.0.1 — 2026-07-27
+
+- 将“土特产品适宜性评价”统一更名为“土特产品土壤适宜性评价”，旧参考目录自动归入新分组。
+- 增加管理员删除中心，可批量删除质控意见、整改答复和参考文件，并在一次提交中同步更新质控索引。
+
+'''
+if '## v1.0.1' not in changelog:
+    changelog = changelog.replace('# Changelog\n\n', '# Changelog\n\n' + section)
+Path('CHANGELOG.md').write_text(changelog, encoding='utf-8')
+
+patch('upload-config.js', [
+    ("window.SOIL_APP_VERSION = 'v1.0.0';", "window.SOIL_APP_VERSION = 'v1.0.1';"),
+    ('page-enhancements.js?v=20260727-11', 'page-enhancements.js?v=20260727-12')
+])
+patch('app-release-ui.js', [("var VERSION = 'v1.0.0';", "var VERSION = 'v1.0.1';")])
+patch('regional-progress-dashboard.js', [
+    ("specialty:'土特产品适宜性评价',", "specialty:'土特产品土壤适宜性评价',"),
+    ("specialtyProduct:'土特产品适宜性评价',", "specialtyProduct:'土特产品土壤适宜性评价',")
+])
+patch('dashboard-extension.js', [
+    ("specialty: '土特产品适宜性评价',", "specialty: '土特产品土壤适宜性评价',"),
+    ("var old = heading.querySelector('.quality-admin-global');\n    if (old) old.remove();", "heading.querySelectorAll('.quality-admin-global').forEach(function (item) { item.remove(); });"),
+    ("heading.appendChild(button);", "heading.appendChild(button);\n\n    var deleteButton = document.createElement('button');\n    deleteButton.type = 'button';\n    deleteButton.className = 'quality-admin-global admin-delete-trigger';\n    deleteButton.textContent = '管理员删除';\n    deleteButton.dataset.key = key;\n    deleteButton.addEventListener('click', function (event) {\n      event.preventDefault();\n      event.stopPropagation();\n      if (typeof window.openSoilAdminDelete !== 'function') {\n        alert('管理员删除组件仍在加载，请稍后重试。');\n        return;\n      }\n      window.openSoilAdminDelete({scope:'quality', dataKey:key});\n    });\n    heading.appendChild(deleteButton);"),
+    ("window.applyAdminQualityIndex = function (entries) {\n    (Array.isArray(entries) ? entries : []).forEach(mergeQualityEntry);\n    refreshDashboard();\n  };", "window.applyAdminQualityIndex = function (entries) {\n    (Array.isArray(entries) ? entries : []).forEach(mergeQualityEntry);\n    refreshDashboard();\n  };\n\n  window.removeAdminQualityPaths = function (paths) {\n    var removed = {};\n    (Array.isArray(paths) ? paths : []).forEach(function (path) {\n      removed[String(path || '').replace(/^data\\//, '')] = true;\n      delete appliedPaths[path];\n    });\n    Object.keys(window.tabData || {}).forEach(function (key) {\n      (window.tabData[key] || []).forEach(function (city) {\n        (city.units || []).forEach(function (unit) {\n          (unit.districts || []).forEach(function (district) {\n            district.docs = (district.docs || []).filter(function (doc) { return !removed[doc.file]; });\n          });\n        });\n      });\n    });\n    refreshDashboard();\n  };")
+])
+patch('reference-library.js', [
+    ("'土特产品适宜性评价',", "'土特产品土壤适宜性评价',"),
+    ("if (compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品适宜性评价';", "if (compact.indexOf('土特产品土壤适宜性评价') >= 0 || compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品土壤适宜性评价';"),
+    ("'<button id=\"ref-admin\" class=\"ref-btn\">管理员导入</button>' +\n        '<button id=\"ref-refresh\"", "'<button id=\"ref-admin\" class=\"ref-btn\">管理员导入</button>' +\n        '<button id=\"ref-delete\" class=\"ref-btn alt admin-delete-trigger\">管理员删除</button>' +\n        '<button id=\"ref-refresh\""),
+    ("'<details class=\"ref-cat\" data-category=\"' + A.esc(name.toLowerCase()) + '\" ' + (index < 3 ? 'open' : '') + '>'", "'<details class=\"ref-cat\" data-category=\"' + A.esc(name.toLowerCase()) + '\">'"),
+    ("document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };", "document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };\n      document.getElementById('ref-delete').onclick = function () {\n        if (typeof window.openSoilAdminDelete !== 'function') {\n          alert('管理员删除组件仍在加载，请稍后重试。');\n          return;\n        }\n        window.openSoilAdminDelete({scope:'reference'});\n      };"),
+    ("function load(src) {", "window.refreshSoilReferenceLibrary = function () { return render(true); };\n\n  function load(src) {")
+])
+patch('upload-auth-reply-batch.js', [
+    ("function installBatchRender(){", "window.reloadReplyIndex=loadReplies;\nfunction installBatchRender(){")
+])
+patch('page-enhancements.js', [
+    ('regional-progress-dashboard.js?v=20260727-5', 'regional-progress-dashboard.js?v=20260727-6'),
+    ('dashboard-extension.js?v=20260727-3', 'dashboard-extension.js?v=20260727-4'),
+    ('reference-library.js?v=20260727-3', 'reference-library.js?v=20260727-4'),
+    ('app-release-ui.js?v=1.0.0', 'app-release-ui.js?v=1.0.1'),
+    (".then(function () { return loadScript('./upload-auth-reply-batch.js'); })", ".then(function () { return loadScript('./upload-auth-reply-batch.js'); })\n    .then(function () { return loadScript('./admin-delete-manager.js?v=1.0.1'); })")
+])
+patch('scripts/validate-project.js', [
+    ("const regional = read('regional-progress-dashboard.js');", "const regional = read('regional-progress-dashboard.js');\nconst dashboard = read('dashboard-extension.js');\nconst deleteManager = read('admin-delete-manager.js');"),
+    ("'土特产品适宜性评价',", "'土特产品土壤适宜性评价',"),
+    ("if (!regional.includes('作业单位（去重）')) fail('页面未明确标注作业单位去重口径');", "if (!regional.includes('作业单位（去重）')) fail('页面未明确标注作业单位去重口径');\nif (!regional.includes('土特产品土壤适宜性评价') || !dashboard.includes('土特产品土壤适宜性评价')) fail('土特产品成果名称未统一');\nconst categoryBlock = reference.slice(reference.indexOf('var CATEGORY_ORDER'), reference.indexOf('];', reference.indexOf('var CATEGORY_ORDER')));\nif (categoryBlock.includes(\"'土特产品适宜性评价'\")) fail('参考文件仍包含旧的多余标准分组');\nif (!reference.includes(\"compact.indexOf('土特产品适宜性评价')\")) fail('旧参考目录未兼容归入新分组');\nif (!deleteManager.includes('sha:null') || !deleteManager.includes('data/admin-import-index.json')) fail('管理员删除未实现事务删除与索引同步');\nif (!deleteManager.includes('质控意见') || !deleteManager.includes('整改答复') || !deleteManager.includes('参考文件')) fail('管理员删除类型不完整');\nif (!loader.includes('admin-delete-manager.js?v=1.0.1')) fail('管理员删除脚本未加载');")
+])
+
+deploy_path = Path('.github/workflows/deploy.yml')
+deploy = deploy_path.read_text(encoding='utf-8')
+deploy = deploy.replace('            app-release-ui.js\n', '            app-release-ui.js\n            admin-delete-manager.js\n')
+deploy = deploy.replace('          test -f app-release-ui.js\n', '          test -f app-release-ui.js\n          test -f admin-delete-manager.js\n')
+deploy = deploy.replace('          node --check app-release-ui.js\n', '          node --check app-release-ui.js\n          node --check admin-delete-manager.js\n')
+deploy = deploy.replace("grep -qx 'v1.0.0' VERSION", "grep -qx 'v1.0.1' VERSION")
+deploy = deploy.replace("grep -q '## v1.0.0' CHANGELOG.md", "grep -q '## v1.0.1' CHANGELOG.md")
+deploy = deploy.replace("window.SOIL_APP_VERSION = 'v1.0.0'", "window.SOIL_APP_VERSION = 'v1.0.1'")
+deploy = deploy.replace('page-enhancements.js?v=20260727-11', 'page-enhancements.js?v=20260727-12')
+deploy = deploy.replace('regional-progress-dashboard.js?v=20260727-5', 'regional-progress-dashboard.js?v=20260727-6')
+deploy = deploy.replace('dashboard-extension.js?v=20260727-3', 'dashboard-extension.js?v=20260727-4')
+deploy = deploy.replace('reference-library.js?v=20260727-3', 'reference-library.js?v=20260727-4')
+deploy = deploy.replace('app-release-ui.js?v=1.0.0', 'app-release-ui.js?v=1.0.1')
+deploy = deploy.replace("          grep -q 'app-release-ui.js?v=1.0.1' page-enhancements.js\n", "          grep -q 'app-release-ui.js?v=1.0.1' page-enhancements.js\n          grep -q 'admin-delete-manager.js?v=1.0.1' page-enhancements.js\n")
+deploy = deploy.replace("          grep -q 'app-version-badge' app-release-ui.js\n", "          grep -q 'app-version-badge' app-release-ui.js\n          grep -q 'sha:null' admin-delete-manager.js\n          grep -q '管理员删除文件' admin-delete-manager.js\n          grep -q 'removeAdminQualityPaths' dashboard-extension.js\n          grep -q 'reloadReplyIndex' upload-auth-reply-batch.js\n          grep -q 'refreshSoilReferenceLibrary' reference-library.js\n")
+deploy = deploy.replace('土特产品适宜性评价', '土特产品土壤适宜性评价')
+deploy_path.write_text(deploy, encoding='utf-8')
