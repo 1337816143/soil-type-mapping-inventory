@@ -1,0 +1,52 @@
+[
+  {
+    "raw_kib": 40192,
+    "raw_mib": 39.25,
+    "raw_bytes": 41156608,
+    "request_bytes": 54875514,
+    "request_mib": 52.333,
+    "status": 201,
+    "ok": true,
+    "sha": "6b0cf2bf13fcf4c9b3b4f4b45394b48df75a9108"
+  },
+  {
+    "raw_kib": 40320,
+    "raw_mib": 39.375,
+    "raw_bytes": 41287680,
+    "request_bytes": 55050274,
+    "request_mib": 52.5,
+    "status": 201,
+    "ok": true,
+    "sha": "ab5afd3e62de3d9fdfd99eb82381803a4ae88c10"
+  },
+  {
+    "raw_kib": 40448,
+    "raw_mib": 39.5,
+    "raw_bytes": 41418752,
+    "request_bytes": 55225038,
+    "request_mib": 52.667,
+    "status": 201,
+    "ok": true,
+    "sha": "46e12962e567a6f3e5eee1cc0c0f9db4872b69f2"
+  },
+  {
+    "raw_kib": 40576,
+    "raw_mib": 39.625,
+    "raw_bytes": 41549824,
+    "request_bytes": 55399802,
+    "request_mib": 52.833,
+    "status": 201,
+    "ok": true,
+    "sha": "4372275f85e20a35d7de669ba22f23330062ee1c"
+  },
+  {
+    "raw_kib": 40704,
+    "raw_mib": 39.75,
+    "raw_bytes": 41680896,
+    "request_bytes": 55574562,
+    "request_mib": 53.0,
+    "status": 201,
+    "ok": true,
+    "sha": "fc0ac432f49238bfc12ed4c66b2912fb8df25b11"
+  }
+]
