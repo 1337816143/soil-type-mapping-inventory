@@ -84,8 +84,8 @@ jobs:
           grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'task-unit-mappings.js' page-enhancements.js
-          grep -q 'regional-progress-dashboard.js?v=20260727-3' page-enhancements.js
-          grep -q 'dashboard-extension.js' page-enhancements.js
+          grep -q 'regional-progress-dashboard.js?v=20260727-4' page-enhancements.js
+          grep -q 'dashboard-extension.js?v=20260727-3' page-enhancements.js
           grep -q 'reference-library.js' page-enhancements.js
           grep -q 'admin-quality-ui.js' page-enhancements.js
           grep -q 'admin-quality-upload.js' page-enhancements.js
@@ -96,22 +96,24 @@ jobs:
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q 'hybrid-staged-upload.js' page-enhancements.js
-          grep -q 'page-enhancements.js?v=20260727-8' upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-9' upload-config.js
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
           grep -q "dataKey === 'soilType'" task-unit-mappings.js
           grep -q '中地科勘察设计有限公司' task-unit-mappings.js
           grep -q '石家庄师兄弟土地环境技术服务有限公司' task-unit-mappings.js
           grep -q '河北省北部片区' regional-progress-dashboard.js
           grep -q '河北省南部片区' regional-progress-dashboard.js
-          grep -q '石家庄市（市级）' regional-progress-dashboard.js
-          grep -q 'progress-overview-summary' regional-progress-dashboard.js
-          grep -q 'regional-progress-chip' regional-progress-dashboard.js
-          grep -q 'removeCitySummaryBar' regional-progress-dashboard.js
-          grep -q "esc(name) + '收缴进度</h3>'" regional-progress-dashboard.js
-          grep -q '任务单元<br>应有' regional-progress-dashboard.js
+          grep -q "'秦皇岛市','保定市','承德市','雄安新区','唐山市','廊坊市','张家口市'" regional-progress-dashboard.js
+          grep -q "return '成果'" regional-progress-dashboard.js
+          grep -q '土壤退化与障碍分析' regional-progress-dashboard.js
+          grep -q 'regional-progress-table-wrap' regional-progress-dashboard.js
+          grep -q 'table-layout:fixed' regional-progress-dashboard.js
+          grep -q 'text-align:center' regional-progress-dashboard.js
+          grep -q '市级进度（已收 / 应有）' regional-progress-dashboard.js
           grep -q '每次调用都从当前 tabData' regional-progress-dashboard.js
           grep -q 'refresh:refreshActiveProgress' regional-progress-dashboard.js
-          grep -q '页面整体统计和南北片区共用同一个实时计算入口' regional-progress-dashboard.js
+          grep -q '页面整体统计、南北片区及明细表共用同一个实时计算入口' regional-progress-dashboard.js
+          grep -q "setHeadingText(heading, TYPES\[key\] + '收缴进度')" dashboard-extension.js
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
             echo '检测到旧的分片区标题，停止部署。'
             exit 1
