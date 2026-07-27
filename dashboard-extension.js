@@ -13,7 +13,7 @@
   var NEW_KEYS = ['degradation', 'specialty', 'agriSuitability', 'landUse'];
   var appliedPaths = {};
 
-  window.SoilDashboardTypes = TYPES;
+  window.SoilDashboardTypes = Object.assign({}, window.SoilDashboardTypes || {}, TYPES);
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -50,6 +50,8 @@
         tab.dataset.tab = key;
         tab.textContent = TYPES[key];
         tabs.appendChild(tab);
+      } else {
+        tab.textContent = TYPES[key];
       }
       var panel = document.getElementById('tab-' + key);
       if (!panel) {
@@ -85,18 +87,26 @@
     if (banner) banner.style.display = 'none';
   }
 
+  function setHeadingText(heading, text) {
+    var textNode = null;
+    Array.prototype.some.call(heading.childNodes, function (node) {
+      if (node.nodeType === 3) {
+        textNode = node;
+        return true;
+      }
+      return false;
+    });
+    if (textNode) textNode.nodeValue = text;
+    else heading.insertBefore(document.createTextNode(text), heading.firstChild);
+  }
+
   function decorateBanner(key) {
     if (!TYPES[key]) return;
     var banner = document.getElementById('missingBanner');
     var heading = banner && banner.querySelector('h3');
     if (!heading) return;
 
-    var name = TYPES[key] || key || '';
-    Array.prototype.forEach.call(heading.childNodes, function (node) {
-      if (node.nodeType === 3 && node.nodeValue.indexOf('收缴进度') >= 0) {
-        node.nodeValue = node.nodeValue.replace(/^.*?收缴进度：/, name + ' 收缴进度：');
-      }
-    });
+    setHeadingText(heading, TYPES[key] + '收缴进度');
 
     var old = heading.querySelector('.quality-admin-global');
     if (old) old.remove();
