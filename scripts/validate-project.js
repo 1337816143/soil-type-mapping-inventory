@@ -40,7 +40,9 @@ requiredCategories.forEach((name) => {
   if (position < lastPosition) fail('参考文件标准分组顺序错误');
   lastPosition = position;
 });
-if (!releaseUi.includes("group.open = false")) fail('参考文件分组未设置默认收起');
+if (!releaseUi.includes('group.open = false')) fail('参考文件分组未设置默认收起');
+if (!releaseUi.includes('__unitDeduplicated')) fail('城市作业单位徽标未启用去重');
+if (!releaseUi.includes('家单位（去重）')) fail('城市作业单位去重口径未标明');
 if (!regional.includes("progressChip('区县'")) fail('片区摘要缺少区县统计块');
 if (!regional.includes('expectedUnitKeys:new Set()') || !regional.includes('receivedUnitKeys:new Set()')) {
   fail('作业单位统计未采用集合去重');
