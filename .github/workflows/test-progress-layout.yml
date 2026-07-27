@@ -1,0 +1,138 @@
+name: Test progress layout
+
+on:
+  push:
+    branches: [polish-progress-layout]
+    paths:
+      - '.github/workflows/test-progress-layout.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: polish-progress-layout
+          fetch-depth: 0
+
+      - name: Install DOM test dependency
+        run: npm install --no-save --no-package-lock jsdom@24
+
+      - name: Validate JavaScript, layout and dynamic refresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check regional-progress-dashboard.js
+          node --check page-enhancements.js
+          node --check upload-config.js
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/deploy.yml')"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const {JSDOM} = require('jsdom');
+
+          const html = fs.readFileSync('index.html', 'utf8');
+          function between(startText, endText) {
+            const start = html.indexOf(startText);
+            const end = html.indexOf(endText, start);
+            if (start < 0 || end < 0) throw new Error(`无法定位：${startText}`);
+            return html.slice(start, end);
+          }
+
+          const dom = new JSDOM('<!doctype html><html><head></head><body>' +
+            '<div id="missingBanner" class="missing-banner"></div>' +
+            '<div class="tab active" data-tab="soilType"></div>' +
+            '</body></html>', {runScripts:'outside-only', url:'https://example.test/'});
+          const window = dom.window;
+          const context = dom.getInternalVMContext();
+
+          Object.defineProperty(window.document, 'readyState', {value:'complete', configurable:true});
+          vm.runInContext(between('var masterList = [', '// 从 tabData'), context);
+          vm.runInContext(between('function collectSubmittedDistricts', 'var soilTypeData = ['), context);
+          vm.runInContext(between('var soilTypeData = [', '\nvar soilAttrData = ['), context);
+          window.tabData = {soilType: window.soilTypeData};
+
+          window.calculateDashboardStats = function(){ return {}; };
+          window.renderMissingBanner = function(){};
+          window.renderCities = function(){
+            return '<div class="summary-bar"><div class="summary-card">旧统计</div></div>' +
+              '<section class="city-section">城市成果内容</section>';
+          };
+          window.refreshAllTabs = function(){
+            window.__cityHtml = window.renderCities([], 'soilType');
+          };
+
+          vm.runInContext(fs.readFileSync('task-unit-mappings.js', 'utf8'), context);
+          vm.runInContext(fs.readFileSync('regional-progress-dashboard.js', 'utf8'), context);
+
+          const banner = window.document.getElementById('missingBanner');
+          const output = banner.innerHTML;
+          const titlePos = output.indexOf('土壤类型图收缴进度');
+          const overallPos = output.indexOf('progress-overview-summary');
+          const northPos = output.indexOf('data-region="north"');
+          const southPos = output.indexOf('data-region="south"');
+          if (!(titlePos >= 0 && titlePos < overallPos && overallPos < northPos && northPos < southPos)) {
+            throw new Error('布局顺序不是“标题→整体统计→北部→南部”');
+          }
+          if (output.includes('分片区收缴进度')) throw new Error('仍显示旧标题');
+          if (banner.querySelectorAll('.progress-overview-summary .summary-card').length !== 4) {
+            throw new Error('整体统计应为4张卡');
+          }
+          if (banner.querySelectorAll('details.regional-progress-section').length !== 2) {
+            throw new Error('应有北部、南部2个折叠栏');
+          }
+          if (banner.querySelector('details[open]')) throw new Error('片区默认应收起');
+          if (banner.querySelectorAll('.regional-progress-chip').length !== 6) {
+            throw new Error('每个片区应展示3项摘要统计');
+          }
+          if (!window.__cityHtml.includes('city-section') || window.__cityHtml.includes('summary-bar')) {
+            throw new Error('城市成果列表顶部的旧统计栏未移除');
+          }
+
+          const before = window.SoilRegionalProgress.calculate('soilType');
+          const totals = before.overall;
+          const expected = [73,142,3,9,27,52,76,151];
+          const actual = [totals.totalDistricts, totals.expDistricts, totals.totalMunicipal,
+            totals.expMunicipal, totals.totalUnits, totals.expUnits, totals.totalTasks, totals.expTasks];
+          if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+            throw new Error('当前整体统计不符合预期：' + JSON.stringify(actual));
+          }
+
+          const missing = before.cities.flatMap(city => city.missing).find(item => !item.municipal);
+          if (!missing) throw new Error('找不到可用于动态更新测试的缺失任务');
+          let city = window.tabData.soilType.find(item => item.name === missing.city);
+          if (!city) {
+            city = {name:missing.city, units:[]};
+            window.tabData.soilType.push(city);
+          }
+          let unit = city.units.find(item => item.name === missing.unit);
+          if (!unit) {
+            unit = {name:missing.unit, districts:[]};
+            city.units.push(unit);
+          }
+          unit.districts.push({label:missing.district, docs:[{batch:'动态测试', file:'dynamic-test.pdf'}]});
+          const after = window.SoilRegionalProgress.calculate('soilType');
+          if (after.overall.totalTasks !== before.overall.totalTasks + 1) {
+            throw new Error('新增成果后任务单元统计没有动态增加');
+          }
+          window.SoilRegionalProgress.refresh();
+          if (!banner.innerHTML.includes(String(after.overall.totalTasks) + ' / ' + String(after.overall.expTasks))) {
+            throw new Error('刷新后页面没有显示新的动态统计');
+          }
+          NODE
+
+          printf 'progress layout and live statistics validation passed\n' > progress-layout-test-result.txt
+
+      - name: Record successful validation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add progress-layout-test-result.txt
+          git commit -m "test: record progress layout validation"
+          git push origin HEAD:polish-progress-layout
