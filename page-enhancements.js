@@ -20,6 +20,6 @@
     .then(function () { return loadScript('./upload-auth-reply-batch.js'); })
     .then(function () { return loadScript('./upload-token-default.js'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
-    .then(function () { return loadScript('./chunked-staged-upload.js?v=20260727-2'); })
+    .then(function () { return loadScript('./hybrid-staged-upload.js?v=20260727-1'); })
     .catch(function (error) { console.error(error); });
 })();
