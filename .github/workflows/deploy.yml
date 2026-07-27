@@ -32,6 +32,7 @@ jobs:
             upload-config.js
             page-enhancements.js
             page-enhancements-core.js
+            task-unit-mappings.js
             dashboard-extension.js
             reference-library.js
             admin-import.js
@@ -60,6 +61,7 @@ jobs:
           test -f upload-config.js
           test -f page-enhancements.js
           test -f page-enhancements-core.js
+          test -f task-unit-mappings.js
           test -f dashboard-extension.js
           test -f reference-library.js
           test -f admin-import.js
@@ -79,6 +81,7 @@ jobs:
           test -f data/admin-import-index.json
           grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'page-enhancements-core.js' page-enhancements.js
+          grep -q 'task-unit-mappings.js' page-enhancements.js
           grep -q 'dashboard-extension.js' page-enhancements.js
           grep -q 'reference-library.js' page-enhancements.js
           grep -q 'admin-quality-ui.js' page-enhancements.js
@@ -90,6 +93,12 @@ jobs:
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q 'hybrid-staged-upload.js' page-enhancements.js
+          grep -q 'SoilTaskUnitLists' task-unit-mappings.js
+          grep -q "dataKey === 'soilType'" task-unit-mappings.js
+          grep -q '中地科勘察设计有限公司' task-unit-mappings.js
+          grep -q '石家庄师兄弟土地环境技术服务有限公司' task-unit-mappings.js
+          grep -q "key === 'references'" dashboard-extension.js
+          grep -q 'hideCollectionBanner' reference-library.js
           grep -q 'SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
           grep -q 'soilGithubUploadTokenV2' upload-token-default.js
           grep -q 'SINGLE_BLOB_LIMIT = 39 \* 1024 \* 1024' hybrid-staged-upload.js

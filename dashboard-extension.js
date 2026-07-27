@@ -76,11 +76,17 @@
 
   function activeKey() {
     var tab = document.querySelector('.tab.active');
-    return tab && tab.dataset.tab && TYPES[tab.dataset.tab] ? tab.dataset.tab : 'soilType';
+    return tab && tab.dataset.tab ? tab.dataset.tab : 'soilType';
   }
   window.getActiveDashboardKey = activeKey;
 
+  function hideCollectionBanner() {
+    var banner = document.getElementById('missingBanner');
+    if (banner) banner.style.display = 'none';
+  }
+
   function decorateBanner(key) {
+    if (!TYPES[key]) return;
     var banner = document.getElementById('missingBanner');
     var heading = banner && banner.querySelector('h3');
     if (!heading) return;
@@ -115,6 +121,10 @@
     if (window.__dashboardMissingWrapped || typeof window.renderMissingBanner !== 'function') return;
     var original = window.renderMissingBanner;
     window.renderMissingBanner = function (key) {
+      if (key === 'references') {
+        hideCollectionBanner();
+        return;
+      }
       original(key);
       decorateBanner(key);
     };
@@ -156,7 +166,12 @@
 
   function refreshDashboard() {
     if (typeof window.refreshAllTabs === 'function') window.refreshAllTabs();
-    if (typeof window.renderMissingBanner === 'function') window.renderMissingBanner(activeKey());
+    var key = activeKey();
+    if (key === 'references') {
+      hideCollectionBanner();
+      return;
+    }
+    if (typeof window.renderMissingBanner === 'function' && TYPES[key]) window.renderMissingBanner(key);
   }
 
   window.applyAdminQualityIndex = function (entries) {
@@ -177,6 +192,10 @@
       tab.dataset.dashboardStatsBound = '1';
       tab.addEventListener('click', function () {
         var key = tab.dataset.tab;
+        if (key === 'references') {
+          setTimeout(hideCollectionBanner, 0);
+          return;
+        }
         if (TYPES[key]) setTimeout(function () { decorateBanner(key); }, 0);
       });
     });

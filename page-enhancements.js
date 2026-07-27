@@ -10,8 +10,9 @@
   }
 
   loadScript('./page-enhancements-core.js')
-    .then(function () { return loadScript('./dashboard-extension.js'); })
-    .then(function () { return loadScript('./reference-library.js'); })
+    .then(function () { return loadScript('./task-unit-mappings.js?v=20260727-1'); })
+    .then(function () { return loadScript('./dashboard-extension.js?v=20260727-2'); })
+    .then(function () { return loadScript('./reference-library.js?v=20260727-2'); })
     .then(function () { return loadScript('./admin-quality-ui.js'); })
     .then(function () { return loadScript('./admin-quality-upload.js'); })
     .then(function () { return loadScript('./admin-import-v2.js'); })
