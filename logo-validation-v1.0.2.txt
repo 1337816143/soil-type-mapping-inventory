@@ -1,0 +1,5 @@
+v1.0.2 supplied transparent PNG logo embedded
+source image sha256: 6ca6e0b82bcc3a303e47f468eb51dd5ee0cb1bb644cf464a70e18487509517ad
+optimized display PNG sha256: d26d89c9dfb973ee8824ec5d76454d1e05cf8d19b0277912dbde6560aede80fb
+header and footer replacement enabled
+legacy clipping override disabled
