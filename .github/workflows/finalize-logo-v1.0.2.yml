@@ -1,0 +1,123 @@
+name: Finalize supplied soil survey logo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-logo-v1.0.2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Assemble PNG and update release files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat scripts/logo-v1.0.2.part0 scripts/logo-v1.0.2.part1 | tr -d '\r\n ' | base64 --decode > assets/soil-survey-logo.png
+
+          python3 <<'PY'
+          from pathlib import Path
+          import struct
+
+          png = Path('assets/soil-survey-logo.png').read_bytes()
+          if png[:8] != b'\x89PNG\r\n\x1a\n':
+              raise SystemExit('新Logo不是有效PNG')
+          width, height, bit_depth, color_type = struct.unpack('>IIBB', png[16:26])
+          if (width, height) != (128, 128):
+              raise SystemExit(f'新Logo尺寸异常：{width}x{height}')
+          if color_type not in (4, 6):
+              raise SystemExit(f'新Logo没有Alpha透明通道，PNG color type={color_type}')
+
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'{path} 未找到待替换内容：{old}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          replace('page-enhancements-core.js', "var SOIL_SURVEY_LOGO = './assets/soil-survey-logo.svg';", "var SOIL_SURVEY_LOGO = './assets/soil-survey-logo.png?v=1.0.2';")
+
+          p = Path('app-release-ui.js')
+          text = p.read_text(encoding='utf-8')
+          text = text.replace("var VERSION = 'v1.0.1';", "var VERSION = 'v1.0.2';")
+          old_desktop = ".page-title-logo-frame{display:inline-flex;width:58px;height:58px;min-width:58px;flex:0 0 58px;align-items:center;justify-content:center;overflow:hidden;border-radius:10px;background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.18)}' +\n      '.page-title-logo-frame .page-title-logo{display:block!important;width:74px!important;height:74px!important;min-width:74px!important;max-width:none!important;flex:0 0 74px!important;object-fit:contain!important;transform:scale(1.08);transform-origin:center}"
+          new_desktop = ".page-title-logo-frame{display:inline-flex;width:62px;height:62px;min-width:62px;flex:0 0 62px;align-items:center;justify-content:center;overflow:visible;border-radius:50%;background:transparent;box-shadow:none}' +\n      '.page-title-logo-frame .page-title-logo{display:block!important;width:60px!important;height:60px!important;min-width:60px!important;max-width:60px!important;flex:0 0 60px!important;object-fit:contain!important;transform:none!important;transform-origin:center}"
+          if old_desktop not in text:
+              raise SystemExit('app-release-ui.js 未找到旧Logo裁切样式')
+          text = text.replace(old_desktop, new_desktop)
+          old_mobile = "@media(max-width:760px){.page-title-logo-frame{width:46px;height:46px;min-width:46px;flex-basis:46px;border-radius:8px}.page-title-logo-frame .page-title-logo{width:59px!important;height:59px!important;min-width:59px!important;flex-basis:59px!important}.app-version-badge"
+          new_mobile = "@media(max-width:760px){.page-title-logo-frame{width:50px;height:50px;min-width:50px;flex-basis:50px;border-radius:50%}.page-title-logo-frame .page-title-logo{width:48px!important;height:48px!important;min-width:48px!important;max-width:48px!important;flex-basis:48px!important}.app-version-badge"
+          if old_mobile not in text:
+              raise SystemExit('app-release-ui.js 未找到移动端Logo样式')
+          text = text.replace(old_mobile, new_mobile)
+          p.write_text(text, encoding='utf-8')
+
+          replace('upload-config.js', "window.SOIL_APP_VERSION = 'v1.0.1';", "window.SOIL_APP_VERSION = 'v1.0.2';")
+          replace('upload-config.js', 'page-enhancements.js?v=20260727-12', 'page-enhancements.js?v=20260727-13')
+          replace('page-enhancements.js', 'app-release-ui.js?v=1.0.1', 'app-release-ui.js?v=1.0.2')
+          replace('page-enhancements.js', 'admin-delete-manager.js?v=1.0.1', 'admin-delete-manager.js?v=1.0.2')
+
+          Path('VERSION').write_text('v1.0.2\n', encoding='utf-8')
+          changelog = Path('CHANGELOG.md').read_text(encoding='utf-8')
+          entry = "## v1.0.2 — 2026-07-27\n\n- 使用用户提供的透明PNG替换第三次全国土壤普查Logo，页首与页脚统一使用新图。\n- 取消旧Logo的放大裁切规则，完整显示新Logo外圈，并清理临时分片文件。\n\n"
+          if '## v1.0.2' not in changelog:
+              changelog = changelog.replace('# Changelog\n\n', '# Changelog\n\n' + entry, 1)
+          Path('CHANGELOG.md').write_text(changelog, encoding='utf-8')
+
+          for path in ['.github/workflows/deploy.yml', 'scripts/validate-project.js']:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              text = text.replace('v1.0.1', 'v1.0.2')
+              text = text.replace('page-enhancements.js?v=20260727-12', 'page-enhancements.js?v=20260727-13')
+              text = text.replace('assets/soil-survey-logo.svg', 'assets/soil-survey-logo.png')
+              p.write_text(text, encoding='utf-8')
+          PY
+
+          rm -f assets/soil-survey-logo.svg
+          rm -f scripts/logo-v1.0.2.part0 scripts/logo-v1.0.2.part1
+          rm -f .github/workflows/finalize-logo-v1.0.2.yml
+
+      - name: Validate final repository state
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f assets/soil-survey-logo.png
+          test ! -e assets/soil-survey-logo.svg
+          test ! -e scripts/logo-v1.0.2.part0
+          test ! -e scripts/logo-v1.0.2.part1
+          test ! -e .github/workflows/finalize-logo-v1.0.2.yml
+          grep -qx 'v1.0.2' VERSION
+          grep -q '## v1.0.2' CHANGELOG.md
+          grep -q 'soil-survey-logo.png?v=1.0.2' page-enhancements-core.js
+          grep -q "var VERSION = 'v1.0.2'" app-release-ui.js
+          grep -q 'transform:none!important' app-release-ui.js
+          grep -q "window.SOIL_APP_VERSION = 'v1.0.2'" upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-13' upload-config.js
+          grep -q 'app-release-ui.js?v=1.0.2' page-enhancements.js
+          ! grep -R --exclude-dir=.git -n 'soil-survey-logo.svg' .
+          node --check page-enhancements-core.js
+          node --check app-release-ui.js
+          node --check upload-config.js
+          node --check page-enhancements.js
+          node scripts/validate-project.js
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/deploy.yml')"
+
+      - name: Commit finalized logo release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: finalize v1.0.2 soil survey logo'
+          git push origin HEAD:main
