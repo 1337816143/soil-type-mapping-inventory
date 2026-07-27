@@ -43,6 +43,7 @@ jobs:
             upload-auth-reply-batch.js
             upload-token-default.js
             pptx-auto-split.js
+            release-upload-reliability.js
             release-staged-upload.js
             assets
             data
@@ -68,6 +69,7 @@ jobs:
           test -f upload-auth-reply-batch.js
           test -f upload-token-default.js
           test -f pptx-auto-split.js
+          test -f release-upload-reliability.js
           test -f release-staged-upload.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
@@ -83,9 +85,12 @@ jobs:
           grep -q 'upload-auth-reply-batch.js' page-enhancements.js
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
+          grep -q 'release-upload-reliability.js' page-enhancements.js
           grep -q 'release-staged-upload.js' page-enhancements.js
           grep -q 'SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
           grep -q 'soilGithubUploadTokenV2' upload-token-default.js
+          grep -q 'uploads.github.com' release-upload-reliability.js
+          grep -q 'MAX_ATTEMPTS = 4' release-upload-reliability.js
           grep -q '原始二进制暂存到 GitHub 临时 Release' release-staged-upload.js
           grep -q '土壤退化与障碍分析' dashboard-extension.js
           grep -q '土特产品适宜性评价' dashboard-extension.js
