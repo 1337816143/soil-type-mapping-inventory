@@ -1,0 +1,47 @@
+name: Inspect unbatched reply files
+
+on:
+  push:
+    branches: [inspect-legacy-replies]
+    paths:
+      - '.github/workflows/inspect-legacy-replies.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: inspect-legacy-replies
+          fetch-depth: 0
+
+      - name: List legacy replies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json, re
+          from pathlib import Path
+          root = Path('replies')
+          files = []
+          if root.exists():
+              for path in sorted(root.rglob('*')):
+                  if not path.is_file():
+                      continue
+                  name = path.name
+                  legacy = bool(re.match(r'^(.*)_整改答复_([0-9]+)\.([a-z0-9]+)$', name, re.I)) and '_批次-' not in name
+                  files.append({'path': path.as_posix(), 'name': name, 'size': path.stat().st_size, 'legacy': legacy})
+          Path('legacy-replies-inspection.json').write_text(json.dumps(files, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Record inspection
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add legacy-replies-inspection.json
+          git commit -m "test: record legacy reply inspection"
+          git push origin HEAD:inspect-legacy-replies
