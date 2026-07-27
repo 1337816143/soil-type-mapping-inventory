@@ -27,8 +27,8 @@ if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('uplo
 if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js 版本号与 VERSION 不一致');
 if (!loader.includes(`app-release-ui.js?v=${version.slice(1)}`)) fail('版本界面脚本未按当前版本加载');
 if (!loader.includes(`soil-survey-logo-${version}.js?v=${version.slice(1)}`)) fail('新三普Logo脚本未按当前版本加载');
-if (!logoPatch.includes("data:image/png;base64,")) fail('新三普Logo未按PNG数据资源加载');
-if (!logoPatch.includes('logo-v1.0.2.part0') || !logoPatch.includes('logo-v1.0.2.part1')) fail('新三普Logo资源分片不完整');
+const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
+if (!logoMatch || logoMatch[1].length < 8000 || !logoMatch[1].startsWith('iVBORw0KGgo')) fail('新三普Logo PNG数据不完整');
 if (!logoPatch.includes('transform:none!important')) fail('新三普Logo仍可能被旧裁切规则截断');
 
 const requiredCategories = [
