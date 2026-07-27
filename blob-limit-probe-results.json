@@ -1,0 +1,74 @@
+[
+  {
+    "raw_mib": 24,
+    "raw_bytes": 25165824,
+    "request_bytes": 33554466,
+    "request_mib": 32.0,
+    "status": 201,
+    "ok": true,
+    "sha": "b2c17eb5c8392aa1749eba7bce9469be5cf0c85a"
+  },
+  {
+    "raw_mib": 30,
+    "raw_bytes": 31457280,
+    "request_bytes": 41943074,
+    "request_mib": 40.0,
+    "status": 201,
+    "ok": true,
+    "sha": "1677f9b5c885a92f581086f39bcbe0bc8653188f"
+  },
+  {
+    "raw_mib": 32,
+    "raw_bytes": 33554432,
+    "request_bytes": 44739278,
+    "request_mib": 42.667,
+    "status": 201,
+    "ok": true,
+    "sha": "574bfc0018c8144c050a44c328a1aa7a4691e3e4"
+  },
+  {
+    "raw_mib": 34,
+    "raw_bytes": 35651584,
+    "request_bytes": 47535482,
+    "request_mib": 45.333,
+    "status": 201,
+    "ok": true,
+    "sha": "baa59760995ab9dc5ca84b5dd1f7be07a1992842"
+  },
+  {
+    "raw_mib": 36,
+    "raw_bytes": 37748736,
+    "request_bytes": 50331682,
+    "request_mib": 48.0,
+    "status": 201,
+    "ok": true,
+    "sha": "3da077f0807fdfb031926211a7c4f76924ce3b24"
+  },
+  {
+    "raw_mib": 37,
+    "raw_bytes": 38797312,
+    "request_bytes": 51729786,
+    "request_mib": 49.333,
+    "status": 201,
+    "ok": true,
+    "sha": "c6a85544c8a791389f4e85bf8dc374b701b5a425"
+  },
+  {
+    "raw_mib": 38,
+    "raw_bytes": 39845888,
+    "request_bytes": 53127886,
+    "request_mib": 50.667,
+    "status": 201,
+    "ok": true,
+    "sha": "583972bd80be4ccc0fe2c70d529767201d2dc6d3"
+  },
+  {
+    "raw_mib": 39,
+    "raw_bytes": 40894464,
+    "request_bytes": 54525986,
+    "request_mib": 52.0,
+    "status": 201,
+    "ok": true,
+    "sha": "ab22054e51aeeb678ac3b3e34c219dbcf032206d"
+  }
+]
