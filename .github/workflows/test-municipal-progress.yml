@@ -1,0 +1,176 @@
+name: Test municipal progress and Chinese titles
+
+on:
+  push:
+    branches: [fix-north-municipal-and-labels]
+    paths:
+      - '.github/workflows/test-municipal-progress.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-north-municipal-and-labels
+          fetch-depth: 0
+
+      - name: Install DOM test dependency
+        run: npm install --no-save --no-package-lock jsdom@24
+
+      - name: Validate statistics, titles and table layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check regional-progress-dashboard.js
+          node --check dashboard-extension.js
+          node --check page-enhancements.js
+          node --check upload-config.js
+          ruby -e "require 'yaml'; YAML.load_file('.github/workflows/deploy.yml')"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const {JSDOM} = require('jsdom');
+          const html = fs.readFileSync('index.html', 'utf8');
+
+          function between(startText, endText) {
+            const start = html.indexOf(startText);
+            const end = html.indexOf(endText, start);
+            if (start < 0 || end < 0) throw new Error(`无法定位：${startText}`);
+            return html.slice(start, end);
+          }
+
+          const tabs = [
+            ['soilType','土壤类型图'],['soilAttr','土壤属性图'],['farmland','耕地质量等级评价'],
+            ['degradation','土壤退化与障碍分析'],['specialty','土特产品适宜性评价'],
+            ['agriSuitability','土壤农业利用适宜性评价'],['landUse','土地资源评价与利用报告']
+          ];
+          const tabHtml = tabs.map(([key,name], index) =>
+            `<div class="tab${index === 0 ? ' active' : ''}" data-tab="${key}">${name}</div>` +
+            `<div id="tab-${key}" class="tab-content"><div class="content"></div></div>`).join('');
+          const dom = new JSDOM('<!doctype html><html><head></head><body><header><div class="tabs">' +
+            tabHtml + '</div></header><div class="container"><div id="missingBanner" class="missing-banner"></div></div></body></html>',
+            {runScripts:'outside-only', url:'https://example.test/'});
+          const window = dom.window;
+          const context = dom.getInternalVMContext();
+          Object.defineProperty(window.document, 'readyState', {value:'complete', configurable:true});
+          window.fetch = () => Promise.resolve({ok:true, json:() => Promise.resolve([])});
+          window.alert = function(){};
+
+          vm.runInContext(between('var masterList = [', '// 从 tabData'), context);
+          vm.runInContext(between('function collectSubmittedDistricts', 'var soilTypeData = ['), context);
+          vm.runInContext(between('var soilTypeData = [', '\nvar soilAttrData = ['), context);
+          window.tabData = {soilType:window.soilTypeData};
+          tabs.slice(1).forEach(([key]) => { window.tabData[key] = []; });
+          window.calculateDashboardStats = function(){ return {}; };
+          window.renderMissingBanner = function(){};
+          window.renderCities = function(){ return '<section class="city-section">城市内容</section>'; };
+          window.refreshAllTabs = function(){};
+
+          vm.runInContext(fs.readFileSync('task-unit-mappings.js', 'utf8'), context);
+          vm.runInContext(fs.readFileSync('regional-progress-dashboard.js', 'utf8'), context);
+
+          const progress = window.SoilRegionalProgress.calculate('soilType');
+          const byCity = Object.fromEntries(progress.cities.map(city => [city.city, city]));
+          if (progress.regions.north.expMunicipal !== 7) {
+            throw new Error('北部市级应有应为7，实际为' + progress.regions.north.expMunicipal);
+          }
+          if (progress.regions.south.expMunicipal !== 5) {
+            throw new Error('南部市级应有应为5，实际为' + progress.regions.south.expMunicipal);
+          }
+          if (progress.overall.expMunicipal !== 12) {
+            throw new Error('全省市级应有应为12，实际为' + progress.overall.expMunicipal);
+          }
+          if (byCity['定州市'].expMunicipal !== 0 || byCity['辛集市'].expMunicipal !== 0) {
+            throw new Error('定州市和辛集市不应计入市级成果');
+          }
+          ['秦皇岛市','保定市','承德市','雄安新区','唐山市','廊坊市','张家口市'].forEach(city => {
+            if (!byCity[city] || byCity[city].expMunicipal !== 1) {
+              throw new Error(city + '应有1个市级成果');
+            }
+          });
+
+          const titles = {
+            soilType:'土壤类型图收缴进度', soilAttr:'土壤属性图收缴进度',
+            farmland:'耕地质量等级评价收缴进度', degradation:'土壤退化与障碍分析收缴进度',
+            specialty:'土特产品适宜性评价收缴进度',
+            agriSuitability:'土壤农业利用适宜性评价收缴进度',
+            landUse:'土地资源评价与利用报告收缴进度'
+          };
+          for (const [key, title] of Object.entries(titles)) {
+            window.renderMissingBanner(key);
+            const heading = window.document.querySelector('#missingBanner h3');
+            if (!heading || !heading.textContent.startsWith(title)) {
+              throw new Error(`${key}标题错误：${heading && heading.textContent}`);
+            }
+            if (heading.textContent.startsWith(key)) throw new Error(`${key}仍显示英文内部键名`);
+          }
+          window.renderMissingBanner('unmappedInternalKey');
+          if (window.document.querySelector('#missingBanner h3').textContent.startsWith('unmappedInternalKey')) {
+            throw new Error('未知内部键仍直接显示英文');
+          }
+
+          window.renderMissingBanner('soilType');
+          const north = window.document.querySelector('details[data-region="north"]');
+          north.open = true;
+          const table = north.querySelector('.regional-progress-table');
+          if (!table || table.querySelectorAll('colgroup col').length !== 5) throw new Error('表格列宽结构不完整');
+          if (!north.querySelector('.regional-progress-table-wrap')) throw new Error('表格缺少横向滚动容器');
+          const headers = Array.from(table.querySelectorAll('thead th')).map(x => x.textContent.trim());
+          const expectedHeaders = ['市（区）','任务单元应有','任务单元已收','任务单元缺失','市级进度（已收 / 应有）'];
+          if (JSON.stringify(headers) !== JSON.stringify(expectedHeaders)) {
+            throw new Error('表头不正确：' + JSON.stringify(headers));
+          }
+          const styleText = window.document.getElementById('regional-progress-style').textContent;
+          if (!styleText.includes('table-layout:fixed') || !styleText.includes('text-align:center') ||
+              !styleText.includes('min-width:700px') || !styleText.includes('overflow-x:auto')) {
+            throw new Error('固定列宽、居中或窄屏滚动样式缺失');
+          }
+
+          const before = window.SoilRegionalProgress.calculate('soilType');
+          const missingMunicipal = before.cities.find(city => city.region === 'north' && city.expMunicipal === 1 && city.totalMunicipal === 0);
+          if (!missingMunicipal) throw new Error('找不到用于动态更新测试的北部市级缺失项');
+          let submittedCity = window.tabData.soilType.find(city => city.name === missingMunicipal.city);
+          if (!submittedCity) {
+            submittedCity = {name:missingMunicipal.city, units:[]};
+            window.tabData.soilType.push(submittedCity);
+          }
+          let submittedUnit = submittedCity.units[0];
+          if (!submittedUnit) {
+            submittedUnit = {name:'动态测试单位', districts:[]};
+            submittedCity.units.push(submittedUnit);
+          }
+          submittedUnit.districts.push({label:missingMunicipal.city, docs:[{batch:'动态测试', file:'dynamic-municipal.pdf'}]});
+          const after = window.SoilRegionalProgress.calculate('soilType');
+          if (after.regions.north.totalMunicipal !== before.regions.north.totalMunicipal + 1 ||
+              after.overall.totalMunicipal !== before.overall.totalMunicipal + 1 ||
+              after.overall.totalTasks !== before.overall.totalTasks + 1) {
+            throw new Error('新增市级成果后动态统计未同步更新');
+          }
+
+          fs.writeFileSync('municipal-progress-test-result.json', JSON.stringify({
+            before:{
+              northMunicipal:[before.regions.north.totalMunicipal,before.regions.north.expMunicipal],
+              southMunicipal:[before.regions.south.totalMunicipal,before.regions.south.expMunicipal],
+              overallMunicipal:[before.overall.totalMunicipal,before.overall.expMunicipal],
+              northTasks:[before.regions.north.totalTasks,before.regions.north.expTasks],
+              overallTasks:[before.overall.totalTasks,before.overall.expTasks]
+            },
+            dynamicCity:missingMunicipal.city,
+            afterNorthMunicipal:after.regions.north.totalMunicipal
+          }, null, 2) + '\n');
+          NODE
+
+      - name: Record successful validation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add municipal-progress-test-result.json
+          git commit -m "test: record municipal progress validation"
+          git push origin HEAD:fix-north-municipal-and-labels
