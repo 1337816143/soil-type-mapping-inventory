@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'v1.0.1';
+  var VERSION = 'v1.0.2';
   window.SOIL_APP_VERSION = VERSION;
   document.documentElement.setAttribute('data-app-version', VERSION);
 
@@ -11,11 +11,11 @@
     style.id = 'app-release-ui-style';
     style.textContent =
       'header h1.page-title-with-logo{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap}' +
-      '.page-title-logo-frame{display:inline-flex;width:58px;height:58px;min-width:58px;flex:0 0 58px;align-items:center;justify-content:center;overflow:hidden;border-radius:10px;background:transparent;box-shadow:0 0 0 1px rgba(255,255,255,.18)}' +
-      '.page-title-logo-frame .page-title-logo{display:block!important;width:74px!important;height:74px!important;min-width:74px!important;max-width:none!important;flex:0 0 74px!important;object-fit:contain!important;transform:scale(1.08);transform-origin:center}' +
+      '.page-title-logo-frame{display:inline-flex;width:62px;height:62px;min-width:62px;flex:0 0 62px;align-items:center;justify-content:center;overflow:visible;border-radius:50%;background:transparent;box-shadow:none}' +
+      '.page-title-logo-frame .page-title-logo{display:block!important;width:60px!important;height:60px!important;min-width:60px!important;max-width:60px!important;flex:0 0 60px!important;object-fit:contain!important;transform:none!important;transform-origin:center}' +
       '.app-version-badge{display:inline-flex;align-items:center;justify-content:center;padding:2px 7px;border:1px solid rgba(255,255,255,.34);border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:.67rem;font-weight:650;letter-spacing:.02em;line-height:1.4;white-space:nowrap}' +
       '.app-version-footer{margin-top:7px;color:var(--muted);font-size:.69rem;letter-spacing:.02em}' +
-      '@media(max-width:760px){.page-title-logo-frame{width:46px;height:46px;min-width:46px;flex-basis:46px;border-radius:8px}.page-title-logo-frame .page-title-logo{width:59px!important;height:59px!important;min-width:59px!important;flex-basis:59px!important}.app-version-badge{font-size:.62rem;padding:1px 6px}}';
+      '@media(max-width:760px){.page-title-logo-frame{width:50px;height:50px;min-width:50px;flex-basis:50px;border-radius:50%}.page-title-logo-frame .page-title-logo{width:48px!important;height:48px!important;min-width:48px!important;max-width:48px!important;flex-basis:48px!important}.app-version-badge{font-size:.62rem;padding:1px 6px}}';
     document.head.appendChild(style);
   }
 
