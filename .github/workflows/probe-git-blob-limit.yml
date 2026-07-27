@@ -1,0 +1,92 @@
+name: Probe Git blob API payload limit
+
+on:
+  push:
+    branches: [probe-git-blob-limit-20260727]
+    paths:
+      - '.github/workflows/probe-git-blob-limit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: probe-git-blob-limit-20260727
+          fetch-depth: 0
+
+      - name: Probe raw binary sizes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 <<'PY'
+          import base64
+          import json
+          import os
+          import urllib.error
+          import urllib.request
+          from pathlib import Path
+
+          token = os.environ['GH_TOKEN']
+          repo = os.environ['REPOSITORY']
+          endpoint = f'https://api.github.com/repos/{repo}/git/blobs'
+          sizes_mib = [24, 30, 32, 34, 36, 37, 38, 39]
+          results = []
+
+          for mib in sizes_mib:
+              raw_size = mib * 1024 * 1024
+              raw = b'X' * raw_size
+              encoded = base64.b64encode(raw).decode('ascii')
+              body = json.dumps({'content': encoded, 'encoding': 'base64'}, separators=(',', ':')).encode('utf-8')
+              request = urllib.request.Request(
+                  endpoint,
+                  data=body,
+                  method='POST',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                      'Content-Type': 'application/json',
+                      'User-Agent': 'soil-blob-limit-probe'
+                  }
+              )
+              record = {
+                  'raw_mib': mib,
+                  'raw_bytes': raw_size,
+                  'request_bytes': len(body),
+                  'request_mib': round(len(body) / 1024 / 1024, 3)
+              }
+              try:
+                  with urllib.request.urlopen(request, timeout=240) as response:
+                      payload = json.loads(response.read().decode('utf-8'))
+                      record.update({'status': response.status, 'ok': True, 'sha': payload.get('sha', '')})
+              except urllib.error.HTTPError as error:
+                  text = error.read().decode('utf-8', 'replace')
+                  try:
+                      payload = json.loads(text)
+                      message = payload.get('message', text)
+                  except Exception:
+                      message = text
+                  record.update({'status': error.code, 'ok': False, 'message': message})
+              except Exception as error:
+                  record.update({'status': 0, 'ok': False, 'message': repr(error)})
+              results.append(record)
+              del raw, encoded, body
+
+          Path('blob-limit-probe-results.json').write_text(
+              json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Commit probe results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blob-limit-probe-results.json
+          git commit -m "test: record Git blob API payload results"
+          git push origin HEAD:probe-git-blob-limit-20260727
