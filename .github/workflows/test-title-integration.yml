@@ -1,0 +1,78 @@
+name: Test integrated Chinese dashboard titles
+
+on:
+  push:
+    branches: [fix-north-municipal-and-labels]
+    paths:
+      - '.github/workflows/test-title-integration.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-north-municipal-and-labels
+          fetch-depth: 0
+      - run: npm install --no-save --no-package-lock jsdom@24
+      - name: Load regional and dashboard scripts together
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const vm = require('vm');
+          const {JSDOM} = require('jsdom');
+          const types = {
+            soilType:'土壤类型图', soilAttr:'土壤属性图', farmland:'耕地质量等级评价',
+            degradation:'土壤退化与障碍分析', specialty:'土特产品适宜性评价',
+            agriSuitability:'土壤农业利用适宜性评价', landUse:'土地资源评价与利用报告'
+          };
+          const tabs = Object.entries(types).map(([key,name], i) =>
+            `<div class="tab${i === 0 ? ' active' : ''}" data-tab="${key}">${name}</div>` +
+            `<div id="tab-${key}" class="tab-content"><div class="content"></div></div>`).join('');
+          const dom = new JSDOM(`<!doctype html><html><head></head><body><header><div class="tabs">${tabs}</div></header>` +
+            '<div class="container"><div id="missingBanner"></div></div></body></html>',
+            {runScripts:'outside-only', url:'https://example.test/'});
+          const window = dom.window;
+          const context = dom.getInternalVMContext();
+          Object.defineProperty(window.document, 'readyState', {value:'complete', configurable:true});
+          window.SoilTaskUnitLists = {soilType:[], other:[]};
+          window.masterList = [];
+          window.tabData = Object.fromEntries(Object.keys(types).map(key => [key,[]]));
+          window.collectSubmittedDistricts = () => ({});
+          window.isMunicipalTask = () => false;
+          window.isDistrictMatched = () => false;
+          window.renderCities = () => '';
+          window.refreshAllTabs = () => {};
+          window.calculateDashboardStats = () => ({});
+          window.renderMissingBanner = () => {};
+          window.openSoilAdminImport = () => {};
+          window.fetch = () => Promise.resolve({ok:true, json:() => Promise.resolve([])});
+          window.alert = () => {};
+
+          vm.runInContext(fs.readFileSync('regional-progress-dashboard.js', 'utf8'), context);
+          vm.runInContext(fs.readFileSync('dashboard-extension.js', 'utf8'), context);
+
+          for (const [key,name] of Object.entries(types)) {
+            window.renderMissingBanner(key);
+            const heading = window.document.querySelector('#missingBanner h3');
+            if (!heading || !heading.textContent.startsWith(name + '收缴进度')) {
+              throw new Error(`${key}集成标题错误：${heading && heading.textContent}`);
+            }
+            if (heading.textContent.startsWith(key)) throw new Error(`${key}显示了英文键名`);
+          }
+          fs.writeFileSync('title-integration-test-result.txt', 'integrated Chinese titles validation passed\n');
+          NODE
+      - name: Record successful validation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add title-integration-test-result.txt
+          git commit -m "test: record integrated title validation"
+          git push origin HEAD:fix-north-municipal-and-labels
