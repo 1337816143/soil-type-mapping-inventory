@@ -15,6 +15,7 @@
     .then(function () { return loadScript('./dashboard-extension.js?v=20260727-4'); })
     .then(function () { return loadScript('./reference-library.js?v=20260727-4'); })
     .then(function () { return loadScript('./app-release-ui.js?v=1.0.1'); })
+    .then(function () { return loadScript('./soil-survey-logo-v1.0.2.js?v=1.0.2'); })
     .then(function () { return loadScript('./admin-quality-ui.js'); })
     .then(function () { return loadScript('./admin-quality-upload.js'); })
     .then(function () { return loadScript('./admin-import-v2.js'); })
