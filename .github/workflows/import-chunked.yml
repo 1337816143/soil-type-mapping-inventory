@@ -1,4 +1,4 @@
-name: Import chunked staging branch
+name: Import hybrid staging branch
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: soil-chunked-import
+  group: soil-hybrid-import
   cancel-in-progress: false
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Validate and reconstruct chunks
+      - name: Validate and restore staged files
         id: manifest
         shell: bash
         run: |
@@ -39,7 +39,7 @@ jobs:
           root = Path.cwd().resolve()
           ready_path = root / '.soil-upload' / 'ready.json'
           ready = json.loads(ready_path.read_text(encoding='utf-8'))
-          if ready.get('schemaVersion') != 2:
+          if ready.get('schemaVersion') != 3:
               raise SystemExit('不支持的 ready 清单版本')
 
           manifest_rel = str(ready.get('manifestPath') or '')
@@ -48,7 +48,7 @@ jobs:
               raise SystemExit('manifestPath 非法')
           manifest_path = root / manifest_rel
           manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
-          if manifest.get('schemaVersion') != 2:
+          if manifest.get('schemaVersion') != 3:
               raise SystemExit('不支持的导入清单版本')
           if str(manifest.get('uploadId') or '') != str(ready.get('uploadId') or ''):
               raise SystemExit('uploadId 不一致')
@@ -57,42 +57,72 @@ jobs:
           if not target_branch or target_branch.startswith('-') or any(x in target_branch for x in ['..', '~', '^', ':', '?', '*', '[', '\\']):
               raise SystemExit('目标分支名称非法')
 
+          direct_limit = int(manifest.get('singleBlobLimit') or 0)
+          chunk_size = int(manifest.get('chunkSize') or 0)
+          if direct_limit != 39 * 1024 * 1024 or chunk_size != 39 * 1024 * 1024:
+              raise SystemExit('上传阈值配置不一致')
+
           files = manifest.get('files')
           if not isinstance(files, list) or not files:
               raise SystemExit('导入清单中没有文件')
 
-          restored = Path('/tmp/soil-chunked-restored')
+          restored = Path('/tmp/soil-hybrid-restored')
           if restored.exists():
               shutil.rmtree(restored)
           restored.mkdir(parents=True)
 
+          def validate_stage_path(raw):
+              value = str(raw or '')
+              posix = PurePosixPath(value)
+              if not value.startswith('.soil-upload/') or posix.is_absolute() or '..' in posix.parts:
+                  raise SystemExit(f'非法暂存路径：{value}')
+              source = root / value
+              if not source.is_file():
+                  raise SystemExit(f'找不到暂存文件：{value}')
+              return source
+
           for index, item in enumerate(sorted(files, key=lambda x: int(x.get('order') or 0)), start=1):
-              chunks = item.get('chunks')
-              if not isinstance(chunks, list) or not chunks:
-                  raise SystemExit(f'文件 {index} 没有分块')
+              storage = str(item.get('storage') or '')
               output = restored / f'{index:04d}.bin'
               actual = 0
-              with output.open('wb') as destination:
-                  for chunk in chunks:
-                      rel = str(chunk.get('path') or '')
-                      posix = PurePosixPath(rel)
-                      if not rel.startswith('.soil-upload/') or posix.is_absolute() or '..' in posix.parts:
-                          raise SystemExit(f'非法分块路径：{rel}')
-                      source = root / rel
-                      if not source.is_file():
-                          raise SystemExit(f'找不到分块：{rel}')
-                      expected = int(chunk.get('size') or 0)
-                      if source.stat().st_size != expected:
-                          raise SystemExit(f'分块大小不一致：{rel}')
-                      with source.open('rb') as handle:
-                          shutil.copyfileobj(handle, destination, length=1024 * 1024)
-                      actual += expected
+
+              if storage == 'whole':
+                  whole = item.get('whole')
+                  if not isinstance(whole, dict):
+                      raise SystemExit(f'整文件 {index} 缺少 whole 信息')
+                  source = validate_stage_path(whole.get('path'))
+                  expected = int(whole.get('size') or 0)
+                  if expected > direct_limit:
+                      raise SystemExit(f'整文件超过单 Blob 安全阈值：{item.get("originalName") or index}')
+                  if source.stat().st_size != expected:
+                      raise SystemExit(f'整文件大小不一致：{whole.get("path")}')
+                  shutil.copy2(source, output)
+                  actual = expected
+
+              elif storage == 'chunked':
+                  chunks = item.get('chunks')
+                  if not isinstance(chunks, list) or len(chunks) < 2:
+                      raise SystemExit(f'超限文件 {index} 的分块数量无效')
+                  with output.open('wb') as destination:
+                      for chunk in chunks:
+                          source = validate_stage_path(chunk.get('path'))
+                          expected = int(chunk.get('size') or 0)
+                          if expected <= 0 or expected > chunk_size:
+                              raise SystemExit(f'分块大小超出 39 MiB：{chunk.get("path")}')
+                          if source.stat().st_size != expected:
+                              raise SystemExit(f'分块大小不一致：{chunk.get("path")}')
+                          with source.open('rb') as handle:
+                              shutil.copyfileobj(handle, destination, length=1024 * 1024)
+                          actual += expected
+              else:
+                  raise SystemExit(f'文件 {index} 的存储方式无效：{storage}')
+
               if actual != int(item.get('size') or -1):
                   raise SystemExit(f'文件大小校验失败：{item.get("originalName") or index}')
               if actual >= 100 * 1024 * 1024:
-                  raise SystemExit(f'普通 Git 仓库不接受 100 MB 及以上文件：{item.get("originalName") or index}')
+                  raise SystemExit(f'普通 Git 仓库不接受 100 MiB 及以上文件：{item.get("originalName") or index}')
 
-          Path('/tmp/soil-chunked-manifest.json').write_text(
+          Path('/tmp/soil-hybrid-manifest.json').write_text(
               json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
           )
           Path('/tmp/soil-target-branch.txt').write_text(target_branch, encoding='utf-8')
@@ -118,8 +148,8 @@ jobs:
           from pathlib import Path, PurePosixPath
 
           root = Path.cwd().resolve()
-          restored = Path('/tmp/soil-chunked-restored')
-          manifest = json.loads(Path('/tmp/soil-chunked-manifest.json').read_text(encoding='utf-8'))
+          restored = Path('/tmp/soil-hybrid-restored')
+          manifest = json.loads(Path('/tmp/soil-hybrid-manifest.json').read_text(encoding='utf-8'))
           kind = manifest.get('kind')
           if kind not in {'reference', 'quality'}:
               raise SystemExit('导入类型无效')
@@ -211,7 +241,7 @@ jobs:
           if git diff --cached --quiet; then
             echo '没有需要提交的文件。'
           else
-            git commit -m "docs: import chunked files ${UPLOAD_ID#soil-upload-}"
+            git commit -m "docs: import staged files ${UPLOAD_ID#soil-upload-}"
             git push origin "HEAD:$TARGET_BRANCH"
           fi
 
