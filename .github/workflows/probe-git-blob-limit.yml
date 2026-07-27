@@ -12,7 +12,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,12 +35,12 @@ jobs:
           token = os.environ['GH_TOKEN']
           repo = os.environ['REPOSITORY']
           endpoint = f'https://api.github.com/repos/{repo}/git/blobs'
-          sizes_mib = [24, 30, 32, 34, 36, 37, 38, 39]
+          sizes_mib = [40, 50, 64, 72, 80, 90, 95]
           results = []
 
           for mib in sizes_mib:
               raw_size = mib * 1024 * 1024
-              raw = b'X' * raw_size
+              raw = b'Y' * raw_size
               encoded = base64.b64encode(raw).decode('ascii')
               body = json.dumps({'content': encoded, 'encoding': 'base64'}, separators=(',', ':')).encode('utf-8')
               request = urllib.request.Request(
@@ -62,7 +62,7 @@ jobs:
                   'request_mib': round(len(body) / 1024 / 1024, 3)
               }
               try:
-                  with urllib.request.urlopen(request, timeout=240) as response:
+                  with urllib.request.urlopen(request, timeout=360) as response:
                       payload = json.loads(response.read().decode('utf-8'))
                       record.update({'status': response.status, 'ok': True, 'sha': payload.get('sha', '')})
               except urllib.error.HTTPError as error:
@@ -78,7 +78,7 @@ jobs:
               results.append(record)
               del raw, encoded, body
 
-          Path('blob-limit-probe-results.json').write_text(
+          Path('blob-limit-probe-results-2.json').write_text(
               json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
           )
           PY
@@ -87,6 +87,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add blob-limit-probe-results.json
-          git commit -m "test: record Git blob API payload results"
+          git add blob-limit-probe-results-2.json
+          git commit -m "test: record extended Git blob API payload results"
           git push origin HEAD:probe-git-blob-limit-20260727
