@@ -59,15 +59,15 @@
       '.progress-overview-summary .summary-card .label{margin-top:4px!important;font-size:.74rem!important;color:#64748b!important}' +
       '.regional-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:0}' +
       '.regional-progress-section{min-width:0;border:1px solid #ead8a5;border-radius:9px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(120,53,15,.04)}' +
-      '.regional-progress-section>summary{display:grid;grid-template-columns:minmax(125px,.55fr) minmax(330px,1.45fr) auto;align-items:center;gap:12px;padding:11px 13px;cursor:pointer;list-style:none;background:#fffaf0;color:#78350f}' +
+      '.regional-progress-section>summary{display:grid;grid-template-columns:minmax(118px,.5fr) minmax(360px,1.5fr) auto;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;list-style:none;background:#fffaf0;color:#78350f}' +
       '.regional-progress-section>summary::-webkit-details-marker{display:none}' +
-      '.regional-progress-section>summary:after{content:"展开 ▾";font-size:.72rem;font-weight:700;white-space:nowrap;color:#a16207}' +
+      '.regional-progress-section>summary:after{content:"展开 ▾";font-size:.7rem;font-weight:700;white-space:nowrap;color:#a16207}' +
       '.regional-progress-section[open]>summary:after{content:"收起 ▴"}' +
-      '.regional-progress-name{font-size:.95rem;font-weight:800;white-space:nowrap}' +
-      '.regional-progress-brief{display:grid;grid-template-columns:repeat(3,minmax(86px,1fr));gap:6px;min-width:0}' +
-      '.regional-progress-chip{display:flex;align-items:baseline;justify-content:center;gap:5px;min-width:0;padding:5px 8px;border:1px solid #eadfbe;border-radius:6px;background:rgba(255,255,255,.82);color:#92400e;white-space:nowrap}' +
-      '.regional-progress-chip span{font-size:.68rem;color:#a16207}' +
-      '.regional-progress-chip strong{font-size:.82rem;color:#78350f;font-weight:800}' +
+      '.regional-progress-name{font-size:.93rem;font-weight:800;white-space:nowrap}' +
+      '.regional-progress-brief{display:grid;grid-template-columns:repeat(4,minmax(66px,1fr));gap:5px;min-width:0}' +
+      '.regional-progress-chip{display:flex;align-items:baseline;justify-content:center;gap:4px;min-width:0;padding:4px 6px;border:1px solid #eadfbe;border-radius:6px;background:rgba(255,255,255,.84);color:#92400e;white-space:nowrap}' +
+      '.regional-progress-chip span{font-size:.62rem;color:#a16207}' +
+      '.regional-progress-chip strong{font-size:.77rem;color:#78350f;font-weight:800}' +
       '.regional-progress-chip.missing{border-color:#fecaca;background:#fff7f7}' +
       '.regional-progress-chip.missing span,.regional-progress-chip.missing strong{color:#b91c1c}' +
       '.regional-progress-chip.complete{border-color:#bbf7d0;background:#f7fff9}' +
@@ -86,9 +86,9 @@
       '.regional-missing-item{padding:5px 7px;border-radius:5px;background:#fff5cc;font-size:.72rem;line-height:1.45;color:#92400e;overflow-wrap:anywhere}' +
       '.regional-missing-empty{padding:7px;text-align:center;color:#15803d;font-size:.75rem;background:#f0fdf4;border-radius:6px}' +
       '.municipal-progress-missing{color:#dc2626;font-weight:800}.municipal-progress-complete{color:#16a34a;font-weight:800}' +
-      '@media(max-width:1150px){.regional-progress-grid{grid-template-columns:1fr}.regional-progress-section>summary{grid-template-columns:minmax(135px,.55fr) minmax(330px,1.45fr) auto}}' +
+      '@media(max-width:1150px){.regional-progress-grid{grid-template-columns:1fr}.regional-progress-section>summary{grid-template-columns:minmax(135px,.5fr) minmax(360px,1.5fr) auto}}' +
       '@media(max-width:760px){.progress-overview-summary{grid-template-columns:repeat(2,minmax(120px,1fr))}.regional-progress-section>summary{grid-template-columns:1fr auto}.regional-progress-brief{grid-column:1/-1;grid-row:2}.regional-progress-section>summary:after{grid-column:2;grid-row:1}.regional-progress-name{grid-column:1;grid-row:1}.regional-progress-body{padding:8px}.regional-progress-table{min-width:640px!important}}' +
-      '@media(max-width:480px){.progress-overview-summary{grid-template-columns:1fr 1fr;gap:7px!important}.progress-overview-summary .summary-card{padding:10px 11px!important}.regional-progress-brief{grid-template-columns:1fr}.regional-progress-chip{justify-content:space-between}.regional-progress-table{font-size:.72rem!important}.regional-progress-table th,.regional-progress-table td{padding:7px 5px!important}}';
+      '@media(max-width:480px){.progress-overview-summary{grid-template-columns:1fr 1fr;gap:7px!important}.progress-overview-summary .summary-card{padding:10px 11px!important}.regional-progress-brief{grid-template-columns:repeat(2,minmax(0,1fr))}.regional-progress-chip{justify-content:space-between}.regional-progress-table{font-size:.72rem!important}.regional-progress-table th,.regional-progress-table td{padding:7px 5px!important}}';
     document.head.appendChild(style);
   }
 
@@ -149,23 +149,61 @@
     return SOUTH_CITIES.indexOf(city) >= 0 ? 'south' : 'north';
   }
 
+  function normalizeUnitName(value) {
+    return compact(String(value || '')
+      .replace(/[（(]\s*牵头人\s*[）)]/g, '')
+      .replace(/[“”"']/g, '')
+      .replace(/[，,；;。]+$/g, ''));
+  }
+
+  function unitKeys(unitName) {
+    var raw = String(unitName || '').trim();
+    if (!raw) return [];
+    var parts = raw.split(/\s*\/\s*|[；;\n]+/).map(function (name) {
+      return normalizeUnitName(name);
+    }).filter(Boolean);
+    var unique = [];
+    parts.forEach(function (name) {
+      if (unique.indexOf(name) < 0) unique.push(name);
+    });
+    return unique;
+  }
+
   function emptyTotals() {
     return {
       totalUnits:0, expUnits:0,
       totalDistricts:0, expDistricts:0,
       totalMunicipal:0, expMunicipal:0,
       totalTasks:0, expTasks:0,
-      missingTasks:0, cities:0
+      missingTasks:0, cities:0,
+      expectedUnitKeys:new Set(),
+      receivedUnitKeys:new Set()
     };
   }
 
-  function addTotals(target, source) {
-    ['totalUnits','expUnits','totalDistricts','expDistricts','totalMunicipal','expMunicipal','totalTasks','expTasks','missingTasks','cities']
-      .forEach(function (key) { target[key] += source[key] || 0; });
+  function registerUnits(target, keys, received) {
+    keys.forEach(function (key) {
+      target.expectedUnitKeys.add(key);
+      if (received) target.receivedUnitKeys.add(key);
+    });
+  }
+
+  function finalizeUnits(target) {
+    target.expUnits = target.expectedUnitKeys.size;
+    target.totalUnits = target.receivedUnitKeys.size;
     return target;
   }
 
+  function addTotals(target, source) {
+    ['totalDistricts','expDistricts','totalMunicipal','expMunicipal','totalTasks','expTasks','missingTasks','cities']
+      .forEach(function (key) { target[key] += source[key] || 0; });
+    source.expectedUnitKeys.forEach(function (key) { target.expectedUnitKeys.add(key); });
+    source.receivedUnitKeys.forEach(function (key) { target.receivedUnitKeys.add(key); });
+    return finalizeUnits(target);
+  }
+
   // 每次调用都从当前 tabData 和管理员导入索引已合并的数据重新统计，不缓存实际数量。
+  // 作业单位统计按规范化名称集合去重，片区与全省汇总使用集合并集，避免跨市重复累加。
   function calculateProgress(dataKey) {
     var submitted = window.collectSubmittedDistricts(dataKey);
     var cities = [];
@@ -177,26 +215,27 @@
       stats.cities = 1;
       stats.missing = [];
 
-      city.items.forEach(function (work) {
-        var expectedNonMunicipal = false;
-        var matchedNonMunicipal = false;
-        work.districts.forEach(function (district) {
+      (city.items || []).forEach(function (work) {
+        var keys = unitKeys(work.unit);
+        var matchedWork = false;
+        var districts = Array.isArray(work.districts) ? work.districts : [];
+
+        districts.forEach(function (district) {
           var municipal = isMunicipalLabel(district, city.city);
           var matched = municipal ? isMunicipalMatched(city.city, submitted) :
             window.isDistrictMatched(district, city.city, submitted);
           stats.expTasks++;
-          if (matched) stats.totalTasks++;
+          if (matched) {
+            stats.totalTasks++;
+            matchedWork = true;
+          }
 
           if (municipal) {
             stats.expMunicipal++;
             if (matched) stats.totalMunicipal++;
           } else {
             stats.expDistricts++;
-            expectedNonMunicipal = true;
-            if (matched) {
-              stats.totalDistricts++;
-              matchedNonMunicipal = true;
-            }
+            if (matched) stats.totalDistricts++;
           }
 
           if (!matched) {
@@ -206,11 +245,12 @@
             });
           }
         });
-        if (expectedNonMunicipal) stats.expUnits++;
-        if (matchedNonMunicipal) stats.totalUnits++;
+
+        if (districts.length) registerUnits(stats, keys, matchedWork);
       });
 
       stats.missingTasks = stats.expTasks - stats.totalTasks;
+      finalizeUnits(stats);
       cities.push(stats);
     });
 
@@ -220,6 +260,9 @@
       addTotals(regions[city.region], city);
       addTotals(overall, city);
     });
+    finalizeUnits(regions.north);
+    finalizeUnits(regions.south);
+    finalizeUnits(overall);
     return {cities:cities, regions:regions, overall:overall};
   }
 
@@ -232,7 +275,7 @@
     return '<div class="summary-bar progress-overview-summary">' +
       summaryCard('区县（含合并区）', total.totalDistricts, total.expDistricts) +
       summaryCard('市级', total.totalMunicipal, total.expMunicipal) +
-      summaryCard('作业单位', total.totalUnits, total.expUnits) +
+      summaryCard('作业单位（去重）', total.totalUnits, total.expUnits) +
       summaryCard('任务单元', total.totalTasks, total.expTasks) +
       '</div>';
   }
@@ -281,6 +324,7 @@
       '<span class="regional-progress-brief">' +
       progressChip('任务单元', totals.totalTasks + ' / ' + totals.expTasks, '') +
       progressChip('市级', totals.totalMunicipal + ' / ' + totals.expMunicipal, '') +
+      progressChip('区县', totals.totalDistricts + ' / ' + totals.expDistricts, '') +
       progressChip('缺失', totals.missingTasks, missingClass) +
       '</span></summary>' +
       '<div class="regional-progress-body">' + renderCityTable(cities, totals) + renderMissingList(cities) + '</div></details>';
@@ -337,6 +381,8 @@
       calculate:calculateProgress,
       regionForCity:regionForCity,
       resultName:resultName,
+      normalizeUnitName:normalizeUnitName,
+      unitKeys:unitKeys,
       refresh:refreshActiveProgress
     };
 
