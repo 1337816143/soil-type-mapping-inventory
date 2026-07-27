@@ -69,11 +69,53 @@
     root.__referenceCollapseObserver = observer;
   }
 
+  function deduplicatedUnitCount(city) {
+    var unique = new Set();
+    var helper = window.SoilRegionalProgress && window.SoilRegionalProgress.unitKeys;
+    (city && city.units || []).forEach(function (unit) {
+      var name = unit && (unit.name || unit.unit) || '';
+      var keys = helper ? helper(name) : [String(name).replace(/\s+/g, '')];
+      keys.filter(Boolean).forEach(function (key) { unique.add(key); });
+    });
+    return unique.size;
+  }
+
+  function patchCityUnitBadges() {
+    if (typeof window.renderCities !== 'function' || window.renderCities.__unitDeduplicated) return;
+    var original = window.renderCities;
+    window.renderCities = function (cities) {
+      var html = original.apply(this, arguments);
+      var holder = document.createElement('div');
+      holder.innerHTML = html;
+      var sections = holder.querySelectorAll('.city-section');
+      (cities || []).forEach(function (city, index) {
+        var badge = sections[index] && sections[index].querySelector('h2 .badge');
+        if (!badge) return;
+        var count = deduplicatedUnitCount(city);
+        badge.textContent = badge.textContent.replace(/^\s*\d+\s*家单位(?:（去重）)?/, count + ' 家单位（去重）');
+      });
+      return holder.innerHTML;
+    };
+    window.renderCities.__unitDeduplicated = true;
+  }
+
+  function refreshAfterPatches() {
+    setTimeout(function () {
+      if (window.SoilRegionalProgress && typeof window.SoilRegionalProgress.refresh === 'function') {
+        window.SoilRegionalProgress.refresh();
+      } else if (typeof window.refreshAllTabs === 'function') {
+        window.refreshAllTabs();
+      }
+    }, 0);
+  }
+
   function install() {
     installStyles();
     enhanceHeaderLogo();
     enhanceFooterVersion();
     enforceCollapsedReferenceDefaults();
+    patchCityUnitBadges();
+    refreshAfterPatches();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
