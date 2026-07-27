@@ -12,7 +12,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,12 +35,12 @@ jobs:
           token = os.environ['GH_TOKEN']
           repo = os.environ['REPOSITORY']
           endpoint = f'https://api.github.com/repos/{repo}/git/blobs'
-          sizes_mib = [40, 50, 64, 72, 80, 90, 95]
+          sizes_kib = [40192, 40320, 40448, 40576, 40704]
           results = []
 
-          for mib in sizes_mib:
-              raw_size = mib * 1024 * 1024
-              raw = b'Y' * raw_size
+          for kib in sizes_kib:
+              raw_size = kib * 1024
+              raw = b'Z' * raw_size
               encoded = base64.b64encode(raw).decode('ascii')
               body = json.dumps({'content': encoded, 'encoding': 'base64'}, separators=(',', ':')).encode('utf-8')
               request = urllib.request.Request(
@@ -56,13 +56,14 @@ jobs:
                   }
               )
               record = {
-                  'raw_mib': mib,
+                  'raw_kib': kib,
+                  'raw_mib': round(raw_size / 1024 / 1024, 3),
                   'raw_bytes': raw_size,
                   'request_bytes': len(body),
                   'request_mib': round(len(body) / 1024 / 1024, 3)
               }
               try:
-                  with urllib.request.urlopen(request, timeout=360) as response:
+                  with urllib.request.urlopen(request, timeout=300) as response:
                       payload = json.loads(response.read().decode('utf-8'))
                       record.update({'status': response.status, 'ok': True, 'sha': payload.get('sha', '')})
               except urllib.error.HTTPError as error:
@@ -78,7 +79,7 @@ jobs:
               results.append(record)
               del raw, encoded, body
 
-          Path('blob-limit-probe-results-2.json').write_text(
+          Path('blob-limit-probe-results-3.json').write_text(
               json.dumps(results, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
           )
           PY
@@ -87,6 +88,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add blob-limit-probe-results-2.json
-          git commit -m "test: record extended Git blob API payload results"
+          git add blob-limit-probe-results-3.json
+          git commit -m "test: record Git blob API boundary results"
           git push origin HEAD:probe-git-blob-limit-20260727
