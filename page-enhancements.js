@@ -12,7 +12,7 @@
   function loadReleaseStagedUpload() {
     var NativeMutationObserver = window.MutationObserver;
     if (typeof NativeMutationObserver !== 'function') {
-      return loadScript('./release-staged-upload.js?v=20260726-3');
+      return loadScript('./release-staged-upload.js?v=20260727-1');
     }
 
     var restored = false;
@@ -48,7 +48,7 @@
     window.MutationObserver = ReleaseObserverGuard;
     restoreTimer = setTimeout(restore, 30000);
 
-    return loadScript('./release-staged-upload.js?v=20260726-3').catch(function (error) {
+    return loadScript('./release-staged-upload.js?v=20260727-1').catch(function (error) {
       restore();
       throw error;
     }).then(function () {
@@ -69,6 +69,7 @@
     .then(function () { return loadScript('./upload-auth-reply-batch.js'); })
     .then(function () { return loadScript('./upload-token-default.js'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
+    .then(function () { return loadScript('./release-upload-reliability.js?v=20260727-1'); })
     .then(loadReleaseStagedUpload)
     .catch(function (error) { console.error(error); });
 })();
