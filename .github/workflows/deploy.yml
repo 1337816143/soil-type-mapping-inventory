@@ -35,6 +35,7 @@ jobs:
             page-enhancements.js
             page-enhancements-core.js
             app-release-ui.js
+            admin-delete-manager.js
             task-unit-mappings.js
             regional-progress-dashboard.js
             dashboard-extension.js
@@ -69,6 +70,7 @@ jobs:
           test -f page-enhancements.js
           test -f page-enhancements-core.js
           test -f app-release-ui.js
+          test -f admin-delete-manager.js
           test -f task-unit-mappings.js
           test -f regional-progress-dashboard.js
           test -f dashboard-extension.js
@@ -93,20 +95,24 @@ jobs:
           node --check upload-config.js
           node --check page-enhancements.js
           node --check app-release-ui.js
+          node --check admin-delete-manager.js
           node --check regional-progress-dashboard.js
+          node --check dashboard-extension.js
           node --check reference-library.js
+          node --check upload-auth-reply-batch.js
           node scripts/validate-project.js
 
-          grep -qx 'v1.0.0' VERSION
-          grep -q '## v1.0.0' CHANGELOG.md
-          grep -q "window.SOIL_APP_VERSION = 'v1.0.0'" upload-config.js
-          grep -q 'page-enhancements.js?v=20260727-11' upload-config.js
+          grep -qx 'v1.0.1' VERSION
+          grep -q '## v1.0.1' CHANGELOG.md
+          grep -q "window.SOIL_APP_VERSION = 'v1.0.1'" upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-12' upload-config.js
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'task-unit-mappings.js' page-enhancements.js
-          grep -q 'regional-progress-dashboard.js?v=20260727-5' page-enhancements.js
-          grep -q 'dashboard-extension.js?v=20260727-3' page-enhancements.js
-          grep -q 'reference-library.js?v=20260727-3' page-enhancements.js
-          grep -q 'app-release-ui.js?v=1.0.0' page-enhancements.js
+          grep -q 'regional-progress-dashboard.js?v=20260727-6' page-enhancements.js
+          grep -q 'dashboard-extension.js?v=20260727-4' page-enhancements.js
+          grep -q 'reference-library.js?v=20260727-4' page-enhancements.js
+          grep -q 'app-release-ui.js?v=1.0.1' page-enhancements.js
+          grep -q 'admin-delete-manager.js?v=1.0.1' page-enhancements.js
           grep -q 'page-title-logo-frame' app-release-ui.js
           grep -q 'app-version-badge' app-release-ui.js
           grep -q 'group.open = false' app-release-ui.js
@@ -120,6 +126,7 @@ jobs:
           grep -q "'秦皇岛市','保定市','承德市','雄安新区','唐山市','廊坊市','张家口市'" regional-progress-dashboard.js
           grep -q "return '成果'" regional-progress-dashboard.js
           grep -q '土壤退化与障碍分析' regional-progress-dashboard.js
+          grep -q '土特产品土壤适宜性评价' regional-progress-dashboard.js
           grep -q "progressChip('区县'" regional-progress-dashboard.js
           grep -q 'expectedUnitKeys:new Set()' regional-progress-dashboard.js
           grep -q 'receivedUnitKeys:new Set()' regional-progress-dashboard.js
@@ -133,11 +140,24 @@ jobs:
           grep -q '页面整体统计、南北片区及明细表共用同一个实时计算入口' regional-progress-dashboard.js
 
           grep -q "setHeadingText(heading, TYPES\[key\] + '收缴进度')" dashboard-extension.js
+          grep -q '土特产品土壤适宜性评价' dashboard-extension.js
+          grep -q 'removeAdminQualityPaths' dashboard-extension.js
           grep -q "var PAGE_TITLE = '三普成果编制及质控参考资料'" reference-library.js
           grep -q 'SoilReferenceLibraryConfig' reference-library.js
           grep -q 'CATEGORY_ORDER.forEach' reference-library.js
+          grep -q '土特产品土壤适宜性评价' reference-library.js
+          grep -q "compact.indexOf('土特产品适宜性评价')" reference-library.js
           grep -q '暂无参考文件' reference-library.js
           grep -q 'ref-page-title' reference-library.js
+          grep -q 'ref-delete' reference-library.js
+          grep -q 'refreshSoilReferenceLibrary' reference-library.js
+          grep -q 'reloadReplyIndex' upload-auth-reply-batch.js
+          grep -q '管理员删除文件' admin-delete-manager.js
+          grep -q 'sha:null' admin-delete-manager.js
+          grep -q 'data/admin-import-index.json' admin-delete-manager.js
+          grep -q "type === 'quality'" admin-delete-manager.js
+          grep -q "type === 'reply'" admin-delete-manager.js
+          grep -q "type === 'reference'" admin-delete-manager.js
 
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
             echo '检测到旧的分片区标题，停止部署。'
@@ -162,9 +182,16 @@ jobs:
               loader.index('dashboard-extension.js'),
               loader.index('reference-library.js'),
               loader.index('app-release-ui.js'),
+              loader.index('upload-auth-reply-batch.js'),
+              loader.index('admin-delete-manager.js'),
           ]
           if order != sorted(order):
-              raise SystemExit('v1.0.0 页面脚本加载顺序错误')
+              raise SystemExit('v1.0.1 页面脚本加载顺序错误')
+
+          reference = Path('reference-library.js').read_text(encoding='utf-8')
+          block = reference[reference.index('var CATEGORY_ORDER'):reference.index('];', reference.index('var CATEGORY_ORDER'))]
+          if "'土特产品适宜性评价'" in block:
+              raise SystemExit('参考文件仍存在旧的多余标准分组')
           PY
 
           grep -q "key === 'references'" dashboard-extension.js
@@ -179,7 +206,6 @@ jobs:
           grep -q 'applyAdminQualityIndex' hybrid-staged-upload.js
           grep -q 'hybrid-staged-upload.js' release-staged-upload.js
           grep -q '土壤退化与障碍分析' dashboard-extension.js
-          grep -q '土特产品适宜性评价' dashboard-extension.js
           grep -q '土壤农业利用适宜性评价' dashboard-extension.js
           grep -q '土地资源评价与利用报告' dashboard-extension.js
           grep -q '耕地质量等级评价' dashboard-extension.js
