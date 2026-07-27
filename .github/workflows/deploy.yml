@@ -28,10 +28,13 @@ jobs:
         with:
           fetch-depth: 1
           sparse-checkout: |
+            VERSION
+            CHANGELOG.md
             index.html
             upload-config.js
             page-enhancements.js
             page-enhancements-core.js
+            app-release-ui.js
             task-unit-mappings.js
             regional-progress-dashboard.js
             dashboard-extension.js
@@ -49,6 +52,7 @@ jobs:
             chunked-staged-upload.js
             release-upload-reliability.js
             release-staged-upload.js
+            scripts
             assets
             data
             replies
@@ -58,10 +62,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -f VERSION
+          test -f CHANGELOG.md
           test -f index.html
           test -f upload-config.js
           test -f page-enhancements.js
           test -f page-enhancements-core.js
+          test -f app-release-ui.js
           test -f task-unit-mappings.js
           test -f regional-progress-dashboard.js
           test -f dashboard-extension.js
@@ -79,24 +86,31 @@ jobs:
           test -f chunked-staged-upload.js
           test -f release-upload-reliability.js
           test -f release-staged-upload.js
+          test -f scripts/validate-project.js
           test -f assets/soil-survey-logo.svg
           test -f data/admin-import-index.json
-          grep -q 'calculateDashboardStats(dataKey)' index.html
+
+          node --check upload-config.js
+          node --check page-enhancements.js
+          node --check app-release-ui.js
+          node --check regional-progress-dashboard.js
+          node --check reference-library.js
+          node scripts/validate-project.js
+
+          grep -qx 'v1.0.0' VERSION
+          grep -q '## v1.0.0' CHANGELOG.md
+          grep -q "window.SOIL_APP_VERSION = 'v1.0.0'" upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-11' upload-config.js
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'task-unit-mappings.js' page-enhancements.js
-          grep -q 'regional-progress-dashboard.js?v=20260727-4' page-enhancements.js
+          grep -q 'regional-progress-dashboard.js?v=20260727-5' page-enhancements.js
           grep -q 'dashboard-extension.js?v=20260727-3' page-enhancements.js
           grep -q 'reference-library.js?v=20260727-3' page-enhancements.js
-          grep -q 'admin-quality-ui.js' page-enhancements.js
-          grep -q 'admin-quality-upload.js' page-enhancements.js
-          grep -q 'admin-import-v2.js' page-enhancements.js
-          grep -q 'admin-import-v2-bridge.js' page-enhancements.js
-          grep -q 'reference-import-mode.js' page-enhancements.js
-          grep -q 'upload-auth-reply-batch.js' page-enhancements.js
-          grep -q 'upload-token-default.js' page-enhancements.js
-          grep -q 'pptx-auto-split.js' page-enhancements.js
-          grep -q 'hybrid-staged-upload.js' page-enhancements.js
-          grep -q 'page-enhancements.js?v=20260727-10' upload-config.js
+          grep -q 'app-release-ui.js?v=1.0.0' page-enhancements.js
+          grep -q 'page-title-logo-frame' app-release-ui.js
+          grep -q 'app-version-badge' app-release-ui.js
+          grep -q 'group.open = false' app-release-ui.js
+
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
           grep -q "dataKey === 'soilType'" task-unit-mappings.js
           grep -q '中地科勘察设计有限公司' task-unit-mappings.js
@@ -106,6 +120,10 @@ jobs:
           grep -q "'秦皇岛市','保定市','承德市','雄安新区','唐山市','廊坊市','张家口市'" regional-progress-dashboard.js
           grep -q "return '成果'" regional-progress-dashboard.js
           grep -q '土壤退化与障碍分析' regional-progress-dashboard.js
+          grep -q "progressChip('区县'" regional-progress-dashboard.js
+          grep -q 'expectedUnitKeys:new Set()' regional-progress-dashboard.js
+          grep -q 'receivedUnitKeys:new Set()' regional-progress-dashboard.js
+          grep -q '作业单位（去重）' regional-progress-dashboard.js
           grep -q 'regional-progress-table-wrap' regional-progress-dashboard.js
           grep -q 'table-layout:fixed' regional-progress-dashboard.js
           grep -q 'text-align:center' regional-progress-dashboard.js
@@ -113,18 +131,20 @@ jobs:
           grep -q '每次调用都从当前 tabData' regional-progress-dashboard.js
           grep -q 'refresh:refreshActiveProgress' regional-progress-dashboard.js
           grep -q '页面整体统计、南北片区及明细表共用同一个实时计算入口' regional-progress-dashboard.js
+
           grep -q "setHeadingText(heading, TYPES\[key\] + '收缴进度')" dashboard-extension.js
           grep -q "var PAGE_TITLE = '三普成果编制及质控参考资料'" reference-library.js
           grep -q 'SoilReferenceLibraryConfig' reference-library.js
           grep -q 'CATEGORY_ORDER.forEach' reference-library.js
           grep -q '暂无参考文件' reference-library.js
           grep -q 'ref-page-title' reference-library.js
+
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
             echo '检测到旧的分片区标题，停止部署。'
             exit 1
           fi
+
           python3 <<'PY'
-          import re
           from pathlib import Path
 
           script = Path('regional-progress-dashboard.js').read_text(encoding='utf-8')
@@ -134,35 +154,19 @@ jobs:
           if not heading < summary < regions:
               raise SystemExit('收缴进度布局顺序不是“标题→整体统计→南北片区”')
 
-          reference = Path('reference-library.js').read_text(encoding='utf-8')
-          categories = [
-              '土壤类型图',
-              '土壤属性图',
-              '耕地质量等级评价',
-              '土壤退化与障碍分析',
-              '土特产品适宜性评价',
-              '土壤农业利用适宜性评价',
-              '土地资源评价与利用报告',
+          loader = Path('page-enhancements.js').read_text(encoding='utf-8')
+          order = [
+              loader.index('page-enhancements-core.js'),
+              loader.index('task-unit-mappings.js'),
+              loader.index('regional-progress-dashboard.js'),
+              loader.index('dashboard-extension.js'),
+              loader.index('reference-library.js'),
+              loader.index('app-release-ui.js'),
           ]
-          positions = [reference.index("'" + name + "'", reference.index('var CATEGORY_ORDER')) for name in categories]
-          if positions != sorted(positions):
-              raise SystemExit('参考文件成果分组顺序不正确')
-          if "CATEGORY_ORDER.forEach(function (name) { groups[name] = []; });" not in reference:
-              raise SystemExit('参考文件空分组未预先创建')
-          if "'<h2 class=\"ref-page-title\">'" not in reference:
-              raise SystemExit('参考文件页左上角标题缺失')
-
-          legacy = []
-          root = Path('replies')
-          if root.exists():
-              for path in root.rglob('*'):
-                  if not path.is_file():
-                      continue
-                  if re.match(r'^(.*)_整改答复_([0-9]+)\.([a-z0-9]+)$', path.name, re.I) and '_批次-' not in path.name:
-                      legacy.append(path.as_posix())
-          if legacy:
-              raise SystemExit('检测到历史未标批次测试文件：\n' + '\n'.join(legacy))
+          if order != sorted(order):
+              raise SystemExit('v1.0.0 页面脚本加载顺序错误')
           PY
+
           grep -q "key === 'references'" dashboard-extension.js
           grep -q 'hideCollectionBanner' reference-library.js
           grep -q 'SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
