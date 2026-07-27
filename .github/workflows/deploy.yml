@@ -43,6 +43,7 @@ jobs:
             upload-auth-reply-batch.js
             upload-token-default.js
             pptx-auto-split.js
+            hybrid-staged-upload.js
             chunked-staged-upload.js
             release-upload-reliability.js
             release-staged-upload.js
@@ -70,6 +71,7 @@ jobs:
           test -f upload-auth-reply-batch.js
           test -f upload-token-default.js
           test -f pptx-auto-split.js
+          test -f hybrid-staged-upload.js
           test -f chunked-staged-upload.js
           test -f release-upload-reliability.js
           test -f release-staged-upload.js
@@ -87,13 +89,15 @@ jobs:
           grep -q 'upload-auth-reply-batch.js' page-enhancements.js
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
-          grep -q 'chunked-staged-upload.js' page-enhancements.js
+          grep -q 'hybrid-staged-upload.js' page-enhancements.js
           grep -q 'SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
           grep -q 'soilGithubUploadTokenV2' upload-token-default.js
-          grep -q 'CHUNK_SIZE = 2 \* 1024 \* 1024' chunked-staged-upload.js
-          grep -q "'/git/blobs'" chunked-staged-upload.js
-          grep -q "'refs/heads/'" chunked-staged-upload.js
-          grep -q 'chunked-staged-upload.js' release-staged-upload.js
+          grep -q 'SINGLE_BLOB_LIMIT = 39 \* 1024 \* 1024' hybrid-staged-upload.js
+          grep -q 'CHUNK_SIZE = 39 \* 1024 \* 1024' hybrid-staged-upload.js
+          grep -q "storage: item.file.size <= SINGLE_BLOB_LIMIT ? 'whole' : 'chunked'" hybrid-staged-upload.js
+          grep -q '正在整文件上传' hybrid-staged-upload.js
+          grep -q '39 MiB 分块' hybrid-staged-upload.js
+          grep -q 'hybrid-staged-upload.js' release-staged-upload.js
           grep -q '土壤退化与障碍分析' dashboard-extension.js
           grep -q '土特产品适宜性评价' dashboard-extension.js
           grep -q '土壤农业利用适宜性评价' dashboard-extension.js
