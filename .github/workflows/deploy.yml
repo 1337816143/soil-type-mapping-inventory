@@ -86,7 +86,7 @@ jobs:
           grep -q 'task-unit-mappings.js' page-enhancements.js
           grep -q 'regional-progress-dashboard.js?v=20260727-4' page-enhancements.js
           grep -q 'dashboard-extension.js?v=20260727-3' page-enhancements.js
-          grep -q 'reference-library.js' page-enhancements.js
+          grep -q 'reference-library.js?v=20260727-3' page-enhancements.js
           grep -q 'admin-quality-ui.js' page-enhancements.js
           grep -q 'admin-quality-upload.js' page-enhancements.js
           grep -q 'admin-import-v2.js' page-enhancements.js
@@ -96,7 +96,7 @@ jobs:
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q 'hybrid-staged-upload.js' page-enhancements.js
-          grep -q 'page-enhancements.js?v=20260727-9' upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-10' upload-config.js
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
           grep -q "dataKey === 'soilType'" task-unit-mappings.js
           grep -q '中地科勘察设计有限公司' task-unit-mappings.js
@@ -114,6 +114,11 @@ jobs:
           grep -q 'refresh:refreshActiveProgress' regional-progress-dashboard.js
           grep -q '页面整体统计、南北片区及明细表共用同一个实时计算入口' regional-progress-dashboard.js
           grep -q "setHeadingText(heading, TYPES\[key\] + '收缴进度')" dashboard-extension.js
+          grep -q "var PAGE_TITLE = '三普成果编制及质控参考资料'" reference-library.js
+          grep -q 'SoilReferenceLibraryConfig' reference-library.js
+          grep -q 'CATEGORY_ORDER.forEach' reference-library.js
+          grep -q '暂无参考文件' reference-library.js
+          grep -q 'ref-page-title' reference-library.js
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
             echo '检测到旧的分片区标题，停止部署。'
             exit 1
@@ -128,6 +133,24 @@ jobs:
           regions = script.index('REGION_ORDER.map', summary)
           if not heading < summary < regions:
               raise SystemExit('收缴进度布局顺序不是“标题→整体统计→南北片区”')
+
+          reference = Path('reference-library.js').read_text(encoding='utf-8')
+          categories = [
+              '土壤类型图',
+              '土壤属性图',
+              '耕地质量等级评价',
+              '土壤退化与障碍分析',
+              '土特产品适宜性评价',
+              '土壤农业利用适宜性评价',
+              '土地资源评价与利用报告',
+          ]
+          positions = [reference.index("'" + name + "'", reference.index('var CATEGORY_ORDER')) for name in categories]
+          if positions != sorted(positions):
+              raise SystemExit('参考文件成果分组顺序不正确')
+          if "CATEGORY_ORDER.forEach(function (name) { groups[name] = []; });" not in reference:
+              raise SystemExit('参考文件空分组未预先创建')
+          if "'<h2 class=\"ref-page-title\">'" not in reference:
+              raise SystemExit('参考文件页左上角标题缺失')
 
           legacy = []
           root = Path('replies')
