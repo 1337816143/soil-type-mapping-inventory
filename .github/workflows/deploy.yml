@@ -84,7 +84,7 @@ jobs:
           grep -q 'calculateDashboardStats(dataKey)' index.html
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'task-unit-mappings.js' page-enhancements.js
-          grep -q 'regional-progress-dashboard.js?v=20260727-2' page-enhancements.js
+          grep -q 'regional-progress-dashboard.js?v=20260727-3' page-enhancements.js
           grep -q 'dashboard-extension.js' page-enhancements.js
           grep -q 'reference-library.js' page-enhancements.js
           grep -q 'admin-quality-ui.js' page-enhancements.js
@@ -96,6 +96,7 @@ jobs:
           grep -q 'upload-token-default.js' page-enhancements.js
           grep -q 'pptx-auto-split.js' page-enhancements.js
           grep -q 'hybrid-staged-upload.js' page-enhancements.js
+          grep -q 'page-enhancements.js?v=20260727-8' upload-config.js
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
           grep -q "dataKey === 'soilType'" task-unit-mappings.js
           grep -q '中地科勘察设计有限公司' task-unit-mappings.js
@@ -103,18 +104,29 @@ jobs:
           grep -q '河北省北部片区' regional-progress-dashboard.js
           grep -q '河北省南部片区' regional-progress-dashboard.js
           grep -q '石家庄市（市级）' regional-progress-dashboard.js
-          grep -q 'regional-progress-section' regional-progress-dashboard.js
+          grep -q 'progress-overview-summary' regional-progress-dashboard.js
+          grep -q 'regional-progress-chip' regional-progress-dashboard.js
+          grep -q 'removeCitySummaryBar' regional-progress-dashboard.js
+          grep -q "esc(name) + '收缴进度</h3>'" regional-progress-dashboard.js
           grep -q '任务单元<br>应有' regional-progress-dashboard.js
           grep -q '每次调用都从当前 tabData' regional-progress-dashboard.js
           grep -q 'refresh:refreshActiveProgress' regional-progress-dashboard.js
-          grep -q '页面上方四张总览卡和南北片区共用同一个实时计算入口' regional-progress-dashboard.js
-          if grep -q 'province-progress-overview' regional-progress-dashboard.js; then
-            echo '检测到重复的河北省整体统计卡，停止部署。'
+          grep -q '页面整体统计和南北片区共用同一个实时计算入口' regional-progress-dashboard.js
+          if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
+            echo '检测到旧的分片区标题，停止部署。'
             exit 1
           fi
           python3 <<'PY'
           import re
           from pathlib import Path
+
+          script = Path('regional-progress-dashboard.js').read_text(encoding='utf-8')
+          heading = script.index("esc(name) + '收缴进度</h3>'")
+          summary = script.index('renderOverallSummary(progress.overall)', heading)
+          regions = script.index('REGION_ORDER.map', summary)
+          if not heading < summary < regions:
+              raise SystemExit('收缴进度布局顺序不是“标题→整体统计→南北片区”')
+
           legacy = []
           root = Path('replies')
           if root.exists():
