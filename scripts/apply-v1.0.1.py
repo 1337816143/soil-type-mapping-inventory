@@ -1,5 +1,8 @@
 from pathlib import Path
 
+if Path('VERSION').read_text(encoding='utf-8').strip() == 'v1.0.1':
+    raise SystemExit(0)
+
 
 def patch(path, replacements):
     file = Path(path)
@@ -44,7 +47,7 @@ patch('reference-library.js', [
     ("if (compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品适宜性评价';", "if (compact.indexOf('土特产品土壤适宜性评价') >= 0 || compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品土壤适宜性评价';"),
     ("'<button id=\"ref-admin\" class=\"ref-btn\">管理员导入</button>' +\n        '<button id=\"ref-refresh\"", "'<button id=\"ref-admin\" class=\"ref-btn\">管理员导入</button>' +\n        '<button id=\"ref-delete\" class=\"ref-btn alt admin-delete-trigger\">管理员删除</button>' +\n        '<button id=\"ref-refresh\""),
     ("'<details class=\"ref-cat\" data-category=\"' + A.esc(name.toLowerCase()) + '\" ' + (index < 3 ? 'open' : '') + '>'", "'<details class=\"ref-cat\" data-category=\"' + A.esc(name.toLowerCase()) + '\">'"),
-    ("document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };", "document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };\n      document.getElementById('ref-delete').onclick = function () {\n        if (typeof window.openSoilAdminDelete !== 'function') {\n          alert('管理员删除组件仍在加载，请稍后重试。');\n          return;\n        }\n        window.openSoilAdminDelete({scope:'reference'});\n      };"),
+    ("document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };", "document.getElementById('ref-admin').onclick = function () {\n        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});\n      };\n      document.getElementById('ref-delete').onclick = function () {\n        if (typeof window.openSoilAdminDelete !== 'function') {\n          alert('管理员删除组件仍在加载，请稍后重试。');\n          return;\n        }\n        window.openSoilAdminDelete({scope:'reference'});\n      };") ,
     ("function load(src) {", "window.refreshSoilReferenceLibrary = function () { return render(true); };\n\n  function load(src) {")
 ])
 patch('upload-auth-reply-batch.js', [
