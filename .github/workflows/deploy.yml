@@ -35,6 +35,7 @@ jobs:
             page-enhancements.js
             page-enhancements-core.js
             app-release-ui.js
+            soil-survey-logo-v1.0.2.js
             admin-delete-manager.js
             task-unit-mappings.js
             regional-progress-dashboard.js
@@ -70,6 +71,7 @@ jobs:
           test -f page-enhancements.js
           test -f page-enhancements-core.js
           test -f app-release-ui.js
+          test -f soil-survey-logo-v1.0.2.js
           test -f admin-delete-manager.js
           test -f task-unit-mappings.js
           test -f regional-progress-dashboard.js
@@ -89,12 +91,14 @@ jobs:
           test -f release-upload-reliability.js
           test -f release-staged-upload.js
           test -f scripts/validate-project.js
-          test -f assets/soil-survey-logo.svg
+          test -f scripts/logo-v1.0.2.part0
+          test -f scripts/logo-v1.0.2.part1
           test -f data/admin-import-index.json
 
           node --check upload-config.js
           node --check page-enhancements.js
           node --check app-release-ui.js
+          node --check soil-survey-logo-v1.0.2.js
           node --check admin-delete-manager.js
           node --check regional-progress-dashboard.js
           node --check dashboard-extension.js
@@ -102,20 +106,25 @@ jobs:
           node --check upload-auth-reply-batch.js
           node scripts/validate-project.js
 
-          grep -qx 'v1.0.1' VERSION
-          grep -q '## v1.0.1' CHANGELOG.md
-          grep -q "window.SOIL_APP_VERSION = 'v1.0.1'" upload-config.js
-          grep -q 'page-enhancements.js?v=20260727-12' upload-config.js
+          grep -qx 'v1.0.2' VERSION
+          grep -q '## v1.0.2' CHANGELOG.md
+          grep -q "window.SOIL_APP_VERSION = 'v1.0.2'" upload-config.js
+          grep -q 'page-enhancements.js?v=20260727-13' upload-config.js
           grep -q 'page-enhancements-core.js' page-enhancements.js
           grep -q 'task-unit-mappings.js' page-enhancements.js
           grep -q 'regional-progress-dashboard.js?v=20260727-6' page-enhancements.js
           grep -q 'dashboard-extension.js?v=20260727-4' page-enhancements.js
           grep -q 'reference-library.js?v=20260727-4' page-enhancements.js
-          grep -q 'app-release-ui.js?v=1.0.1' page-enhancements.js
-          grep -q 'admin-delete-manager.js?v=1.0.1' page-enhancements.js
+          grep -q 'app-release-ui.js?v=1.0.2' page-enhancements.js
+          grep -q 'soil-survey-logo-v1.0.2.js?v=1.0.2' page-enhancements.js
+          grep -q 'admin-delete-manager.js?v=1.0.2' page-enhancements.js
           grep -q 'page-title-logo-frame' app-release-ui.js
           grep -q 'app-version-badge' app-release-ui.js
           grep -q 'group.open = false' app-release-ui.js
+          grep -q 'logo-v1.0.2.part0' soil-survey-logo-v1.0.2.js
+          grep -q 'logo-v1.0.2.part1' soil-survey-logo-v1.0.2.js
+          grep -q 'data:image/png;base64' soil-survey-logo-v1.0.2.js
+          grep -q 'transform:none!important' soil-survey-logo-v1.0.2.js
 
           grep -q 'SoilTaskUnitLists' task-unit-mappings.js
           grep -q "dataKey === 'soilType'" task-unit-mappings.js
@@ -182,16 +191,21 @@ jobs:
               loader.index('dashboard-extension.js'),
               loader.index('reference-library.js'),
               loader.index('app-release-ui.js'),
+              loader.index('soil-survey-logo-v1.0.2.js'),
               loader.index('upload-auth-reply-batch.js'),
               loader.index('admin-delete-manager.js'),
           ]
           if order != sorted(order):
-              raise SystemExit('v1.0.1 页面脚本加载顺序错误')
+              raise SystemExit('v1.0.2 页面脚本加载顺序错误')
 
           reference = Path('reference-library.js').read_text(encoding='utf-8')
           block = reference[reference.index('var CATEGORY_ORDER'):reference.index('];', reference.index('var CATEGORY_ORDER'))]
           if "'土特产品适宜性评价'" in block:
               raise SystemExit('参考文件仍存在旧的多余标准分组')
+
+          base64_text = (Path('scripts/logo-v1.0.2.part0').read_text() + Path('scripts/logo-v1.0.2.part1').read_text()).strip().replace('\n', '')
+          if not base64_text.startswith('iVBORw0KGgo') or len(base64_text) < 10000:
+              raise SystemExit('三普PNG Logo资源不完整')
           PY
 
           grep -q "key === 'references'" dashboard-extension.js
