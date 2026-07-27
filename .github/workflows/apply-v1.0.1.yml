@@ -5,6 +5,9 @@ on:
     branches: [fix-specialty-soil-label-v1.0.1]
     paths:
       - '.github/workflows/apply-v1.0.1.yml'
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
@@ -34,10 +37,14 @@ jobs:
           node scripts/validate-project.js
           ruby -e "require 'yaml'; YAML.load_file('.github/workflows/deploy.yml')"
 
-      - name: Commit integration
+      - name: Commit integration when changed
         shell: bash
         run: |
           set -euo pipefail
+          if git diff --quiet; then
+            echo '补丁已应用，无需再次提交。'
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add VERSION CHANGELOG.md upload-config.js app-release-ui.js regional-progress-dashboard.js dashboard-extension.js reference-library.js upload-auth-reply-batch.js page-enhancements.js admin-delete-manager.js scripts/validate-project.js .github/workflows/deploy.yml
