@@ -1,5 +1,5 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
-window.SOIL_APP_VERSION = 'v1.0.0';
+window.SOIL_APP_VERSION = 'v1.0.1';
 
 // 主方案：普通文件整文件暂存，只有超过 Git Blob 安全阈值的文件才分块，再由 Actions 一次性归档到 main。
 // 默认 Token 以字符编码数组保存；管理员在页面中更新的 Token 可覆盖默认值。
@@ -23,7 +23,7 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  script.src = './page-enhancements.js?v=20260727-11';
+  script.src = './page-enhancements.js?v=20260727-12';
   script.async = false;
 
   // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。

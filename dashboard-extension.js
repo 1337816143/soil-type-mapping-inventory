@@ -6,7 +6,7 @@
     soilAttr: '土壤属性图',
     farmland: '耕地质量等级评价',
     degradation: '土壤退化与障碍分析',
-    specialty: '土特产品适宜性评价',
+    specialty: '土特产品土壤适宜性评价',
     agriSuitability: '土壤农业利用适宜性评价',
     landUse: '土地资源评价与利用报告'
   };
@@ -108,8 +108,7 @@
 
     setHeadingText(heading, TYPES[key] + '收缴进度');
 
-    var old = heading.querySelector('.quality-admin-global');
-    if (old) old.remove();
+    heading.querySelectorAll('.quality-admin-global').forEach(function (item) { item.remove(); });
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'quality-admin-global';
@@ -125,6 +124,22 @@
       window.openSoilAdminImport({kind: 'quality', dataKey: key});
     });
     heading.appendChild(button);
+
+    var deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'quality-admin-global admin-delete-trigger';
+    deleteButton.textContent = '管理员删除';
+    deleteButton.dataset.key = key;
+    deleteButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (typeof window.openSoilAdminDelete !== 'function') {
+        alert('管理员删除组件仍在加载，请稍后重试。');
+        return;
+      }
+      window.openSoilAdminDelete({scope:'quality', dataKey:key});
+    });
+    heading.appendChild(deleteButton);
   }
 
   function wrapMissingBanner() {
@@ -186,6 +201,24 @@
 
   window.applyAdminQualityIndex = function (entries) {
     (Array.isArray(entries) ? entries : []).forEach(mergeQualityEntry);
+    refreshDashboard();
+  };
+
+  window.removeAdminQualityPaths = function (paths) {
+    var removed = {};
+    (Array.isArray(paths) ? paths : []).forEach(function (path) {
+      removed[String(path || '').replace(/^data\//, '')] = true;
+      delete appliedPaths[path];
+    });
+    Object.keys(window.tabData || {}).forEach(function (key) {
+      (window.tabData[key] || []).forEach(function (city) {
+        (city.units || []).forEach(function (unit) {
+          (unit.districts || []).forEach(function (district) {
+            district.docs = (district.docs || []).filter(function (doc) { return !removed[doc.file]; });
+          });
+        });
+      });
+    });
     refreshDashboard();
   };
 

@@ -17,7 +17,7 @@
     '土壤属性图',
     '耕地质量等级评价',
     '土壤退化与障碍分析',
-    '土特产品适宜性评价',
+    '土特产品土壤适宜性评价',
     '土壤农业利用适宜性评价',
     '土地资源评价与利用报告'
   ];
@@ -182,7 +182,7 @@
     if (compact.indexOf('土壤属性图') >= 0) return '土壤属性图';
     if (compact.indexOf('耕地质量等级评价') >= 0 || compact.indexOf('耕地质量评价') >= 0) return '耕地质量等级评价';
     if (compact.indexOf('土壤退化与障碍分析') >= 0) return '土壤退化与障碍分析';
-    if (compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品适宜性评价';
+    if (compact.indexOf('土特产品土壤适宜性评价') >= 0 || compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品土壤适宜性评价';
     if (compact.indexOf('土壤农业利用适宜性评价') >= 0) return '土壤农业利用适宜性评价';
     if (compact.indexOf('土地资源评价与利用报告') >= 0) return '土地资源评价与利用报告';
 
@@ -241,13 +241,14 @@
         '<h2 class="ref-page-title">' + A.esc(PAGE_TITLE) + '</h2>' +
         '<div class="ref-tools"><input id="ref-search" class="ref-search" type="search" placeholder="搜索文件名、目录或成果类别">' +
         '<button id="ref-admin" class="ref-btn">管理员导入</button>' +
+        '<button id="ref-delete" class="ref-btn alt admin-delete-trigger">管理员删除</button>' +
         '<button id="ref-refresh" class="ref-btn alt">刷新目录</button>' +
         '<div class="ref-note">仓库内共 ' + count + ' 个参考文件，保持原目录层级，点击可直接下载。</div></div>';
 
       categories.forEach(function (name, index) {
         var files = groups[name];
         files.sort(function (a, b) { return a.path.localeCompare(b.path, 'zh-CN'); });
-        html += '<details class="ref-cat" data-category="' + A.esc(name.toLowerCase()) + '" ' + (index < 3 ? 'open' : '') + '>' +
+        html += '<details class="ref-cat" data-category="' + A.esc(name.toLowerCase()) + '">' +
           '<summary><span>' + A.esc(name) + '</span><span class="ref-count">' + files.length + ' 个文件</span></summary>';
 
         if (!files.length) {
@@ -291,10 +292,19 @@
       document.getElementById('ref-admin').onclick = function () {
         window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});
       };
+      document.getElementById('ref-delete').onclick = function () {
+        if (typeof window.openSoilAdminDelete !== 'function') {
+          alert('管理员删除组件仍在加载，请稍后重试。');
+          return;
+        }
+        window.openSoilAdminDelete({scope:'reference'});
+      };
     }).catch(function (error) {
       root.innerHTML = '<div class="ref-empty">目录加载失败：' + A.esc(error.message) + '</div>';
     });
   }
+
+  window.refreshSoilReferenceLibrary = function () { return render(true); };
 
   function load(src) {
     return new Promise(function (resolve, reject) {
