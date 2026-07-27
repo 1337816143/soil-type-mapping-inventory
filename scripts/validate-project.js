@@ -21,10 +21,15 @@ const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
 const dashboard = read('dashboard-extension.js');
 const deleteManager = read('admin-delete-manager.js');
+const logoPatch = read('soil-survey-logo-v1.0.2.js');
 
 if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('upload-config.js 版本号与 VERSION 不一致');
 if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js 版本号与 VERSION 不一致');
 if (!loader.includes(`app-release-ui.js?v=${version.slice(1)}`)) fail('版本界面脚本未按当前版本加载');
+if (!loader.includes(`soil-survey-logo-${version}.js?v=${version.slice(1)}`)) fail('新三普Logo脚本未按当前版本加载');
+const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
+if (!logoMatch || logoMatch[1].length < 8000 || !logoMatch[1].startsWith('iVBORw0KGgo')) fail('新三普Logo PNG数据不完整');
+if (!logoPatch.includes('transform:none!important')) fail('新三普Logo仍可能被旧裁切规则截断');
 
 const requiredCategories = [
   '土壤类型图',
@@ -56,7 +61,7 @@ if (categoryBlock.includes("'土特产品适宜性评价'")) fail('参考文件�
 if (!reference.includes("compact.indexOf('土特产品适宜性评价')")) fail('旧参考目录未兼容归入新分组');
 if (!deleteManager.includes('sha:null') || !deleteManager.includes('data/admin-import-index.json')) fail('管理员删除未实现事务删除与索引同步');
 if (!deleteManager.includes('质控意见') || !deleteManager.includes('整改答复') || !deleteManager.includes('参考文件')) fail('管理员删除类型不完整');
-if (!loader.includes('admin-delete-manager.js?v=1.0.1')) fail('管理员删除脚本未加载');
+if (!loader.includes(`admin-delete-manager.js?v=${version.slice(1)}`)) fail('管理员删除脚本未按当前版本加载');
 
 const banner = {style:{}, innerHTML:''};
 const documentStub = {
