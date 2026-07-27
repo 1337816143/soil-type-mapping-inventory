@@ -7,6 +7,15 @@
   var SOUTH_CITIES = ['石家庄市','邢台市','沧州市','衡水市','邯郸市','辛集市'];
   var REGION_ORDER = ['north','south'];
   var REGION_NAMES = {north:'河北省北部片区', south:'河北省南部片区'};
+  var RESULT_NAMES = {
+    soilType:'土壤类型图',
+    soilAttr:'土壤属性图',
+    farmland:'耕地质量等级评价',
+    degradation:'土壤退化与障碍分析',
+    specialty:'土特产品适宜性评价',
+    agriSuitability:'土壤农业利用适宜性评价',
+    landUse:'土地资源评价与利用报告'
+  };
 
   function esc(value) {
     return String(value == null ? '' : value)
@@ -19,14 +28,27 @@
     var style = document.createElement('style');
     style.id = 'regional-progress-style';
     style.textContent =
-      '.regional-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:9px}' +
-      '.regional-progress-section{min-width:0;border:1px solid #ead8a5;border-radius:9px;background:#fff;overflow:hidden}' +
-      '.regional-progress-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;cursor:pointer;list-style:none;background:#fff8df;color:#78350f}' +
+      '.missing-banner>h3{margin-bottom:12px!important;font-size:1rem!important;font-weight:750!important}' +
+      '.progress-overview-summary{display:grid!important;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px!important;margin:0 0 12px!important}' +
+      '.progress-overview-summary .summary-card{position:relative;overflow:hidden;min-width:0;padding:12px 14px!important;border:1px solid #e5eaf2;border-radius:8px!important;background:linear-gradient(180deg,#fff 0%,#f8fafc 100%)!important;box-shadow:0 1px 3px rgba(15,23,42,.05);text-align:left!important}' +
+      '.progress-overview-summary .summary-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#3b82f6}' +
+      '.progress-overview-summary .summary-card .num{font-size:1.32rem!important;line-height:1.2;color:#1d4ed8!important;letter-spacing:.01em}' +
+      '.progress-overview-summary .summary-card .label{margin-top:4px!important;font-size:.74rem!important;color:#64748b!important}' +
+      '.regional-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:0}' +
+      '.regional-progress-section{min-width:0;border:1px solid #ead8a5;border-radius:9px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(120,53,15,.04)}' +
+      '.regional-progress-section>summary{display:grid;grid-template-columns:minmax(125px,.55fr) minmax(330px,1.45fr) auto;align-items:center;gap:12px;padding:11px 13px;cursor:pointer;list-style:none;background:#fffaf0;color:#78350f}' +
       '.regional-progress-section>summary::-webkit-details-marker{display:none}' +
       '.regional-progress-section>summary:after{content:"展开 ▾";font-size:.72rem;font-weight:700;white-space:nowrap;color:#a16207}' +
       '.regional-progress-section[open]>summary:after{content:"收起 ▴"}' +
-      '.regional-progress-name{font-weight:800}' +
-      '.regional-progress-brief{font-size:.74rem;color:#92400e;text-align:right}' +
+      '.regional-progress-name{font-size:.95rem;font-weight:800;white-space:nowrap}' +
+      '.regional-progress-brief{display:grid;grid-template-columns:repeat(3,minmax(86px,1fr));gap:6px;min-width:0}' +
+      '.regional-progress-chip{display:flex;align-items:baseline;justify-content:center;gap:5px;min-width:0;padding:5px 8px;border:1px solid #eadfbe;border-radius:6px;background:rgba(255,255,255,.82);color:#92400e;white-space:nowrap}' +
+      '.regional-progress-chip span{font-size:.68rem;color:#a16207}' +
+      '.regional-progress-chip strong{font-size:.82rem;color:#78350f;font-weight:800}' +
+      '.regional-progress-chip.missing{border-color:#fecaca;background:#fff7f7}' +
+      '.regional-progress-chip.missing span,.regional-progress-chip.missing strong{color:#b91c1c}' +
+      '.regional-progress-chip.complete{border-color:#bbf7d0;background:#f7fff9}' +
+      '.regional-progress-chip.complete span,.regional-progress-chip.complete strong{color:#15803d}' +
       '.regional-progress-body{padding:10px 12px 12px;border-top:1px solid #f3e4b7}' +
       '.regional-progress-table{width:100%!important;min-width:0!important;border-collapse:collapse!important;table-layout:auto!important;font-size:.78rem!important;margin:0!important}' +
       '.regional-progress-table th{padding:7px 6px!important;background:#f5f7fa!important;border-bottom:2px solid #e2e8f0!important;text-align:center!important;white-space:normal!important}' +
@@ -39,8 +61,9 @@
       '.regional-missing-item{padding:5px 7px;border-radius:5px;background:#fff5cc;font-size:.72rem;line-height:1.45;color:#92400e;overflow-wrap:anywhere}' +
       '.regional-missing-empty{padding:7px;text-align:center;color:#15803d;font-size:.75rem;background:#f0fdf4;border-radius:6px}' +
       '.municipal-progress-missing{color:#dc2626;font-weight:800}.municipal-progress-complete{color:#16a34a;font-weight:800}' +
-      '@media(max-width:1100px){.regional-progress-grid{grid-template-columns:1fr}}' +
-      '@media(max-width:600px){.regional-progress-section>summary{align-items:flex-start}.regional-progress-brief{text-align:left}.regional-progress-table{font-size:.7rem!important}.regional-progress-table th,.regional-progress-table td{padding:5px 3px!important}}';
+      '@media(max-width:1150px){.regional-progress-grid{grid-template-columns:1fr}.regional-progress-section>summary{grid-template-columns:minmax(135px,.55fr) minmax(330px,1.45fr) auto}}' +
+      '@media(max-width:760px){.progress-overview-summary{grid-template-columns:repeat(2,minmax(120px,1fr))}.regional-progress-section>summary{grid-template-columns:1fr auto}.regional-progress-brief{grid-column:1/-1;grid-row:2}.regional-progress-section>summary:after{grid-column:2;grid-row:1}.regional-progress-name{grid-column:1;grid-row:1}}' +
+      '@media(max-width:480px){.progress-overview-summary{grid-template-columns:1fr 1fr;gap:7px!important}.progress-overview-summary .summary-card{padding:10px 11px!important}.regional-progress-brief{grid-template-columns:1fr}.regional-progress-chip{justify-content:space-between}.regional-progress-table{font-size:.7rem!important}.regional-progress-table th,.regional-progress-table td{padding:5px 3px!important}}';
     document.head.appendChild(style);
   }
 
@@ -138,6 +161,20 @@
     return {cities:cities, regions:regions, overall:overall};
   }
 
+  function summaryCard(label, actual, expected) {
+    return '<div class="summary-card"><div class="num">' + actual + ' / ' + expected +
+      '</div><div class="label">' + esc(label) + '</div></div>';
+  }
+
+  function renderOverallSummary(total) {
+    return '<div class="summary-bar progress-overview-summary">' +
+      summaryCard('区县（含合并区）', total.totalDistricts, total.expDistricts) +
+      summaryCard('市级', total.totalMunicipal, total.expMunicipal) +
+      summaryCard('作业单位', total.totalUnits, total.expUnits) +
+      summaryCard('任务单元', total.totalTasks, total.expTasks) +
+      '</div>';
+  }
+
   function renderCityTable(cities, totals) {
     var html = '<table class="regional-progress-table"><thead><tr>' +
       '<th>市（区）</th><th>任务单元<br>应有</th><th>任务单元<br>已收</th><th>任务单元<br>缺失</th><th>市级进度<br>已收 / 应有</th>' +
@@ -167,13 +204,22 @@
     return html + '</div>';
   }
 
+  function progressChip(label, value, className) {
+    return '<span class="regional-progress-chip ' + (className || '') + '"><span>' + esc(label) +
+      '</span><strong>' + value + '</strong></span>';
+  }
+
   function renderRegion(regionKey, progress) {
     var cities = progress.cities.filter(function (city) { return city.region === regionKey; });
     var totals = progress.regions[regionKey];
+    var missingClass = totals.missingTasks ? 'missing' : 'complete';
     return '<details class="regional-progress-section" data-region="' + regionKey + '">' +
       '<summary><span class="regional-progress-name">' + REGION_NAMES[regionKey] + '</span>' +
-      '<span class="regional-progress-brief">任务单元 ' + totals.totalTasks + ' / ' + totals.expTasks +
-      '　市级 ' + totals.totalMunicipal + ' / ' + totals.expMunicipal + '　缺失 ' + totals.missingTasks + '</span></summary>' +
+      '<span class="regional-progress-brief">' +
+      progressChip('任务单元', totals.totalTasks + ' / ' + totals.expTasks, '') +
+      progressChip('市级', totals.totalMunicipal + ' / ' + totals.expMunicipal, '') +
+      progressChip('缺失', totals.missingTasks, missingClass) +
+      '</span></summary>' +
       '<div class="regional-progress-body">' + renderCityTable(cities, totals) + renderMissingList(cities) + '</div></details>';
   }
 
@@ -185,13 +231,27 @@
       return;
     }
 
-    var names = {soilType:'土壤类型图', soilAttr:'土壤属性图', farmland:'耕地质量评价'};
     var progress = calculateProgress(dataKey);
+    var name = RESULT_NAMES[dataKey] || dataKey;
     banner.style.display = 'block';
-    // 河北省整体数据仅保留在页面上方的 summary-bar；此处只展示南北片区，避免重复。
-    banner.innerHTML = '<h3>' + esc(names[dataKey] || dataKey) + ' 分片区收缴进度</h3>' +
+    banner.innerHTML = '<h3>' + esc(name) + '收缴进度</h3>' +
+      renderOverallSummary(progress.overall) +
       '<div class="regional-progress-grid">' +
       REGION_ORDER.map(function (key) { return renderRegion(key, progress); }).join('') + '</div>';
+  }
+
+  function removeCitySummaryBar() {
+    if (typeof window.renderCities !== 'function' || window.renderCities.__regionalSummaryMoved) return;
+    var original = window.renderCities;
+    window.renderCities = function () {
+      var html = original.apply(this, arguments);
+      var holder = document.createElement('div');
+      holder.innerHTML = html;
+      var summary = holder.querySelector(':scope > .summary-bar');
+      if (summary) summary.remove();
+      return holder.innerHTML;
+    };
+    window.renderCities.__regionalSummaryMoved = true;
   }
 
   function refreshActiveProgress() {
@@ -206,6 +266,7 @@
         typeof window.isMunicipalTask !== 'function' || typeof window.isDistrictMatched !== 'function') return;
     installStyles();
     ensureShijiazhuangMunicipalTask();
+    removeCitySummaryBar();
 
     window.SoilRegionalProgress = {
       southCities:SOUTH_CITIES.slice(),
@@ -214,7 +275,7 @@
       refresh:refreshActiveProgress
     };
 
-    // 页面上方四张总览卡和南北片区共用同一个实时计算入口。
+    // 页面整体统计和南北片区共用同一个实时计算入口。
     window.calculateDashboardStats = function (dataKey) {
       var total = calculateProgress(dataKey).overall;
       return {
