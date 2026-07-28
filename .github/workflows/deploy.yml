@@ -30,6 +30,7 @@ jobs:
           sparse-checkout: |
             VERSION
             VERSIONING.md
+            MAINTENANCE_RULES.md
             CHANGELOG.md
             index.html
             upload-config.js
@@ -38,6 +39,8 @@ jobs:
             app-release-ui.js
             app-version-guard.js
             repository-manifest-loader.js
+            reply-workflow-core.js
+            upload-success-notice.js
             soil-survey-logo-v1.0.2.js
             admin-delete-manager.js
             task-unit-mappings.js
@@ -77,10 +80,10 @@ jobs:
           set -euo pipefail
 
           required_files=(
-            VERSION VERSIONING.md CHANGELOG.md index.html upload-config.js
+            VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
-            app-version-guard.js repository-manifest-loader.js
-            soil-survey-logo-v1.0.2.js admin-delete-manager.js
+            app-version-guard.js repository-manifest-loader.js reply-workflow-core.js
+            upload-success-notice.js soil-survey-logo-v1.0.2.js admin-delete-manager.js
             task-unit-mappings.js regional-progress-dashboard.js
             dashboard-extension.js reference-library.js admin-import.js
             admin-quality-ui.js admin-quality-upload.js admin-import-v2.js
@@ -89,8 +92,8 @@ jobs:
             pptx-auto-split.js hybrid-staged-upload.js
             chunked-staged-upload.js release-upload-reliability.js
             release-staged-upload.js scripts/validate-project.js
-            scripts/build-repository-manifest.py scripts/bump-version.js
-            data/admin-import-index.json data/repository-tree.json
+            scripts/validate-reply-workflow.js scripts/build-repository-manifest.py
+            scripts/bump-version.js data/admin-import-index.json data/repository-tree.json
           )
           for file in "${required_files[@]}"; do test -f "$file"; done
 
@@ -99,14 +102,19 @@ jobs:
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check reply-workflow-core.js
+          node --check upload-success-notice.js
           node --check soil-survey-logo-v1.0.2.js
           node --check admin-delete-manager.js
           node --check regional-progress-dashboard.js
           node --check dashboard-extension.js
           node --check reference-library.js
           node --check upload-auth-reply-batch.js
+          node --check upload-token-default.js
           node --check scripts/bump-version.js
+          node --check scripts/validate-reply-workflow.js
           python3 -m py_compile scripts/build-repository-manifest.py
+          node scripts/validate-reply-workflow.js
           node scripts/validate-project.js
 
           python3 <<'PY'
