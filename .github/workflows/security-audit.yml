@@ -39,10 +39,15 @@ jobs:
           grep -q 'savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
           grep -q 'var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-token-default.js
           grep -q 'reply-workflow-core.js?v=' page-enhancements.js
+          grep -q 'reply-upload-progress.js?v=' page-enhancements.js
           grep -q 'upload-success-notice.js?v=' page-enhancements.js
+          grep -q 'soil-app-booting' upload-config.js
+          grep -q "xhr.upload.addEventListener('progress'" reply-upload-progress.js
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-auth-reply-batch.js
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-success-notice.js
           grep -q '不得擅自删除、置空' MAINTENANCE_RULES.md
+          grep -q '不得长期停留在“准备上传”' MAINTENANCE_RULES.md
+          grep -q '不得展示旧版基础页面' MAINTENANCE_RULES.md
 
           node --check upload-config.js
           node --check page-enhancements.js
@@ -50,16 +55,21 @@ jobs:
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
           node --check reply-workflow-core.js
+          node --check reply-upload-progress.js
           node --check upload-auth-reply-batch.js
           node --check upload-success-notice.js
           node --check upload-token-default.js
           node --check scripts/bump-version.js
           node --check scripts/validate-upload-token.js
           node --check scripts/validate-reply-workflow.js
+          node --check scripts/validate-reply-upload-progress.js
+          node --check scripts/validate-app-boot.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
+          node scripts/validate-reply-upload-progress.js
+          node scripts/validate-app-boot.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -72,4 +82,4 @@ jobs:
               raise SystemExit('目录清单格式错误')
           PY
 
-          echo '前端语法、上传流程、目录清单和项目规则检查通过。'
+          echo '前端语法、上传进度、原子启动、目录清单和项目规则检查通过。'
