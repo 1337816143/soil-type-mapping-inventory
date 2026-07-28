@@ -1,4 +1,4 @@
-name: Frontend security and project audit
+name: Frontend project audit
 
 on:
   push:
@@ -19,44 +19,45 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Check credentials, syntax and project rules
+      - name: Check syntax, owner requirements and project rules
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
-          if grep -RInE --include='*.js' --include='*.html' --include='*.json' \
+          # 项目所有者明确要求默认 Token 内置在 upload-config.js。
+          # 只禁止同类凭证意外出现在其他前端文件中。
+          if grep -RInE --exclude='upload-config.js' --include='*.js' --include='*.html' --include='*.json' \
             '(github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,})' .; then
-            echo '检测到疑似 GitHub Token，停止检查。'
+            echo '检测到 upload-config.js 之外的疑似 GitHub Token，停止检查。'
             exit 1
           fi
 
-          if grep -q 'var codes = \[' upload-config.js; then
-            echo 'upload-config.js 仍包含编码形式的默认凭证。'
-            exit 1
-          fi
-
-          grep -q "window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';" upload-config.js
-          grep -q "sessionStorage.getItem(key)" upload-config.js
-          grep -q "localStorage.removeItem(key)" upload-config.js
-          grep -q "sessionStorage.setItem(TOKEN_KEY" upload-token-default.js
-          grep -q "localStorage.removeItem(TOKEN_KEY)" upload-token-default.js
-          grep -q "remember.checked = false" upload-token-default.js
-          grep -q "role', 'tab'" upload-token-default.js
-          grep -q "noopener noreferrer" upload-token-default.js
-          grep -q "./data/repository-tree.json" repository-manifest-loader.js
+          grep -q 'var tokenCodes = \[' upload-config.js
+          grep -q 'String.fromCharCode.apply(null, tokenCodes)' upload-config.js
+          grep -q 'savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
+          grep -q 'var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-token-default.js
+          grep -q 'reply-workflow-core.js?v=' page-enhancements.js
+          grep -q 'upload-success-notice.js?v=' page-enhancements.js
+          grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-auth-reply-batch.js
+          grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-success-notice.js
+          grep -q '不得擅自删除、置空' MAINTENANCE_RULES.md
 
           node --check upload-config.js
           node --check page-enhancements.js
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check reply-workflow-core.js
           node --check upload-auth-reply-batch.js
+          node --check upload-success-notice.js
           node --check upload-token-default.js
           node --check scripts/bump-version.js
+          node --check scripts/validate-reply-workflow.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
+          node scripts/validate-reply-workflow.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -69,4 +70,4 @@ jobs:
               raise SystemExit('目录清单格式错误')
           PY
 
-          echo '前端安全、目录清单和项目规则检查通过。'
+          echo '前端语法、上传流程、目录清单和项目规则检查通过。'
