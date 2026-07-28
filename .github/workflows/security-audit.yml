@@ -1,4 +1,4 @@
-name: Frontend security audit
+name: Frontend security and project audit
 
 on:
   push:
@@ -13,14 +13,16 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Check public frontend credentials and syntax
+      - name: Check credentials, syntax and project rules
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -43,9 +45,27 @@ jobs:
           grep -q "remember.checked = false" upload-token-default.js
           grep -q "role', 'tab'" upload-token-default.js
           grep -q "noopener noreferrer" upload-token-default.js
+          grep -q "./data/repository-tree.json" repository-manifest-loader.js
 
           node --check upload-config.js
           node --check page-enhancements.js
+          node --check app-release-ui.js
+          node --check app-version-guard.js
+          node --check repository-manifest-loader.js
           node --check upload-token-default.js
+          node --check scripts/bump-version.js
+          python3 -m py_compile scripts/build-repository-manifest.py
+          python3 scripts/build-repository-manifest.py --output data/repository-tree.json
+          node scripts/validate-project.js
 
-          echo '前端凭证与可访问性安全检查通过。'
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('data/repository-tree.json').read_text(encoding='utf-8'))
+          if payload.get('appVersion') != Path('VERSION').read_text(encoding='utf-8').strip():
+              raise SystemExit('目录清单版本不一致')
+          if not isinstance(payload.get('tree'), list):
+              raise SystemExit('目录清单格式错误')
+          PY
+
+          echo '前端安全、目录清单和项目规则检查通过。'
