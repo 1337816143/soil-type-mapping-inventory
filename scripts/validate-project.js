@@ -13,23 +13,40 @@ function read(path) {
 
 const version = read('VERSION').trim();
 if (!/^v\d+\.\d+\.\d+$/.test(version)) fail('VERSION 不符合语义化版本格式');
+if (!read('CHANGELOG.md').includes(`## ${version}`)) fail('CHANGELOG.md 缺少当前版本记录');
 
 const uploadConfig = read('upload-config.js');
 const releaseUi = read('app-release-ui.js');
+const versionGuard = read('app-version-guard.js');
 const loader = read('page-enhancements.js');
+const manifestLoader = read('repository-manifest-loader.js');
 const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
 const dashboard = read('dashboard-extension.js');
 const deleteManager = read('admin-delete-manager.js');
 const logoPatch = read('soil-survey-logo-v1.0.2.js');
+const bareVersion = version.slice(1);
 
-if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('upload-config.js 版本号与 VERSION 不一致');
+if (!uploadConfig.includes(`window.SOIL_RELEASE_VERSION = '${version}'`)) fail('upload-config.js 发布版本与 VERSION 不一致');
+if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('upload-config.js 页面版本与 VERSION 不一致');
 if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js 版本号与 VERSION 不一致');
-if (!loader.includes(`app-release-ui.js?v=${version.slice(1)}`)) fail('版本界面脚本未按当前版本加载');
-if (!loader.includes(`soil-survey-logo-${version}.js?v=${version.slice(1)}`)) fail('新三普Logo脚本未按当前版本加载');
+if (!loader.includes(`app-release-ui.js?v=${bareVersion}`)) fail('版本界面脚本未按当前版本加载');
+if (!loader.includes(`app-version-guard.js?v=${bareVersion}`)) fail('版本保护脚本未按当前版本加载');
+if (!loader.includes(`repository-manifest-loader.js?v=${bareVersion}`)) fail('静态目录清单脚本未按当前版本加载');
+if (!loader.includes(`admin-delete-manager.js?v=${bareVersion}`)) fail('管理员删除脚本未按当前版本加载');
+if (!versionGuard.includes("window.SOIL_RELEASE_VERSION")) fail('版本保护脚本未以发布版本为准');
+
 const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
 if (!logoMatch || logoMatch[1].length < 8000 || !logoMatch[1].startsWith('iVBORw0KGgo')) fail('新三普Logo PNG数据不完整');
 if (!logoPatch.includes('transform:none!important')) fail('新三普Logo仍可能被旧裁切规则截断');
+
+if (!manifestLoader.includes("./data/repository-tree.json")) fail('静态目录清单路径未配置');
+if (!manifestLoader.includes('loadManifest')) fail('静态目录清单加载逻辑缺失');
+if (!manifestLoader.includes('force && String(window.SOIL_GITHUB_UPLOAD_TOKEN')) fail('管理员实时目录刷新未要求认证凭证');
+if (!manifestLoader.includes('loadAuthenticatedApiTree().catch')) fail('实时目录请求缺少静态清单回退');
+if (!fs.existsSync('scripts/build-repository-manifest.py')) fail('缺少 Pages 目录清单生成脚本');
+if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚本');
+if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
 
 const requiredCategories = [
   '土壤类型图',
@@ -61,7 +78,24 @@ if (categoryBlock.includes("'土特产品适宜性评价'")) fail('参考文件�
 if (!reference.includes("compact.indexOf('土特产品适宜性评价')")) fail('旧参考目录未兼容归入新分组');
 if (!deleteManager.includes('sha:null') || !deleteManager.includes('data/admin-import-index.json')) fail('管理员删除未实现事务删除与索引同步');
 if (!deleteManager.includes('质控意见') || !deleteManager.includes('整改答复') || !deleteManager.includes('参考文件')) fail('管理员删除类型不完整');
-if (!loader.includes(`admin-delete-manager.js?v=${version.slice(1)}`)) fail('管理员删除脚本未按当前版本加载');
+
+const orderedScripts = [
+  'page-enhancements-core.js',
+  'task-unit-mappings.js',
+  'regional-progress-dashboard.js',
+  'dashboard-extension.js',
+  'reference-library.js',
+  'repository-manifest-loader.js',
+  'app-release-ui.js',
+  'soil-survey-logo-v1.0.2.js',
+  'app-version-guard.js',
+  'upload-auth-reply-batch.js',
+  'admin-delete-manager.js'
+];
+const positions = orderedScripts.map((name) => loader.indexOf(name));
+if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
+  fail('页面脚本加载顺序错误');
+}
 
 const banner = {style:{}, innerHTML:''};
 const documentStub = {
