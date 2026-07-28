@@ -16,7 +16,7 @@
     });
   }
 
-  function loadLogoWithoutObserverLoop() {
+  function loadLogoWithoutObserverLoop(src) {
     return whenDomReady().then(function () {
       // v1.0.2 Logo 脚本会在全页面 MutationObserver 回调中无条件改写版本文字，
       // 文字改写又产生新的 childList 事件，形成无限微任务循环并导致页面“未响应”。
@@ -28,7 +28,7 @@
       OneShotObserver.prototype.takeRecords = function () { return []; };
 
       window.MutationObserver = OneShotObserver;
-      return loadScript('./soil-survey-logo-v1.0.2.js?v=1.0.2&runtime-fix=20260728-1')
+      return loadScript(src)
         .then(function () {
           window.MutationObserver = NativeMutationObserver;
         }, function (error) {
@@ -44,7 +44,7 @@
     .then(function () { return loadScript('./dashboard-extension.js?v=20260727-4'); })
     .then(function () { return loadScript('./reference-library.js?v=20260727-4'); })
     .then(function () { return loadScript('./app-release-ui.js?v=1.0.2'); })
-    .then(loadLogoWithoutObserverLoop)
+    .then(function () { return loadLogoWithoutObserverLoop('./soil-survey-logo-v1.0.2.js?v=1.0.2&runtime-fix=20260728-1'); })
     .then(function () { return loadScript('./admin-quality-ui.js'); })
     .then(function () { return loadScript('./admin-quality-upload.js'); })
     .then(function () { return loadScript('./admin-import-v2.js'); })
