@@ -47,19 +47,19 @@
   A.loadTree = function (force) {
     if (A.tree && !force) return Promise.resolve(A.tree);
 
+    var hasToken = !!String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim();
+
     // 普通访客始终读取随 Pages 部署生成的同源静态清单，避免共享出口 IP
-    // 消耗 GitHub 未认证 API 的每小时限额。管理员已设置 Token 且主动强制
-    // 刷新时，才读取实时 GitHub Tree API；失败后仍回退到静态清单。
-    if (force && String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim()) {
+    // 消耗 GitHub 未认证 API 的每小时限额。管理员只要已经设置 Token，目录
+    // 缓存缺失或主动刷新时就读取认证 Tree API，以保证上传、删除后的实时性；
+    // 认证请求失败仍会自动回退到静态清单。
+    if (hasToken) {
       return loadAuthenticatedApiTree().catch(function () {
         return loadManifest(true);
       });
     }
 
     return loadManifest(!!force).catch(function (manifestError) {
-      if (String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim()) {
-        return loadAuthenticatedApiTree();
-      }
       throw new Error('静态目录清单读取失败，请等待 Pages 部署完成后刷新。' +
         (manifestError && manifestError.message ? '（' + manifestError.message + '）' : ''));
     });
