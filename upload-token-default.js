@@ -7,17 +7,15 @@
   function migrateCredentialStorage() {
     var token = '';
     try {
-      token = sessionStorage.getItem(TOKEN_KEY) || '';
-      var legacy = localStorage.getItem(TOKEN_KEY) || '';
-      if (!token && legacy) {
-        token = legacy;
-        sessionStorage.setItem(TOKEN_KEY, legacy);
-      }
-      localStorage.removeItem(TOKEN_KEY);
+      token = sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY) || '';
     } catch (error) {}
 
-    window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';
-    window.SOIL_GITHUB_UPLOAD_TOKEN = String(token || window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim();
+    var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN || '').trim();
+    // 内置 Token 是项目所有者明确要求的默认凭证，不得在增强脚本中删除或置空。
+    window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = defaultToken;
+    window.SOIL_GITHUB_UPLOAD_TOKEN = String(
+      token || window.SOIL_GITHUB_UPLOAD_TOKEN || defaultToken
+    ).trim();
   }
 
   function secureCredentialDialog() {
@@ -32,15 +30,15 @@
       var label = remember.closest('label');
       if (label) {
         Array.prototype.forEach.call(label.childNodes, function (node) {
-          var text = ' 仅在本次浏览器会话中保存';
+          var text = ' 仅在当前浏览器会话中临时覆盖';
           if (node.nodeType === 3 && node.textContent !== text) node.textContent = text;
         });
       }
     }
 
-    var storageMessage = 'Token 仅保存在当前浏览器会话中，关闭浏览器后自动清除；不会写入公开仓库。请使用仅授权本仓库 Contents 读写权限的 Fine-grained PAT。';
+    var storageMessage = '项目已内置默认Token；管理员在此输入的Token仅作为当前浏览器会话的临时覆盖。';
     Array.prototype.forEach.call(modal.querySelectorAll('p'), function (paragraph) {
-      if (paragraph.id === 'credStorageHint' || paragraph.textContent.indexOf('Token只保存在当前浏览器') >= 0) {
+      if (paragraph.id === 'credStorageHint' || paragraph.textContent.indexOf('Token只保存在当前浏览器') >= 0 || paragraph.textContent.indexOf('项目已内置默认Token') >= 0) {
         paragraph.id = 'credStorageHint';
         // 只在内容确实变化时改写，避免 MutationObserver 被自身写入反复触发。
         if (paragraph.textContent !== storageMessage) paragraph.textContent = storageMessage;
@@ -162,7 +160,7 @@
     migrateCredentialStorage();
     scheduleEnhancements();
 
-    // 即使旧版弹窗代码仍保留“记住在此设备”选项，也强制按会话存储处理。
+    // 管理员临时覆盖凭证时仅保存到当前会话；内置 Token 始终保留为默认值。
     document.addEventListener('click', function (event) {
       var save = event.target && event.target.closest && event.target.closest('#credSave');
       if (save) {
@@ -185,10 +183,6 @@
 
     var observer = new MutationObserver(scheduleEnhancements);
     observer.observe(document.documentElement, {childList:true, subtree:true});
-    window.addEventListener('storage', function (event) {
-      if (event.key !== TOKEN_KEY) return;
-      try { localStorage.removeItem(TOKEN_KEY); } catch (error) {}
-    });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install);
