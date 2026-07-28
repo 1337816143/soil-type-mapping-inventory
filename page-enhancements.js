@@ -56,5 +56,6 @@
     .then(function () { return loadScript('./admin-delete-manager.js?v=1.0.6'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
     .then(function () { return loadScript('./hybrid-staged-upload.js?v=1.0.6'); })
+    .then(function () { return loadScript('./upload-success-notice.js?v=1.0.6'); })
     .catch(function (error) { console.error(error); });
 })();
