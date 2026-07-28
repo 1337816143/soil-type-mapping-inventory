@@ -54,9 +54,11 @@ jobs:
           node --check upload-success-notice.js
           node --check upload-token-default.js
           node --check scripts/bump-version.js
+          node --check scripts/validate-upload-token.js
           node --check scripts/validate-reply-workflow.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
+          node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
           node scripts/validate-project.js
 
