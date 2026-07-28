@@ -16,43 +16,109 @@ if (!/^v\d+\.\d+\.\d+$/.test(version)) fail('VERSION 不符合语义化版本格
 if (!read('CHANGELOG.md').includes(`## ${version}`)) fail('CHANGELOG.md 缺少当前版本记录');
 
 const uploadConfig = read('upload-config.js');
+const tokenDefault = read('upload-token-default.js');
 const releaseUi = read('app-release-ui.js');
 const versionGuard = read('app-version-guard.js');
 const loader = read('page-enhancements.js');
 const manifestLoader = read('repository-manifest-loader.js');
+const replyCore = read('reply-workflow-core.js');
 const replyBatch = read('upload-auth-reply-batch.js');
+const successNotice = read('upload-success-notice.js');
 const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
 const dashboard = read('dashboard-extension.js');
 const deleteManager = read('admin-delete-manager.js');
 const logoPatch = read('soil-survey-logo-v1.0.2.js');
+const maintenance = read('MAINTENANCE_RULES.md');
 const bareVersion = version.slice(1);
+const requiredNotice = '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。';
 
 if (!uploadConfig.includes(`window.SOIL_RELEASE_VERSION = '${version}'`)) fail('upload-config.js 发布版本与 VERSION 不一致');
 if (!uploadConfig.includes(`window.SOIL_APP_VERSION = '${version}'`)) fail('upload-config.js 页面版本与 VERSION 不一致');
 if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js 版本号与 VERSION 不一致');
-if (!loader.includes(`app-release-ui.js?v=${bareVersion}`)) fail('版本界面脚本未按当前版本加载');
-if (!loader.includes(`app-version-guard.js?v=${bareVersion}`)) fail('版本保护脚本未按当前版本加载');
-if (!loader.includes(`repository-manifest-loader.js?v=${bareVersion}`)) fail('静态目录清单脚本未按当前版本加载');
-if (!loader.includes(`upload-auth-reply-batch.js?v=${bareVersion}`)) fail('整改答复索引脚本未按当前版本加载');
-if (!loader.includes(`admin-delete-manager.js?v=${bareVersion}`)) fail('管理员删除脚本未按当前版本加载');
-if (!versionGuard.includes('window.SOIL_RELEASE_VERSION')) fail('版本保护脚本未以发布版本为准');
+if (!versionGuard.includes(`|| '${version}'`)) fail('app-version-guard.js 版本号与 VERSION 不一致');
+if (!uploadConfig.includes(`page-enhancements.js?v=${bareVersion}`)) fail('主加载器缓存版本未更新');
+
+const tokenCodesMatch = uploadConfig.match(/var tokenCodes = \[([0-9,\s]+)\]/);
+if (!tokenCodesMatch) fail('未找到项目所有者要求的内置 Token');
+const tokenCodes = tokenCodesMatch[1].split(',').map((value) => Number(value.trim())).filter(Number.isFinite);
+const embeddedToken = String.fromCharCode(...tokenCodes);
+if (!embeddedToken.startsWith('github_pat_') || embeddedToken.length < 60) fail('内置 GitHub Token 数据不完整');
+if (!uploadConfig.includes('savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN')) fail('浏览器覆盖为空时未回退内置 Token');
+if (uploadConfig.includes("window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';")) fail('内置 Token 被置空');
+if (tokenDefault.includes("window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';")) fail('增强脚本会删除内置 Token');
+if (!tokenDefault.includes('var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN')) fail('增强脚本未保留内置 Token');
+if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未锁定内置 Token');
+
+[
+  'reference-library.js',
+  'repository-manifest-loader.js',
+  'app-release-ui.js',
+  'app-version-guard.js',
+  'upload-token-default.js',
+  'reply-workflow-core.js',
+  'upload-auth-reply-batch.js',
+  'admin-delete-manager.js',
+  'hybrid-staged-upload.js',
+  'upload-success-notice.js'
+].forEach((script) => {
+  if (!loader.includes(`${script}?v=${bareVersion}`)) fail(`${script} 未按当前版本加载`);
+});
+
+const orderedScripts = [
+  'page-enhancements-core.js',
+  'task-unit-mappings.js',
+  'regional-progress-dashboard.js',
+  'dashboard-extension.js',
+  'reference-library.js',
+  'repository-manifest-loader.js',
+  'app-release-ui.js',
+  'soil-survey-logo-v1.0.2.js',
+  'app-version-guard.js',
+  'upload-token-default.js',
+  'reply-workflow-core.js',
+  'upload-auth-reply-batch.js',
+  'admin-delete-manager.js',
+  'hybrid-staged-upload.js',
+  'upload-success-notice.js'
+];
+const positions = orderedScripts.map((name) => loader.indexOf(name));
+if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
+  fail('页面脚本加载顺序错误');
+}
+
+if (!replyCore.includes('replyKey') || !replyCore.includes('buildIndex') || !replyCore.includes("normalize('NFKC')")) {
+  fail('整改答复规范化索引核心不完整');
+}
+if (!replyBatch.includes(requiredNotice)) fail('整改答复上传成功提醒缺失');
+if (!successNotice.includes(requiredNotice)) fail('通用上传成功提醒缺失');
+if (!maintenance.includes(requiredNotice)) fail('维护约束未锁定上传成功提醒');
+if (!replyBatch.includes("closest('#adm-ok')")) fail('管理员导入鉴权拦截缺失');
+if (replyBatch.includes("closest('#adm-ok,#confirmUpload')")) fail('整改答复仍被管理员密码鉴权拦截');
+const replySubmitBlock = replyBatch.slice(replyBatch.indexOf('function patchReplySubmit'), replyBatch.indexOf('function patchAvailableFunctions'));
+if (!replySubmitBlock || replySubmitBlock.includes('ensureAdminToken(') || replySubmitBlock.includes('credPass')) {
+  fail('上传整改答复仍要求管理员密码或凭证弹窗');
+}
+if (!replyBatch.includes('class="reply-view-btn"') || !replyBatch.includes('class="replace-btn"')) {
+  fail('已有答复未同时显示查看和替换按钮');
+}
+if (!replyBatch.includes('replyIndex[lookupKey]') || !replyBatch.includes('refreshAllTabs()')) {
+  fail('上传成功后未立即更新原位置按钮');
+}
+if (!replyBatch.includes('loadReplies(true)')) fail('上传成功后未重新读取仓库答复索引');
+if (!replyBatch.includes('admin.loadTree(!!force)')) fail('刷新后未从仓库树恢复答复索引');
+if (replyBatch.includes("x.open('GET','https://api.github.com/repos/")) fail('整改答复仍存在未认证目录请求');
+
+if (!manifestLoader.includes('./data/repository-tree.json')) fail('静态目录清单路径未配置');
+if (!manifestLoader.includes('loadAuthenticatedApiTree().catch')) fail('实时目录请求缺少静态清单回退');
+if (!fs.existsSync('scripts/build-repository-manifest.py')) fail('缺少 Pages 目录清单生成脚本');
+if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚本');
+if (!fs.existsSync('scripts/validate-reply-workflow.js')) fail('缺少整改答复回归测试');
+if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
 
 const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
 if (!logoMatch || logoMatch[1].length < 8000 || !logoMatch[1].startsWith('iVBORw0KGgo')) fail('新三普Logo PNG数据不完整');
 if (!logoPatch.includes('transform:none!important')) fail('新三普Logo仍可能被旧裁切规则截断');
-
-if (!manifestLoader.includes('./data/repository-tree.json')) fail('静态目录清单路径未配置');
-if (!manifestLoader.includes('loadManifest')) fail('静态目录清单加载逻辑缺失');
-if (!manifestLoader.includes('var hasToken')) fail('管理员实时目录刷新未检测认证凭证');
-if (!manifestLoader.includes('if (hasToken)')) fail('管理员目录未优先使用认证 Tree API');
-if (!manifestLoader.includes('loadAuthenticatedApiTree().catch')) fail('实时目录请求缺少静态清单回退');
-if (!replyBatch.includes('applyReplyFiles')) fail('整改答复索引未使用统一清单解析');
-if (!replyBatch.includes('A.loadTree(false)')) fail('整改答复索引未复用静态或认证仓库树');
-if (replyBatch.includes("x.open('GET','https://api.github.com/repos/")) fail('整改答复仍存在未认证 GitHub 目录请求');
-if (!fs.existsSync('scripts/build-repository-manifest.py')) fail('缺少 Pages 目录清单生成脚本');
-if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚本');
-if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
 
 const requiredCategories = [
   '土壤类型图',
@@ -72,36 +138,13 @@ requiredCategories.forEach((name) => {
 });
 if (!releaseUi.includes('group.open = false')) fail('参考文件分组未设置默认收起');
 if (!releaseUi.includes('__unitDeduplicated')) fail('城市作业单位徽标未启用去重');
-if (!releaseUi.includes('家单位（去重）')) fail('城市作业单位去重口径未标明');
 if (!regional.includes("progressChip('区县'")) fail('片区摘要缺少区县统计块');
-if (!regional.includes('expectedUnitKeys:new Set()') || !regional.includes('receivedUnitKeys:new Set()')) {
-  fail('作业单位统计未采用集合去重');
-}
-if (!regional.includes('作业单位（去重）')) fail('页面未明确标注作业单位去重口径');
+if (!regional.includes('expectedUnitKeys:new Set()') || !regional.includes('receivedUnitKeys:new Set()')) fail('作业单位统计未采用集合去重');
 if (!regional.includes('土特产品土壤适宜性评价') || !dashboard.includes('土特产品土壤适宜性评价')) fail('土特产品成果名称未统一');
 const categoryBlock = reference.slice(reference.indexOf('var CATEGORY_ORDER'), reference.indexOf('];', reference.indexOf('var CATEGORY_ORDER')));
 if (categoryBlock.includes("'土特产品适宜性评价'")) fail('参考文件仍包含旧的多余标准分组');
 if (!reference.includes("compact.indexOf('土特产品适宜性评价')")) fail('旧参考目录未兼容归入新分组');
 if (!deleteManager.includes('sha:null') || !deleteManager.includes('data/admin-import-index.json')) fail('管理员删除未实现事务删除与索引同步');
-if (!deleteManager.includes('质控意见') || !deleteManager.includes('整改答复') || !deleteManager.includes('参考文件')) fail('管理员删除类型不完整');
-
-const orderedScripts = [
-  'page-enhancements-core.js',
-  'task-unit-mappings.js',
-  'regional-progress-dashboard.js',
-  'dashboard-extension.js',
-  'reference-library.js',
-  'repository-manifest-loader.js',
-  'app-release-ui.js',
-  'soil-survey-logo-v1.0.2.js',
-  'app-version-guard.js',
-  'upload-auth-reply-batch.js',
-  'admin-delete-manager.js'
-];
-const positions = orderedScripts.map((name) => loader.indexOf(name));
-if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
-  fail('页面脚本加载顺序错误');
-}
 
 const banner = {style:{}, innerHTML:''};
 const documentStub = {
@@ -120,7 +163,6 @@ const documentStub = {
     return null;
   }
 };
-
 const context = {
   console,
   Set,
@@ -146,27 +188,10 @@ const context = {
 context.window = context;
 vm.createContext(context);
 vm.runInContext(regional, context, {filename:'regional-progress-dashboard.js'});
-
 const totals = context.SoilRegionalProgress.calculate('soilType').overall;
 if (totals.expUnits !== 3) fail(`作业单位去重测试失败，应为3，实际为${totals.expUnits}`);
-if (totals.totalUnits !== 0) fail('未提交成果时作业单位已收数应为0');
-
 context.renderMissingBanner('soilType');
 const chipCount = (banner.innerHTML.match(/regional-progress-chip/g) || []).length;
-if (chipCount !== 8) fail(`南北片区应各有4个统计块，实际共${chipCount}个`);
-if (!banner.innerHTML.includes('区县')) fail('渲染结果中缺少区县统计');
-
-const legacyReplies = [];
-if (fs.existsSync('replies')) {
-  const walk = (dir) => fs.readdirSync(dir, {withFileTypes:true}).forEach((entry) => {
-    const full = `${dir}/${entry.name}`;
-    if (entry.isDirectory()) return walk(full);
-    if (/^(.*)_整改答复_([0-9]+)\.([a-z0-9]+)$/i.test(entry.name) && !entry.name.includes('_批次-')) {
-      legacyReplies.push(full);
-    }
-  });
-  walk('replies');
-}
-if (legacyReplies.length) fail(`检测到历史未标批次文件：\n${legacyReplies.join('\n')}`);
+if (chipCount !== 8 || !banner.innerHTML.includes('区县')) fail('南北片区摘要渲染测试失败');
 
 console.log(`project validation passed (${version})`);

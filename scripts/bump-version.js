@@ -36,15 +36,34 @@ function replace(path, pattern, replacement) {
   fs.writeFileSync(path, after, 'utf8');
 }
 
+function replaceLoaderVersion(scriptName) {
+  const escaped = scriptName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  replace(
+    'page-enhancements.js',
+    new RegExp(escaped + '\\?v=\\d+\\.\\d+\\.\\d+(?:&build=\\d+)?'),
+    `${scriptName}?v=${bare}`
+  );
+}
+
 fs.writeFileSync(versionPath, `${next}\n`, 'utf8');
 replace('upload-config.js', /window\.SOIL_RELEASE_VERSION = 'v\d+\.\d+\.\d+';/, `window.SOIL_RELEASE_VERSION = '${next}';`);
 replace('upload-config.js', /window\.SOIL_APP_VERSION = 'v\d+\.\d+\.\d+';/, `window.SOIL_APP_VERSION = '${next}';`);
+replace('upload-config.js', /page-enhancements\.js\?v=\d+\.\d+\.\d+(?:&build=\d+)?/, `page-enhancements.js?v=${bare}`);
 replace('app-release-ui.js', /var VERSION = 'v\d+\.\d+\.\d+';/, `var VERSION = '${next}';`);
 replace('app-version-guard.js', /\|\| 'v\d+\.\d+\.\d+'/, `|| '${next}'`);
-replace('page-enhancements.js', /app-release-ui\.js\?v=\d+\.\d+\.\d+/, `app-release-ui.js?v=${bare}`);
-replace('page-enhancements.js', /app-version-guard\.js\?v=\d+\.\d+\.\d+/, `app-version-guard.js?v=${bare}`);
-replace('page-enhancements.js', /repository-manifest-loader\.js\?v=\d+\.\d+\.\d+/, `repository-manifest-loader.js?v=${bare}`);
-replace('page-enhancements.js', /admin-delete-manager\.js\?v=\d+\.\d+\.\d+/, `admin-delete-manager.js?v=${bare}`);
+
+[
+  'reference-library.js',
+  'repository-manifest-loader.js',
+  'app-release-ui.js',
+  'app-version-guard.js',
+  'upload-token-default.js',
+  'reply-workflow-core.js',
+  'upload-auth-reply-batch.js',
+  'admin-delete-manager.js',
+  'hybrid-staged-upload.js',
+  'upload-success-notice.js'
+].forEach(replaceLoaderVersion);
 
 console.log(`${current} -> ${next}`);
 console.log('请在 CHANGELOG.md 顶部补充本次变更说明后再提交。');
