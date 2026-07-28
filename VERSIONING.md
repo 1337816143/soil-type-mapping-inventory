@@ -12,4 +12,11 @@
 node scripts/bump-version.js patch
 ```
 
-较大更新分别使用 `minor` 或 `major`。脚本会同步更新 `VERSION`、页面显示版本和主要资源缓存版本；提交前还需在 `CHANGELOG.md` 顶部写明修改内容。
+较大更新分别使用 `minor` 或 `major`。脚本会同步更新 `VERSION`、页面显示版本及上传工作流相关资源的缓存版本；提交前还需在 `CHANGELOG.md` 顶部写明修改内容，并运行：
+
+```bash
+node scripts/validate-reply-workflow.js
+node scripts/validate-project.js
+```
+
+涉及上传、Token、整改答复、按钮或成功提醒的修改，还必须遵守 `MAINTENANCE_RULES.md`。
