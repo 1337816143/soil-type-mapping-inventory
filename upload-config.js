@@ -1,20 +1,19 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
 window.SOIL_APP_VERSION = 'v1.0.2';
 
-// 主方案：普通文件整文件暂存，只有超过 Git Blob 安全阈值的文件才分块，再由 Actions 一次性归档到 main。
-// 默认 Token 以字符编码数组保存；管理员在页面中更新的 Token 可覆盖默认值。
+// 上传凭证安全策略：公开仓库不再内置任何 GitHub Token。
+// 管理员在页面中设置的 Fine-grained PAT 仅保存在当前浏览器会话的 sessionStorage 中。
 (function() {
-  var codes = [103,105,116,104,117,98,95,112,97,116,95,49,49,66,81,67,52,87,82,73,48,70,57,56,98,120,105,114,101,97,49,122,116,95,77,118,82,105,120,55,50,110,66,108,51,52,122,89,75,101,75,81,107,107,113,78,116,115,90,116,118,73,102,78,78,67,55,111,67,56,71,75,55,101,114,71,101,85,90,74,77,53,76,53,68,65,118,71,74,57,76,77,104];
-  var defaultToken = '';
-  for (var i = 0; i < codes.length; i++) defaultToken += String.fromCharCode(codes[i]);
-
+  var key = 'soilGithubUploadTokenV2';
   var savedToken = '';
   try {
-    savedToken = sessionStorage.getItem('soilGithubUploadTokenV2') || localStorage.getItem('soilGithubUploadTokenV2') || '';
+    savedToken = sessionStorage.getItem(key) || '';
+    // 清理旧版本可能写入的长期存储，避免凭证跨会话残留。
+    localStorage.removeItem(key);
   } catch (error) {}
 
-  window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = defaultToken;
-  window.SOIL_GITHUB_UPLOAD_TOKEN = String(savedToken || defaultToken).trim();
+  window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';
+  window.SOIL_GITHUB_UPLOAD_TOKEN = String(savedToken || '').trim();
 })();
 
 // 备用方案：Cloudflare Worker 地址。未部署时保持为空。
@@ -23,7 +22,7 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  script.src = './page-enhancements.js?v=20260727-13';
+  script.src = './page-enhancements.js?v=20260727-13&security=20260728-1';
   script.async = false;
 
   // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。
