@@ -1,5 +1,6 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
-window.SOIL_APP_VERSION = 'v1.0.2';
+window.SOIL_RELEASE_VERSION = 'v1.0.5';
+window.SOIL_APP_VERSION = 'v1.0.5';
 
 // 上传凭证安全策略：公开仓库不再内置任何 GitHub Token。
 // 管理员在页面中设置的 Fine-grained PAT 仅保存在当前浏览器会话的 sessionStorage 中。
@@ -22,8 +23,7 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  // runtime 参数用于强制浏览器获取“页面未响应”修复后的加载器，避免继续命中旧缓存。
-  script.src = './page-enhancements.js?v=20260727-13&security=20260728-1&runtime=20260728-1';
+  script.src = './page-enhancements.js?v=1.0.5';
   script.async = false;
 
   // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。
