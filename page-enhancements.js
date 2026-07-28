@@ -51,7 +51,7 @@
     .then(function () { return loadScript('./admin-import-v2-bridge.js'); })
     .then(function () { return loadScript('./reference-import-mode.js'); })
     // 先执行会话凭证迁移、安全加固和可访问性增强，再加载上传鉴权逻辑。
-    .then(function () { return loadScript('./upload-token-default.js?v=20260728-1'); })
+    .then(function () { return loadScript('./upload-token-default.js?v=20260728-2'); })
     .then(function () { return loadScript('./upload-auth-reply-batch.js'); })
     .then(function () { return loadScript('./admin-delete-manager.js?v=1.0.2'); })
     .then(function () { return loadScript('./pptx-auto-split.js'); })
