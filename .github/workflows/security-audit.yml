@@ -1,0 +1,51 @@
+name: Frontend security audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Check public frontend credentials and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if grep -RInE --include='*.js' --include='*.html' --include='*.json' \
+            '(github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,})' .; then
+            echo '检测到疑似 GitHub Token，停止检查。'
+            exit 1
+          fi
+
+          if grep -q 'var codes = \[' upload-config.js; then
+            echo 'upload-config.js 仍包含编码形式的默认凭证。'
+            exit 1
+          fi
+
+          grep -q "window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = '';" upload-config.js
+          grep -q "sessionStorage.getItem(key)" upload-config.js
+          grep -q "localStorage.removeItem(key)" upload-config.js
+          grep -q "sessionStorage.setItem(TOKEN_KEY" upload-token-default.js
+          grep -q "localStorage.removeItem(TOKEN_KEY)" upload-token-default.js
+          grep -q "remember.checked = false" upload-token-default.js
+          grep -q "role', 'tab'" upload-token-default.js
+          grep -q "noopener noreferrer" upload-token-default.js
+
+          node --check upload-config.js
+          node --check page-enhancements.js
+          node --check upload-token-default.js
+
+          echo '前端凭证与可访问性安全检查通过。'
