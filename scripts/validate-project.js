@@ -20,6 +20,7 @@ const releaseUi = read('app-release-ui.js');
 const versionGuard = read('app-version-guard.js');
 const loader = read('page-enhancements.js');
 const manifestLoader = read('repository-manifest-loader.js');
+const replyBatch = read('upload-auth-reply-batch.js');
 const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
 const dashboard = read('dashboard-extension.js');
@@ -33,17 +34,22 @@ if (!releaseUi.includes(`var VERSION = '${version}'`)) fail('app-release-ui.js �
 if (!loader.includes(`app-release-ui.js?v=${bareVersion}`)) fail('版本界面脚本未按当前版本加载');
 if (!loader.includes(`app-version-guard.js?v=${bareVersion}`)) fail('版本保护脚本未按当前版本加载');
 if (!loader.includes(`repository-manifest-loader.js?v=${bareVersion}`)) fail('静态目录清单脚本未按当前版本加载');
+if (!loader.includes(`upload-auth-reply-batch.js?v=${bareVersion}`)) fail('整改答复索引脚本未按当前版本加载');
 if (!loader.includes(`admin-delete-manager.js?v=${bareVersion}`)) fail('管理员删除脚本未按当前版本加载');
-if (!versionGuard.includes("window.SOIL_RELEASE_VERSION")) fail('版本保护脚本未以发布版本为准');
+if (!versionGuard.includes('window.SOIL_RELEASE_VERSION')) fail('版本保护脚本未以发布版本为准');
 
 const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
 if (!logoMatch || logoMatch[1].length < 8000 || !logoMatch[1].startsWith('iVBORw0KGgo')) fail('新三普Logo PNG数据不完整');
 if (!logoPatch.includes('transform:none!important')) fail('新三普Logo仍可能被旧裁切规则截断');
 
-if (!manifestLoader.includes("./data/repository-tree.json")) fail('静态目录清单路径未配置');
+if (!manifestLoader.includes('./data/repository-tree.json')) fail('静态目录清单路径未配置');
 if (!manifestLoader.includes('loadManifest')) fail('静态目录清单加载逻辑缺失');
-if (!manifestLoader.includes('force && String(window.SOIL_GITHUB_UPLOAD_TOKEN')) fail('管理员实时目录刷新未要求认证凭证');
+if (!manifestLoader.includes('var hasToken')) fail('管理员实时目录刷新未检测认证凭证');
+if (!manifestLoader.includes('if (hasToken)')) fail('管理员目录未优先使用认证 Tree API');
 if (!manifestLoader.includes('loadAuthenticatedApiTree().catch')) fail('实时目录请求缺少静态清单回退');
+if (!replyBatch.includes('applyReplyFiles')) fail('整改答复索引未使用统一清单解析');
+if (!replyBatch.includes('A.loadTree(false)')) fail('整改答复索引未复用静态或认证仓库树');
+if (replyBatch.includes("x.open('GET','https://api.github.com/repos/")) fail('整改答复仍存在未认证 GitHub 目录请求');
 if (!fs.existsSync('scripts/build-repository-manifest.py')) fail('缺少 Pages 目录清单生成脚本');
 if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚本');
 if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
