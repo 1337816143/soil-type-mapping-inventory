@@ -32,15 +32,18 @@
       var label = remember.closest('label');
       if (label) {
         Array.prototype.forEach.call(label.childNodes, function (node) {
-          if (node.nodeType === 3) node.textContent = ' 仅在本次浏览器会话中保存';
+          var text = ' 仅在本次浏览器会话中保存';
+          if (node.nodeType === 3 && node.textContent !== text) node.textContent = text;
         });
       }
     }
 
+    var storageMessage = 'Token 仅保存在当前浏览器会话中，关闭浏览器后自动清除；不会写入公开仓库。请使用仅授权本仓库 Contents 读写权限的 Fine-grained PAT。';
     Array.prototype.forEach.call(modal.querySelectorAll('p'), function (paragraph) {
-      if (paragraph.textContent.indexOf('Token只保存在当前浏览器') >= 0) {
+      if (paragraph.id === 'credStorageHint' || paragraph.textContent.indexOf('Token只保存在当前浏览器') >= 0) {
         paragraph.id = 'credStorageHint';
-        paragraph.textContent = 'Token 仅保存在当前浏览器会话中，关闭浏览器后自动清除；不会写入公开仓库。请使用仅授权本仓库 Contents 读写权限的 Fine-grained PAT。';
+        // 只在内容确实变化时改写，避免 MutationObserver 被自身写入反复触发。
+        if (paragraph.textContent !== storageMessage) paragraph.textContent = storageMessage;
       }
     });
   }
