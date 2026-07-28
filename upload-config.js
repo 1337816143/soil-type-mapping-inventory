@@ -22,7 +22,8 @@ window.SOIL_UPLOAD_API_URL = '';
 // 页面展示与统计增强采用独立文件，便于维护并避免两套逻辑重复执行。
 (function() {
   var script = document.createElement('script');
-  script.src = './page-enhancements.js?v=20260727-13&security=20260728-1';
+  // runtime 参数用于强制浏览器获取“页面未响应”修复后的加载器，避免继续命中旧缓存。
+  script.src = './page-enhancements.js?v=20260727-13&security=20260728-1&runtime=20260728-1';
   script.async = false;
 
   // 等页面增强样式加载完成后再覆盖，确保三普 Logo 不被 Flex 布局压扁或拉长。
