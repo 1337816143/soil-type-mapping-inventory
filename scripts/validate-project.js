@@ -24,6 +24,8 @@ const manifestLoader = read('repository-manifest-loader.js');
 const replyCore = read('reply-workflow-core.js');
 const replyBatch = read('upload-auth-reply-batch.js');
 const successNotice = read('upload-success-notice.js');
+const adminUploadTransport = read('admin-upload-transport-fix.js');
+const hybridUpload = read('hybrid-staged-upload.js');
 const reference = read('reference-library.js');
 const regional = read('regional-progress-dashboard.js');
 const dashboard = read('dashboard-extension.js');
@@ -58,7 +60,9 @@ if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未�
   'upload-token-default.js',
   'reply-workflow-core.js',
   'upload-auth-reply-batch.js',
+  'reply-upload-progress.js',
   'admin-delete-manager.js',
+  'admin-upload-transport-fix.js',
   'hybrid-staged-upload.js',
   'upload-success-notice.js'
 ].forEach((script) => {
@@ -78,7 +82,9 @@ const orderedScripts = [
   'upload-token-default.js',
   'reply-workflow-core.js',
   'upload-auth-reply-batch.js',
+  'reply-upload-progress.js',
   'admin-delete-manager.js',
+  'admin-upload-transport-fix.js',
   'hybrid-staged-upload.js',
   'upload-success-notice.js'
 ];
@@ -86,6 +92,20 @@ const positions = orderedScripts.map((name) => loader.indexOf(name));
 if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
   fail('页面脚本加载顺序错误');
 }
+
+if (!adminUploadTransport.includes('function resolveCredential()')) fail('管理员上传缺少凭证预检');
+if (!adminUploadTransport.includes("'/git/ref/heads/main'")) fail('管理员上传凭证预检未验证 main 分支访问');
+if (!adminUploadTransport.includes('window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN')) fail('管理员上传未保留内置 Token 回退');
+if (!adminUploadTransport.includes('var activeCredential')) fail('管理员上传未冻结单次上传凭证');
+if (!adminUploadTransport.includes("headers.set('Authorization', 'Bearer ' + activeCredential)")) fail('管理员上传请求未固定使用已验证凭证');
+if (!adminUploadTransport.includes('new XMLHttpRequest()')) fail('管理员文件上传未使用可监听进度的 XHR');
+if (!adminUploadTransport.includes('xhr.upload.onprogress')) fail('管理员文件上传缺少真实字节进度监听');
+if (!adminUploadTransport.includes('正在传输：')) fail('管理员文件上传缺少传输字节提示');
+if (!adminUploadTransport.includes('等待 GitHub 确认写入')) fail('管理员文件上传缺少服务端确认阶段');
+if (!adminUploadTransport.includes('内置 Token 没有被删除')) fail('Bad credentials 提示未明确保留内置 Token');
+if (!adminUploadTransport.includes("button.dataset.authReady = '1'")) fail('管理员上传未绕过旧的重复凭证校验');
+if (!hybridUpload.includes('正在整文件上传')) fail('39 MiB 整文件上传策略被删除');
+if (!hybridUpload.includes('39 MiB 分块')) fail('超限文件分块策略被删除');
 
 if (!replyCore.includes('replyKey') || !replyCore.includes('buildIndex') || !replyCore.includes("normalize('NFKC')")) {
   fail('整改答复规范化索引核心不完整');
@@ -114,6 +134,7 @@ if (!manifestLoader.includes('loadAuthenticatedApiTree().catch')) fail('实时�
 if (!fs.existsSync('scripts/build-repository-manifest.py')) fail('缺少 Pages 目录清单生成脚本');
 if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚本');
 if (!fs.existsSync('scripts/validate-reply-workflow.js')) fail('缺少整改答复回归测试');
+if (!fs.existsSync('scripts/validate-admin-upload-transport.js')) fail('缺少管理员上传传输回归测试');
 if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
 
 const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
