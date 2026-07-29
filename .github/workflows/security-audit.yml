@@ -45,13 +45,24 @@ jobs:
           grep -q 'upload-success-notice.js?v=' page-enhancements.js
           grep -q 'soil-app-booting' upload-config.js
           grep -q "xhr.upload.addEventListener('progress'" reply-upload-progress.js
-          grep -q 'xhr.upload.onprogress' admin-upload-transport-fix.js
-          grep -q 'var activeCredential' admin-upload-transport-fix.js
-          grep -q '内置 Token 没有被删除' admin-upload-transport-fix.js
+          grep -q 'function normalizeStage(text)' admin-upload-transport-fix.js
+          grep -q 'function renderUploadStatus()' admin-upload-transport-fix.js
+          grep -q '上传进度：' admin-upload-transport-fix.js
+          grep -q "button.dataset.authReady = '1'" admin-upload-transport-fix.js
+          grep -q "'Authorization': 'Bearer ' + token()" hybrid-staged-upload.js
+          grep -q 'return fetch(API_ROOT + path' hybrid-staged-upload.js
+          if grep -q 'window.fetch = function' admin-upload-transport-fix.js; then
+            echo '管理员上传仍在全局替换 fetch，停止检查。'
+            exit 1
+          fi
+          if grep -q 'new XMLHttpRequest()' admin-upload-transport-fix.js; then
+            echo '管理员 Git Blob 上传仍被 XHR 接管，停止检查。'
+            exit 1
+          fi
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-auth-reply-batch.js
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-success-notice.js
           grep -q '不得擅自删除、置空' MAINTENANCE_RULES.md
-          grep -q '不得长期停留在“准备上传”' MAINTENANCE_RULES.md
+          grep -q '原位置更新' MAINTENANCE_RULES.md
           grep -q '不得展示旧版基础页面' MAINTENANCE_RULES.md
 
           node --check upload-config.js
@@ -71,6 +82,7 @@ jobs:
           node --check scripts/validate-reply-upload-progress.js
           node --check scripts/validate-app-boot.js
           node --check scripts/validate-admin-upload-transport.js
+          node --check scripts/validate-embedded-token-live.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
           node scripts/validate-upload-token.js
@@ -79,6 +91,7 @@ jobs:
           node scripts/validate-app-boot.js
           node scripts/validate-admin-upload-transport.js
           node scripts/validate-project.js
+          node scripts/validate-embedded-token-live.js
 
           python3 <<'PY'
           import json
@@ -90,4 +103,4 @@ jobs:
               raise SystemExit('目录清单格式错误')
           PY
 
-          echo '前端语法、管理员上传凭证与进度、整改答复进度、原子启动、目录清单和项目规则检查通过。'
+          echo '前端语法、管理员上传原位进度、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
