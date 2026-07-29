@@ -74,6 +74,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'reply-upload-progress.js',
   'admin-delete-manager.js',
   'pptx-auto-split.js',
+  'admin-upload-transport-fix.js',
   'hybrid-staged-upload.js',
   'upload-success-notice.js'
 ].forEach(replaceLoaderVersion);

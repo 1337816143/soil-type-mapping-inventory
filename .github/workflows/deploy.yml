@@ -44,6 +44,7 @@ jobs:
             upload-success-notice.js
             soil-survey-logo-v1.0.2.js
             admin-delete-manager.js
+            admin-upload-transport-fix.js
             task-unit-mappings.js
             regional-progress-dashboard.js
             dashboard-extension.js
@@ -84,7 +85,8 @@ jobs:
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
             app-version-guard.js repository-manifest-loader.js reply-workflow-core.js
-            reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js admin-delete-manager.js
+            reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
+            admin-delete-manager.js admin-upload-transport-fix.js
             task-unit-mappings.js regional-progress-dashboard.js
             dashboard-extension.js reference-library.js admin-import.js
             admin-quality-ui.js admin-quality-upload.js admin-import-v2.js
@@ -95,6 +97,7 @@ jobs:
             release-staged-upload.js scripts/validate-project.js
             scripts/validate-upload-token.js scripts/validate-reply-workflow.js
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
+            scripts/validate-admin-upload-transport.js
             scripts/build-repository-manifest.py scripts/bump-version.js
             data/admin-import-index.json data/repository-tree.json
           )
@@ -110,6 +113,7 @@ jobs:
           node --check upload-success-notice.js
           node --check soil-survey-logo-v1.0.2.js
           node --check admin-delete-manager.js
+          node --check admin-upload-transport-fix.js
           node --check regional-progress-dashboard.js
           node --check dashboard-extension.js
           node --check reference-library.js
@@ -120,11 +124,13 @@ jobs:
           node --check scripts/validate-reply-workflow.js
           node --check scripts/validate-reply-upload-progress.js
           node --check scripts/validate-app-boot.js
+          node --check scripts/validate-admin-upload-transport.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
           node scripts/validate-reply-upload-progress.js
           node scripts/validate-app-boot.js
+          node scripts/validate-admin-upload-transport.js
           node scripts/validate-project.js
 
           python3 <<'PY'

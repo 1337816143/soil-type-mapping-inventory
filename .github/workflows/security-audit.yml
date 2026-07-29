@@ -38,11 +38,16 @@ jobs:
           grep -q 'String.fromCharCode.apply(null, tokenCodes)' upload-config.js
           grep -q 'savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
           grep -q 'var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-token-default.js
+          grep -q 'admin-upload-transport-fix.js?v=' page-enhancements.js
+          grep -q 'hybrid-staged-upload.js?v=' page-enhancements.js
           grep -q 'reply-workflow-core.js?v=' page-enhancements.js
           grep -q 'reply-upload-progress.js?v=' page-enhancements.js
           grep -q 'upload-success-notice.js?v=' page-enhancements.js
           grep -q 'soil-app-booting' upload-config.js
           grep -q "xhr.upload.addEventListener('progress'" reply-upload-progress.js
+          grep -q 'xhr.upload.onprogress' admin-upload-transport-fix.js
+          grep -q 'var activeCredential' admin-upload-transport-fix.js
+          grep -q '内置 Token 没有被删除' admin-upload-transport-fix.js
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-auth-reply-batch.js
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-success-notice.js
           grep -q '不得擅自删除、置空' MAINTENANCE_RULES.md
@@ -59,17 +64,20 @@ jobs:
           node --check upload-auth-reply-batch.js
           node --check upload-success-notice.js
           node --check upload-token-default.js
+          node --check admin-upload-transport-fix.js
           node --check scripts/bump-version.js
           node --check scripts/validate-upload-token.js
           node --check scripts/validate-reply-workflow.js
           node --check scripts/validate-reply-upload-progress.js
           node --check scripts/validate-app-boot.js
+          node --check scripts/validate-admin-upload-transport.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
           node scripts/validate-reply-upload-progress.js
           node scripts/validate-app-boot.js
+          node scripts/validate-admin-upload-transport.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -82,4 +90,4 @@ jobs:
               raise SystemExit('目录清单格式错误')
           PY
 
-          echo '前端语法、上传进度、原子启动、目录清单和项目规则检查通过。'
+          echo '前端语法、管理员上传凭证与进度、整改答复进度、原子启动、目录清单和项目规则检查通过。'
