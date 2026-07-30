@@ -37,6 +37,7 @@ jobs:
           grep -q 'var tokenCodes = \[' upload-config.js
           grep -q 'String.fromCharCode.apply(null, tokenCodes)' upload-config.js
           grep -q 'savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-config.js
+          grep -q 'installAtomicBootScreen' upload-config.js
           grep -q 'var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN' upload-token-default.js
           grep -q 'admin-upload-transport-fix.js?v=' page-enhancements.js
           grep -q 'hybrid-staged-upload.js?v=' page-enhancements.js
@@ -48,6 +49,8 @@ jobs:
           grep -q 'function normalizeStage(text)' admin-upload-transport-fix.js
           grep -q 'function renderUploadStatus()' admin-upload-transport-fix.js
           grep -q '上传进度：' admin-upload-transport-fix.js
+          grep -q 'q.__soilAdminStatusInPlaceInstalled' admin-upload-transport-fix.js
+          grep -q 'admin.__successNoticeProgressPatched' upload-success-notice.js
           grep -q "button.dataset.authReady = '1'" admin-upload-transport-fix.js
           grep -q "'Authorization': 'Bearer ' + token()" hybrid-staged-upload.js
           grep -q 'return fetch(API_ROOT + path' hybrid-staged-upload.js
@@ -57,6 +60,10 @@ jobs:
           fi
           if grep -q 'new XMLHttpRequest()' admin-upload-transport-fix.js; then
             echo '管理员 Git Blob 上传仍被 XHR 接管，停止检查。'
+            exit 1
+          fi
+          if grep -q 'new MutationObserver(armAdminUpload)' admin-upload-transport-fix.js; then
+            echo '管理员进度脚本仍长期监听全页面并可能重复包裹，停止检查。'
             exit 1
           fi
           grep -q '上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。' upload-auth-reply-batch.js
@@ -82,6 +89,7 @@ jobs:
           node --check scripts/validate-reply-upload-progress.js
           node --check scripts/validate-app-boot.js
           node --check scripts/validate-admin-upload-transport.js
+          node --check scripts/validate-admin-progress-wrapper.js
           node --check scripts/validate-embedded-token-live.js
           python3 -m py_compile scripts/build-repository-manifest.py
           python3 scripts/build-repository-manifest.py --output data/repository-tree.json
@@ -90,6 +98,7 @@ jobs:
           node scripts/validate-reply-upload-progress.js
           node scripts/validate-app-boot.js
           node scripts/validate-admin-upload-transport.js
+          node scripts/validate-admin-progress-wrapper.js
           node scripts/validate-project.js
           node scripts/validate-embedded-token-live.js
 
@@ -103,4 +112,4 @@ jobs:
               raise SystemExit('目录清单格式错误')
           PY
 
-          echo '前端语法、管理员上传原位进度、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
+          echo '前端语法、管理员上传原位进度、递归防护、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
