@@ -39,13 +39,19 @@
 
   function patchAdminProgress() {
     var admin = window.SoilAdminImport;
-    if (!admin || typeof admin.progress !== 'function' || admin.progress.__successNoticePatched) return;
+    if (!admin || typeof admin.progress !== 'function' || admin.__successNoticeProgressPatched) return;
+
+    // 使用对象级标记保证只包裹一次。管理员原位进度脚本也会包装 progress；若两个
+    // 脚本只检查函数属性，MutationObserver 会交替重新包裹，最终造成调用栈溢出。
+    admin.__successNoticeProgressPatched = true;
     var original = admin.progress;
-    admin.progress = function (message, percent) {
+    var wrapped = function (message, percent) {
       if (Number(percent) >= 100) message = appendNotice(message);
       return original.apply(this, [message].concat(Array.prototype.slice.call(arguments, 1)));
     };
-    admin.progress.__successNoticePatched = true;
+    wrapped.__successNoticePatched = true;
+    if (original.__soilAdminStatusInPlace) wrapped.__soilAdminStatusInPlace = true;
+    admin.progress = wrapped;
   }
 
   function refreshVisibleMessages() {
