@@ -2,14 +2,14 @@ name: Temporary v1.0.13 bump
 
 on:
   push:
-    branches: [fix/import-recognition-v1.0.13]
+    branches:
+      - fix/import-recognition-v1.0.13
 
 permissions:
   contents: write
 
 jobs:
   bump:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,25 +25,7 @@ jobs:
             exit 0
           fi
           node scripts/bump-version.js patch
-          python3 <<'PY'
-          from pathlib import Path
-          path = Path('CHANGELOG.md')
-          text = path.read_text(encoding='utf-8')
-          entry = '''## v1.0.13 — 2026-08-12
-
-- 修复ZIP解压完成后自动识别被基础导入器内部 `setFiles()` 绕过的问题：自动识别器改为直接监听导入状态 `state.files` 的赋值，不再依赖容易被弹窗重建破坏的DOM事件绑定。
-- 当前北部28份共享质控报告按预登记文件名/规范化文件名和大小自动匹配，自动恢复第一轮、6类成果和全部共享任务单元；识别完成后不再显示“未分类/不计入统计”。
-- 扩展历史第一批、第二批、第二批补充、第三批等旧资料识别规则，兼容土壤类型图、土壤属性图、耕地质量评价/等级/耕评等旧命名格式及目录结构。
-- 增强地区与任务单元反推：支持由“市+县区”“唯一县区”“作业单位目录”等信息自动确定市、作业单位和任务单元，并兼容信都县→信都区、南和县→南和区、沙河县→沙河市、石家市→石家庄市等历史名称。
-- 自动识别安装增加有限次数重绑定，覆盖管理员弹窗延迟重建与PPTX拆分后的状态更新；仍不使用长期 `MutationObserver`，避免再次引入页面卡死循环。
-- 新增当前北部登记材料与历史文件名的回归测试，继续保护内置 Token、原始 `fetch + Bearer` Git Data API、39 MiB整文件/分块、整改答复、删除、统计及Pages部署能力。
-
-'''
-          marker = '## v1.0.12 — 2026-08-12\n'
-          if entry.strip() not in text:
-              text = text.replace(marker, entry + marker, 1)
-              path.write_text(text, encoding='utf-8')
-          PY
+          python3 -c "from pathlib import Path; p=Path('CHANGELOG.md'); t=p.read_text(encoding='utf-8'); marker='## v1.0.12 — 2026-08-12\\n'; entry='## v1.0.13 — 2026-08-12\\n\\n- 修复ZIP解压完成后自动识别被基础导入器内部 setFiles() 绕过的问题：直接监听导入状态 state.files 的赋值，确保ZIP预览生成后立即重新识别。\\n- 当前北部28份共享质控报告按预登记文件名/规范化文件名和大小自动匹配，自动恢复第一轮、6类成果和全部共享任务单元。\\n- 扩展历史第一批、第二批、第二批补充、第三批等旧资料识别规则，兼容土壤类型图、土壤属性图、耕地质量评价/等级/耕评等旧命名格式及目录结构。\\n- 增强地区与任务单元反推，兼容信都县→信都区、南和县→南和区、沙河县→沙河市、石家市→石家庄市等历史名称。\\n- 自动识别增加有限次数重绑定，覆盖管理员弹窗延迟重建与拆分文件后的状态更新；仍不使用长期 MutationObserver。\\n- 新增当前北部登记材料与历史文件名回归测试，并继续保护既有上传、答复、删除、统计与Pages部署链路。\\n\\n'; p.write_text(t.replace(marker,entry+marker,1),encoding='utf-8')"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add VERSION CHANGELOG.md upload-config.js app-release-ui.js app-version-guard.js page-enhancements.js
