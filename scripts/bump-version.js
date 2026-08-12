@@ -71,6 +71,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'admin-auto-classifier.js',
   'north-quality-authority-bridge.js',
   'north-quality-upload-adapter.js',
+  'mobile-file-picker-fix.js',
   'reference-import-mode.js',
   'upload-token-default.js',
   'reply-workflow-core.js',
