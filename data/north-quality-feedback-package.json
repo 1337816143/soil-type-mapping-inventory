@@ -5,6 +5,9 @@
   "documentCount": 28,
   "totalBytes": 93379068,
   "storageRule": "每份原始质控报告只保存1份；通过targets/dataKeys关联多个任务单元和成果类型。",
+  "associationStatus": "pre-associated",
+  "associationRule": "filename+size+sha256",
+  "importDefaults": {"kind":"quality","batch":"第一轮","autoTargets":true,"autoDataKeys":true},
   "documents": [
     {"filename":"乐亭县、丰南区、丰润区、合并区、玉田县、滦南县、曹妃甸区和市级第三次全国土壤普查成果质控报告--以乐亭县为例.docx","size":3593632,"sha256":"87b99b5bfcba5f3db93f9ca59b906a6a305e126e34fd0fe48861164107cd114a","batch":"第一轮","targets":["乐亭县","丰南区","丰润区","合并区","玉田县","滦南县","曹妃甸区","市级"],"dataKeys":["soilType","soilAttr","farmland","degradation","specialty","agriSuitability"]},
     {"filename":"固安县、霸州市第三次全国土壤普查成果质控报告--以固安县为例.docx","size":2382285,"sha256":"4ac4a69e18bc8f5f11cd48f01b2661cd33ac38f91003d475bfc870617d7232f8","batch":"第一轮","targets":["固安县","霸州市"],"dataKeys":["soilType","soilAttr","farmland","degradation","specialty","agriSuitability"]},
