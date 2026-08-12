@@ -69,6 +69,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'admin-import-v2.js',
   'admin-import-v2-bridge.js',
   'admin-auto-classifier.js',
+  'north-quality-authority-bridge.js',
   'north-quality-upload-adapter.js',
   'reference-import-mode.js',
   'upload-token-default.js',
