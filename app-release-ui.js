@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'v1.0.10';
+  var VERSION = 'v1.0.11';
   window.SOIL_APP_VERSION = VERSION;
   document.documentElement.setAttribute('data-app-version', VERSION);
 
@@ -50,9 +50,7 @@
 
   function closeReferenceGroups(root) {
     if (!root) return;
-    root.querySelectorAll('details.ref-cat').forEach(function (group) {
-      group.open = false;
-    });
+    root.querySelectorAll('details.ref-cat').forEach(function (group) { group.open = false; });
   }
 
   function enforceCollapsedReferenceDefaults() {

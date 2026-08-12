@@ -11,7 +11,7 @@
     landUse: '土地资源评价与利用报告'
   };
   var NEW_KEYS = ['degradation', 'specialty', 'agriSuitability', 'landUse'];
-  var appliedPaths = {};
+  var appliedAssociations = {};
 
   window.SoilDashboardTypes = Object.assign({}, window.SoilDashboardTypes || {}, TYPES);
 
@@ -166,10 +166,15 @@
     return city;
   }
 
+  function associationKey(entry) {
+    return [entry.path, entry.dataKey, entry.city, entry.unit, entry.district, entry.batch || ''].join('|');
+  }
+
   function mergeQualityEntry(entry) {
     if (!entry || entry.kind !== 'quality-control' || !TYPES[entry.dataKey]) return;
     if (!entry.city || !entry.unit || !entry.district || !entry.path) return;
-    if (appliedPaths[entry.path]) return;
+    var key = associationKey(entry);
+    if (appliedAssociations[key]) return;
 
     var city = findOrCreateCity(entry.dataKey, entry.city);
     var unit = city.units.find(function (item) { return item.name === entry.unit; });
@@ -183,10 +188,16 @@
       unit.districts.push(district);
     }
     var relativeFile = String(entry.path).replace(/^data\//, '');
-    if (!district.docs.some(function (doc) { return doc.file === relativeFile; })) {
+    if (!district.docs.some(function (doc) { return doc.file === relativeFile && doc.batch === (entry.batch || '管理员导入'); })) {
       district.docs.push({batch: entry.batch || '管理员导入', file: relativeFile});
     }
-    appliedPaths[entry.path] = true;
+    appliedAssociations[key] = true;
+  }
+
+  function expandEntry(entry) {
+    var router = window.SoilQualityFileRouting;
+    if (router && typeof router.expandRecord === 'function') return router.expandRecord(entry);
+    return [entry];
   }
 
   function refreshDashboard() {
@@ -200,15 +211,20 @@
   }
 
   window.applyAdminQualityIndex = function (entries) {
-    (Array.isArray(entries) ? entries : []).forEach(mergeQualityEntry);
+    (Array.isArray(entries) ? entries : []).forEach(function (entry) {
+      expandEntry(entry).forEach(mergeQualityEntry);
+    });
     refreshDashboard();
   };
 
   window.removeAdminQualityPaths = function (paths) {
     var removed = {};
     (Array.isArray(paths) ? paths : []).forEach(function (path) {
-      removed[String(path || '').replace(/^data\//, '')] = true;
-      delete appliedPaths[path];
+      path = String(path || '');
+      removed[path.replace(/^data\//, '')] = true;
+      Object.keys(appliedAssociations).forEach(function (key) {
+        if (key.indexOf(path + '|') === 0) delete appliedAssociations[key];
+      });
     });
     Object.keys(window.tabData || {}).forEach(function (key) {
       (window.tabData[key] || []).forEach(function (city) {

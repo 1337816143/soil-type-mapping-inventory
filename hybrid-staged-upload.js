@@ -14,6 +14,7 @@
 
   function A() { return window.SoilRepoAdmin; }
   function Q() { return window.SoilAdminImport; }
+  function R() { return window.SoilQualityFileRouting; }
   function token() { return String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim(); }
   function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
 
@@ -121,9 +122,22 @@
     return candidate;
   }
 
+  function sharedInspection(item) {
+    var router = R();
+    if (!router || !item || !item.file || !router.isSharedReport(item.file.name)) return null;
+    var inspection = router.inspectFile(item.file.name, router.coveredKeys);
+    if (!inspection.targets.length) return null;
+    if (inspection.unresolved.length) {
+      var first = inspection.unresolved[0];
+      throw new Error('北部共享质控文件自动匹配失败：' + first.target + '（' + first.dataKey + '）。请检查文件名或任务单元清单。');
+    }
+    return inspection;
+  }
+
   function buildManifest(files, baseCommit, uploadId) {
     var q = Q();
     var a = A();
+    var router = R();
     var kind = document.getElementById('adm-kind').value;
     var dataKey = document.getElementById('adm-data-key').value;
     var used = existingPaths();
@@ -148,7 +162,11 @@
         if (item.file.size > q.MAX) {
           throw new Error('文件超过 95 MB，须先按原格式拆分：' + item.path);
         }
-        var targetPath = uniquePath(q.destinationFor(item), used);
+
+        var shared = kind === 'quality' ? sharedInspection(item) : null;
+        var targetPath = shared && router ?
+          uniquePath(router.sharedStoragePath(item.file.name, item.batch || '管理员导入'), used) :
+          uniquePath(q.destinationFor(item), used);
         var record = {
           targetPath: targetPath,
           sourcePath: item.sourcePath || item.path,
@@ -159,15 +177,26 @@
           storage: item.file.size <= SINGLE_BLOB_LIMIT ? 'whole' : 'chunked'
         };
         if (kind === 'quality') {
-          record.quality = {
-            kind: 'quality-control',
-            dataKey: dataKey,
-            city: item.city || '',
-            unit: item.unit || '',
-            district: item.district || '',
-            batch: item.batch || '管理员导入',
-            complete: !!(item.city && item.unit && item.district)
-          };
+          if (shared) {
+            record.quality = {
+              kind: 'quality-control',
+              shared: true,
+              dataKeys: shared.dataKeys.slice(),
+              targets: shared.targets.slice(),
+              batch: item.batch || '管理员导入',
+              complete: true
+            };
+          } else {
+            record.quality = {
+              kind: 'quality-control',
+              dataKey: dataKey,
+              city: item.city || '',
+              unit: item.unit || '',
+              district: item.district || '',
+              batch: item.batch || '管理员导入',
+              complete: !!(item.city && item.unit && item.district)
+            };
+          }
         }
         return record;
       })
@@ -225,7 +254,7 @@
             return sleep(160);
           });
         }
-        return stageChunkedFile(file, record, fileIndex, manifest, entries, function (chunkIndex, count, size) {
+        return stageChunkedFile(file, record, fileIndex, manifest, entries, function (chunkIndex, count) {
           var percent = 5 + Math.round((completedBytes + chunkIndex * CHUNK_SIZE) / totalBytes * 76);
           progress('正在上传超限文件 ' + (fileIndex + 1) + ' / ' + files.length + '：' + file.name +
             '\n39 MiB 分块 ' + (chunkIndex + 1) + ' / ' + count, percent);
@@ -277,6 +306,11 @@
     }).catch(function () {});
   }
 
+  function isSharedItem(item) {
+    var router = R();
+    return !!(router && item && item.file && router.isSharedReport(item.file.name));
+  }
+
   function startHybridUpload() {
     var q = Q();
     var a = A();
@@ -296,8 +330,16 @@
     }
     var kind = document.getElementById('adm-kind').value;
     if (kind === 'quality') {
-      var incomplete = files.filter(function (item) { return !item.city || !item.unit || !item.district; });
+      var incomplete = files.filter(function (item) {
+        return !isSharedItem(item) && (!item.city || !item.unit || !item.district);
+      });
       if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，仍会上传但不计入统计。是否继续？')) return;
+      try {
+        files.forEach(function (item) { if (isSharedItem(item)) sharedInspection(item); });
+      } catch (error) {
+        progress(error.message, 0);
+        return;
+      }
     }
 
     var button = document.getElementById('adm-ok');
@@ -322,6 +364,10 @@
       .then(function (commit) {
         baseTree = commit.tree.sha;
         manifest = buildManifest(files, baseCommit, uploadId);
+        var sharedCount = manifest.files.filter(function (item) { return item.quality && item.quality.shared; }).length;
+        if (sharedCount) {
+          progress('已识别 ' + sharedCount + ' 份北部共享质控报告：每份文件只上传一次，并自动关联文件名中的全部任务单元。', 4);
+        }
         return stageFiles(files, manifest, entries);
       })
       .then(function () {
@@ -393,7 +439,7 @@
     var modal = document.getElementById('soilAdminImport');
     if (!modal) return;
     var tip = modal.querySelector('.adm-tip');
-    var text = '39 MiB 及以下文件整文件上传，不分块；仅超过 39 MiB 的文件按每块 39 MiB 暂存，再由 GitHub Actions 还原并一次性归档到 main。';
+    var text = '39 MiB 及以下文件整文件上传，不分块；超过 39 MiB 的文件按每块 39 MiB 暂存。北部“多个地区第三次全国土壤普查成果质控报告”会按文件名自动关联全部地区，仓库只保存一份原文件。';
     if (tip && tip.textContent !== text) tip.textContent = text;
     var button = document.getElementById('adm-ok');
     if (button && button.textContent !== '开始上传') button.textContent = '开始上传';

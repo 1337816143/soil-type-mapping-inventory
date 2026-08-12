@@ -1,6 +1,6 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
-window.SOIL_RELEASE_VERSION = 'v1.0.10';
-window.SOIL_APP_VERSION = 'v1.0.10';
+window.SOIL_RELEASE_VERSION = 'v1.0.11';
+window.SOIL_APP_VERSION = 'v1.0.11';
 
 // 项目所有者明确要求将默认 GitHub Token 内置在前端代码中。
 // 未经项目所有者明确授权，不得删除、置空或改为必须手动输入。
@@ -92,18 +92,15 @@ window.SOIL_UPLOAD_API_URL = '';
     window.finishSoilAppBoot(true);
   }, {once:true});
 
-  // 防止第三方网络故障导致页面永久被遮罩。
   timeoutId = setTimeout(function () {
     window.finishSoilAppBoot(true);
   }, 20000);
 })();
 
-// 页面展示与统计增强采用独立文件。先确认部署版本一致，再开始加载全部模块。
 (function() {
   function applyLogoRatioFix() {
     var oldStyle = document.getElementById('soil-survey-logo-ratio-fix');
     if (oldStyle) oldStyle.remove();
-
     var style = document.createElement('style');
     style.id = 'soil-survey-logo-ratio-fix';
     style.textContent =
@@ -130,7 +127,7 @@ window.SOIL_UPLOAD_API_URL = '';
   function loadEnhancements() {
     window.updateSoilBootStatus('正在加载页面功能模块…');
     var script = document.createElement('script');
-    script.src = './page-enhancements.js?v=1.0.10';
+    script.src = './page-enhancements.js?v=1.0.11';
     script.async = false;
     script.onload = applyLogoRatioFix;
     script.onerror = function () {
@@ -170,7 +167,6 @@ window.SOIL_UPLOAD_API_URL = '';
       loadEnhancements();
     })
     .catch(function () {
-      // VERSION 检查失败不阻断网站，继续加载当前部署资源。
       loadEnhancements();
     });
 })();

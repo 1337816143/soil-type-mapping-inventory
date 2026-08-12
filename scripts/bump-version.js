@@ -56,6 +56,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
 [
   'page-enhancements-core.js',
   'task-unit-mappings.js',
+  'quality-file-routing.js',
   'regional-progress-dashboard.js',
   'dashboard-extension.js',
   'reference-library.js',
@@ -67,6 +68,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'admin-quality-upload.js',
   'admin-import-v2.js',
   'admin-import-v2-bridge.js',
+  'north-quality-upload-adapter.js',
   'reference-import-mode.js',
   'upload-token-default.js',
   'reply-workflow-core.js',
