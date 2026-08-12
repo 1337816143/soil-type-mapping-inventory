@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = String(window.SOIL_RELEASE_VERSION || 'v1.0.10');
+  var VERSION = String(window.SOIL_RELEASE_VERSION || 'v1.0.11');
   window.SOIL_APP_VERSION = VERSION;
   document.documentElement.setAttribute('data-app-version', VERSION);
 
