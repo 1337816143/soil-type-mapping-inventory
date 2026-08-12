@@ -70,13 +70,92 @@
     note.className = 'north-quality-guide';
     note.style.marginTop = '6px';
     note.style.color = '#1d4ed8';
-    note.innerHTML = '<strong>北部片区共享质控：</strong>文件名在“第三次全国土壤普查成果质控报告”前列出的多个地区，会自动关联到同一份质控报告；原文件只上传1份。当前此类综合报告自动覆盖土壤类型图、土壤属性图、耕地质量等级评价、土壤退化与障碍分析、土特产品土壤适宜性评价、土壤农业利用适宜性评价6类成果。';
+    note.innerHTML = '<strong>北部片区共享质控：</strong>文件名在“第三次全国土壤普查成果质控报告”前列出的多个地区，会自动关联到同一份质控报告；原文件只上传1份。当前此类综合报告自动覆盖土壤类型图、土壤属性图、耕地质量等级评价、土壤退化与障碍分析、土特产品土壤适宜性评价、土壤农业利用适宜性评价6类成果。可直接选择包含多份报告的ZIP，系统会先解压再逐文件自动识别。';
     guide.appendChild(note);
+  }
+
+  function loadZip() {
+    var q = Q();
+    if (window.JSZip) return Promise.resolve(window.JSZip);
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement('script');
+      script.src = q && q.ZIP_URL ? q.ZIP_URL : 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+      script.onload = function () { resolve(window.JSZip); };
+      script.onerror = function () { reject(new Error('ZIP解压组件加载失败')); };
+      document.head.appendChild(script);
+    });
+  }
+
+  function stripCommonRoot(path) {
+    var parts = String(path || '').replace(/\\/g, '/').split('/').filter(Boolean);
+    if (parts.length > 1) parts.shift();
+    return parts.join('/');
+  }
+
+  function expandSelectedZip() {
+    var q = Q();
+    if (!q || !q.state || !Array.isArray(q.state.files) || q.state.files.length !== 1) return;
+    var selected = q.state.files[0];
+    if (!selected.file || !/\.zip$/i.test(selected.file.name) || selected.__northZipExpanded) return;
+    selected.__northZipExpanded = true;
+    if (typeof q.progress === 'function') q.progress('正在解析北部质控ZIP……', 2, true);
+    Promise.all([loadZip(), selected.file.arrayBuffer()])
+      .then(function (result) { return result[0].loadAsync(result[1]); })
+      .then(function (zip) {
+        var entries = [];
+        zip.forEach(function (path, entry) {
+          if (!entry.dir && !/(^|\/)~\$/.test(path) && /\.(docx?|pdf)$/i.test(path)) {
+            entries.push({path:path, entry:entry});
+          }
+        });
+        var output = [];
+        return entries.reduce(function (chain, current, index) {
+          return chain.then(function () {
+            if (typeof q.progress === 'function') {
+              q.progress('正在解压北部质控ZIP ' + (index + 1) + ' / ' + entries.length, 3 + Math.round(index / Math.max(1, entries.length) * 10), true);
+            }
+            return current.entry.async('blob').then(function (blob) {
+              var path = stripCommonRoot(current.path) || current.path;
+              output.push({
+                file:new File([blob], path.split('/').pop(), {type:blob.type || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),
+                path:path,
+                sourcePath:current.path,
+                batch:'第一轮'
+              });
+            });
+          });
+        }, Promise.resolve()).then(function () { return output; });
+      })
+      .then(function (files) {
+        if (!files.length) throw new Error('ZIP中未找到可导入的 DOC/DOCX/PDF 文件。');
+        if (typeof q.normalizePreparedFiles === 'function') q.normalizePreparedFiles(files);
+        else q.state.files = files;
+        q.state.files.forEach(function (item) { item.batch = item.batch || '第一轮'; });
+        if (typeof q.renderPreview === 'function') q.renderPreview();
+        var batch = document.getElementById('adm-batch');
+        if (batch) batch.value = '第一轮';
+        if (typeof q.progress === 'function') q.progress('ZIP解析完成：共 ' + files.length + ' 份质控报告，正在按文件名自动关联。', 14, true);
+        setTimeout(annotateRows, 0);
+      })
+      .catch(function (error) {
+        selected.__northZipExpanded = false;
+        if (typeof q.progress === 'function') q.progress('ZIP解析失败：' + error.message, 0, true);
+      });
+  }
+
+  function bindZipPicker() {
+    var picker = document.getElementById('adm-files');
+    if (!picker || picker.__northQualityZipBound) return;
+    picker.addEventListener('change', function () {
+      setTimeout(expandSelectedZip, 0);
+    });
+    picker.__northQualityZipBound = true;
   }
 
   function refresh() {
     ensureFirstRoundOption();
     addGuide();
+    bindZipPicker();
     annotateRows();
   }
 
