@@ -198,12 +198,8 @@ jobs:
 
               quality = item.get('quality')
               if kind == 'quality' and isinstance(quality, dict):
-                  quality_records.append({
+                  common = {
                       'kind': 'quality-control',
-                      'dataKey': str(quality.get('dataKey') or ''),
-                      'city': str(quality.get('city') or ''),
-                      'unit': str(quality.get('unit') or ''),
-                      'district': str(quality.get('district') or ''),
                       'batch': str(quality.get('batch') or '管理员导入'),
                       'path': final_path,
                       'name': PurePosixPath(final_path).name,
@@ -211,7 +207,25 @@ jobs:
                       'order': int(item.get('order') or 0),
                       'complete': bool(quality.get('complete')),
                       'uploadedAt': str(manifest.get('createdAt') or '')
-                  })
+                  }
+                  if quality.get('shared'):
+                      data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
+                      targets = [str(x) for x in (quality.get('targets') or []) if str(x)]
+                      if not data_keys or not targets:
+                          raise SystemExit(f'共享质控报告缺少 dataKeys/targets：{final_path}')
+                      common.update({
+                          'sharedSource': True,
+                          'dataKeys': data_keys,
+                          'targets': targets
+                      })
+                  else:
+                      common.update({
+                          'dataKey': str(quality.get('dataKey') or ''),
+                          'city': str(quality.get('city') or ''),
+                          'unit': str(quality.get('unit') or ''),
+                          'district': str(quality.get('district') or '')
+                      })
+                  quality_records.append(common)
 
           if kind == 'quality':
               target_index = root / index_path
