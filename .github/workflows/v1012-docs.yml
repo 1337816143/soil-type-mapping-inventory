@@ -1,0 +1,68 @@
+name: Temporary v1.0.12 docs patch
+
+on:
+  push:
+    branches:
+      - feat/auto-import-association-v1.0.12
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/auto-import-association-v1.0.12
+          fetch-depth: 0
+      - name: Patch changelog and owner rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+
+          changelog = Path('CHANGELOG.md')
+          text = changelog.read_text(encoding='utf-8')
+          marker = '# Changelog\n\n'
+          block = '''## v1.0.12 — 2026-08-12\n\n- 将本次河北省北部片区28份质控报告正式标记为“预关联”材料库：每份文件预先登记文件名、大小、SHA-256、第一轮批次、关联任务单元和6类成果；实际上传时按登记信息自动校验，不需要重新逐项配置。\n- 管理员导入新增自动识别器：根据文件名、目录名和已登记材料自动判断“质控意见/参考资料”、成果类型、批次、市、作业单位和任务单元；完全识别时隐藏手工下拉框，仅保留“显示人工调整”作为兜底。\n- 成果类型支持逐文件自动识别，同一次质控导入中不同文件可以属于不同成果类型；一份综合质控文件也可同时关联多个成果类型，索引按成果类型展开，但物理文件仍只保存一次。\n- 北部原ZIP继续支持一次选择后自动解压；已登记的28份文件使用“文件名+大小”前置匹配，并在GitHub Actions归档阶段再使用SHA-256校验实际字节，避免误传同名错误文件。\n- 北部上传适配器移除长期 `MutationObserver`，改为对现有渲染函数做一次性包装和受控刷新，避免预览文本更新形成观察器自循环。\n- 内置 GitHub Token 的字节内容未修改；既有 `fetch + Bearer` Git Data API、39 MiB整文件/分块、整改答复、删除、统计和Pages部署链路保持不变。\n\n'''
+          if '## v1.0.12 — 2026-08-12' not in text:
+              text = text.replace(marker, marker + block, 1)
+              changelog.write_text(text, encoding='utf-8')
+
+          rules = Path('MAINTENANCE_RULES.md')
+          text = rules.read_text(encoding='utf-8')
+          old = '10. **所有上传成功提示必须包含：**“上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。”'
+          new = '''10. **管理员导入默认自动识别元数据。** 系统应优先依据已登记材料、文件名和目录名自动判断导入类型、成果类型、批次、市、作业单位和任务单元；完全识别时不得要求管理员重复手动指定，人工下拉框仅作为无法识别或需要纠正时的兜底。\n11. **已登记的北部质控材料必须做一致性校验。** 预关联材料至少记录文件名、大小和SHA-256；实际归档时应校验登记SHA-256，防止同名错误文件被误关联。\n12. **所有上传成功提示必须包含：**“上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。”'''
+          if old in text:
+              text = text.replace(old, new, 1)
+              for number in range(11, 19):
+                  # 原11-18依次后移2位；倒序替换避免碰撞。
+                  pass
+              # 对后续原编号做精确倒序替换。
+              for old_no in range(18, 10, -1):
+                  text = text.replace(f'\n{old_no}. ', f'\n{old_no + 2}. ', 1)
+              rules.write_text(text, encoding='utf-8')
+
+          owner = Path('OWNER_REQUIREMENTS.md')
+          text = owner.read_text(encoding='utf-8')
+          anchor = '- 北部综合质控报告默认关联土壤类型图、土壤属性图、耕地质量等级评价、土壤退化与障碍分析、土特产品土壤适宜性评价、土壤农业利用适宜性评价6类成果。\n'
+          extra = '- 管理员导入优先自动匹配导入类型、成果类型、批次和任务单元；识别完整时不要求手动指定，人工选择只作为纠错兜底。\n- 本次北部28份材料按文件名、大小、SHA-256预关联；实际上传时必须校验登记信息，统计只在真实文件归档后更新。\n'
+          if extra not in text:
+              text = text.replace(anchor, anchor + extra, 1)
+              owner.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit docs
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md MAINTENANCE_RULES.md OWNER_REQUIREMENTS.md
+          if git diff --cached --quiet; then
+            echo 'No documentation changes.'
+          else
+            git commit -m "docs: define automatic import and northern pre-association rules"
+            git push origin HEAD:feat/auto-import-association-v1.0.12
+          fi
