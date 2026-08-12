@@ -15,6 +15,7 @@
   function A() { return window.SoilRepoAdmin; }
   function Q() { return window.SoilAdminImport; }
   function R() { return window.SoilQualityFileRouting; }
+  function C() { return window.SoilAdminAutoClassifier; }
   function token() { return String(window.SOIL_GITHUB_UPLOAD_TOKEN || '').trim(); }
   function sleep(ms) { return new Promise(function (resolve) { setTimeout(resolve, ms); }); }
 
@@ -122,10 +123,48 @@
     return candidate;
   }
 
-  function sharedInspection(item) {
+  function itemMetadata(item) {
+    var classifier = C();
+    if (item && item.autoMeta) return item.autoMeta;
+    if (classifier && typeof classifier.applyItemMetadata === 'function') return classifier.applyItemMetadata(item);
+    return null;
+  }
+
+  function itemDataKeys(item, fallback) {
+    var meta = itemMetadata(item);
+    var keys = meta && Array.isArray(meta.dataKeys) ? meta.dataKeys.filter(Boolean) : [];
+    if (!keys.length && fallback) keys = [fallback];
+    return keys;
+  }
+
+  function safeSegment(value) {
+    return String(value || '').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_').trim();
+  }
+
+  function qualityRoot() {
+    var a = A();
+    var select = document.getElementById('adm-directory');
+    var root = select && select.value ? select.value : 'data/质控意见反馈_管理员导入';
+    var extra = document.getElementById('adm-new-directory');
+    if (extra && extra.value.trim()) root += '/' + extra.value.trim();
+    return a.clean(root);
+  }
+
+  function automaticQualityPath(item, dataKeys) {
+    var q = Q();
+    var a = A();
+    if (!item || !item.file) return q.destinationFor(item);
+    if (dataKeys.length !== 1) {
+      return a.clean(qualityRoot() + '/多成果共享质控/' + safeSegment(item.batch || '管理员导入') + '/' + safeSegment(item.file.name));
+    }
+    var label = q.types()[dataKeys[0]] || dataKeys[0];
+    return a.clean([qualityRoot(), label, item.batch || '未分批', item.city || '未分类市', item.unit || '未分类单位', item.district || '未分类任务单元', item.path].join('/'));
+  }
+
+  function sharedInspection(item, dataKeys) {
     var router = R();
     if (!router || !item || !item.file || !router.isSharedReport(item.file.name)) return null;
-    var inspection = router.inspectFile(item.file.name, router.coveredKeys);
+    var inspection = router.inspectFile(item.file.name, dataKeys && dataKeys.length ? dataKeys : router.coveredKeys);
     if (!inspection.targets.length) return null;
     if (inspection.unresolved.length) {
       var first = inspection.unresolved[0];
@@ -138,7 +177,11 @@
     var q = Q();
     var a = A();
     var router = R();
-    var kind = document.getElementById('adm-kind').value;
+    var classifier = C();
+    var selection = classifier && typeof classifier.selectionMetadata === 'function' ? classifier.selectionMetadata(files) : null;
+    if (selection && selection.kind === 'mixed') throw new Error('一次导入中同时包含质控意见和参考资料，请分两次选择；其余信息均可自动匹配。');
+    var detectedKind = selection && (selection.kind === 'quality' || selection.kind === 'reference') ? selection.kind : '';
+    var kind = detectedKind || document.getElementById('adm-kind').value;
     var dataKey = document.getElementById('adm-data-key').value;
     var used = existingPaths();
     var createdAt = new Date().toISOString();
@@ -163,10 +206,12 @@
           throw new Error('文件超过 95 MB，须先按原格式拆分：' + item.path);
         }
 
-        var shared = kind === 'quality' ? sharedInspection(item) : null;
+        var meta = itemMetadata(item);
+        var dataKeys = kind === 'quality' ? itemDataKeys(item, dataKey) : [];
+        var shared = kind === 'quality' ? sharedInspection(item, dataKeys) : null;
         var targetPath = shared && router ?
           uniquePath(router.sharedStoragePath(item.file.name, item.batch || '管理员导入'), used) :
-          uniquePath(q.destinationFor(item), used);
+          uniquePath(kind === 'quality' && meta && meta.dataKeys && meta.dataKeys.length ? automaticQualityPath(item, dataKeys) : q.destinationFor(item), used);
         var record = {
           targetPath: targetPath,
           sourcePath: item.sourcePath || item.path,
@@ -176,6 +221,10 @@
           order: index + 1,
           storage: item.file.size <= SINGLE_BLOB_LIMIT ? 'whole' : 'chunked'
         };
+        if (meta && meta.catalogExact && meta.expectedSha256) {
+          record.expectedSha256 = String(meta.expectedSha256).toLowerCase();
+          record.expectedSize = Number(meta.expectedSize || item.file.size);
+        }
         if (kind === 'quality') {
           if (shared) {
             record.quality = {
@@ -189,7 +238,8 @@
           } else {
             record.quality = {
               kind: 'quality-control',
-              dataKey: dataKey,
+              dataKey: dataKeys[0] || dataKey,
+              dataKeys: dataKeys.slice(),
               city: item.city || '',
               unit: item.unit || '',
               district: item.district || '',
@@ -328,14 +378,21 @@
       progress('请先选择文件。', 0);
       return;
     }
-    var kind = document.getElementById('adm-kind').value;
+    var classifier = C();
+    var selection = classifier && typeof classifier.selectionMetadata === 'function' ? classifier.selectionMetadata(files) : null;
+    if (selection && selection.kind === 'mixed') {
+      progress('一次导入中同时包含质控意见和参考资料，请分两次选择；成果类型、批次和任务单元仍会自动匹配。', 0);
+      return;
+    }
+    var kind = selection && (selection.kind === 'quality' || selection.kind === 'reference') ? selection.kind : document.getElementById('adm-kind').value;
     if (kind === 'quality') {
+      var fallbackDataKey = document.getElementById('adm-data-key').value;
       var incomplete = files.filter(function (item) {
-        return !isSharedItem(item) && (!item.city || !item.unit || !item.district);
+        return !isSharedItem(item) && (!itemDataKeys(item, fallbackDataKey).length || !item.city || !item.unit || !item.district);
       });
       if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，仍会上传但不计入统计。是否继续？')) return;
       try {
-        files.forEach(function (item) { if (isSharedItem(item)) sharedInspection(item); });
+        files.forEach(function (item) { if (isSharedItem(item)) sharedInspection(item, itemDataKeys(item, fallbackDataKey)); });
       } catch (error) {
         progress(error.message, 0);
         return;
@@ -365,8 +422,11 @@
         baseTree = commit.tree.sha;
         manifest = buildManifest(files, baseCommit, uploadId);
         var sharedCount = manifest.files.filter(function (item) { return item.quality && item.quality.shared; }).length;
+        var autoTypedCount = manifest.files.filter(function (item) { return item.quality && Array.isArray(item.quality.dataKeys) && item.quality.dataKeys.length; }).length;
         if (sharedCount) {
-          progress('已识别 ' + sharedCount + ' 份北部共享质控报告：每份文件只上传一次，并自动关联文件名中的全部任务单元。', 4);
+          progress('已识别 ' + sharedCount + ' 份北部共享质控报告：每份文件只上传一次，并自动关联地区、成果类型和批次。', 4);
+        } else if (kind === 'quality' && autoTypedCount) {
+          progress('已自动识别 ' + autoTypedCount + ' 份质控文件的成果类型、批次和任务单元，无需手动指定。', 4);
         }
         return stageFiles(files, manifest, entries);
       })
@@ -439,7 +499,7 @@
     var modal = document.getElementById('soilAdminImport');
     if (!modal) return;
     var tip = modal.querySelector('.adm-tip');
-    var text = '39 MiB 及以下文件整文件上传，不分块；超过 39 MiB 的文件按每块 39 MiB 暂存。北部“多个地区第三次全国土壤普查成果质控报告”会按文件名自动关联全部地区，仓库只保存一份原文件。';
+    var text = '导入时自动识别导入类型、成果类型、批次和任务单元；只有无法识别的项目才需要人工调整。39 MiB 及以下整文件上传，超过39 MiB按块暂存；北部共享报告始终只保存一份原文件。';
     if (tip && tip.textContent !== text) tip.textContent = text;
     var button = document.getElementById('adm-ok');
     if (button && button.textContent !== '开始上传') button.textContent = '开始上传';

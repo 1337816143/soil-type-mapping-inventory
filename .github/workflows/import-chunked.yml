@@ -32,6 +32,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 <<'PY'
+          import hashlib
           import json
           import shutil
           from pathlib import Path, PurePosixPath
@@ -119,6 +120,14 @@ jobs:
 
               if actual != int(item.get('size') or -1):
                   raise SystemExit(f'文件大小校验失败：{item.get("originalName") or index}')
+              expected_size = int(item.get('expectedSize') or 0)
+              if expected_size and actual != expected_size:
+                  raise SystemExit(f'登记表文件大小不匹配：{item.get("originalName") or index}')
+              expected_sha = str(item.get('expectedSha256') or '').strip().lower()
+              if expected_sha:
+                  actual_sha = hashlib.sha256(output.read_bytes()).hexdigest()
+                  if actual_sha != expected_sha:
+                      raise SystemExit(f'登记表 SHA-256 校验失败：{item.get("originalName") or index}')
               if actual >= 100 * 1024 * 1024:
                   raise SystemExit(f'普通 Git 仓库不接受 100 MiB 及以上文件：{item.get("originalName") or index}')
 
@@ -208,8 +217,10 @@ jobs:
                       'complete': bool(quality.get('complete')),
                       'uploadedAt': str(manifest.get('createdAt') or '')
                   }
+                  data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
+                  if not data_keys and str(quality.get('dataKey') or ''):
+                      data_keys = [str(quality.get('dataKey'))]
                   if quality.get('shared'):
-                      data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
                       targets = [str(x) for x in (quality.get('targets') or []) if str(x)]
                       if not data_keys or not targets:
                           raise SystemExit(f'共享质控报告缺少 dataKeys/targets：{final_path}')
@@ -218,14 +229,19 @@ jobs:
                           'dataKeys': data_keys,
                           'targets': targets
                       })
+                      quality_records.append(common)
                   else:
-                      common.update({
-                          'dataKey': str(quality.get('dataKey') or ''),
-                          'city': str(quality.get('city') or ''),
-                          'unit': str(quality.get('unit') or ''),
-                          'district': str(quality.get('district') or '')
-                      })
-                  quality_records.append(common)
+                      if not data_keys:
+                          raise SystemExit(f'质控文件未识别成果类型：{final_path}')
+                      for data_key in data_keys:
+                          row = dict(common)
+                          row.update({
+                              'dataKey': data_key,
+                              'city': str(quality.get('city') or ''),
+                              'unit': str(quality.get('unit') or ''),
+                              'district': str(quality.get('district') or '')
+                          })
+                          quality_records.append(row)
 
           if kind == 'quality':
               target_index = root / index_path
