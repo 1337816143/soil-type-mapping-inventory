@@ -19,12 +19,13 @@ jobs:
           fetch-depth: 0
       - name: Apply deterministic patch
         run: python3 scripts/v1012-apply.py
-      - name: Commit patch
+      - name: Commit non-workflow patch
         run: |
           set -euo pipefail
+          git checkout -- .github/workflows/import-chunked.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hybrid-staged-upload.js .github/workflows/import-chunked.yml data/north-quality-feedback-package.json scripts/bump-version.js
+          git add hybrid-staged-upload.js data/north-quality-feedback-package.json scripts/bump-version.js
           if git diff --cached --quiet; then
             echo 'No structural patch changes.'
           else
