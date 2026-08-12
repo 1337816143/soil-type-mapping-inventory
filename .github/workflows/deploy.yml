@@ -46,6 +46,8 @@ jobs:
             admin-delete-manager.js
             admin-upload-transport-fix.js
             task-unit-mappings.js
+            quality-file-routing.js
+            north-quality-upload-adapter.js
             regional-progress-dashboard.js
             dashboard-extension.js
             reference-library.js
@@ -87,8 +89,8 @@ jobs:
             app-version-guard.js repository-manifest-loader.js reply-workflow-core.js
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
-            task-unit-mappings.js regional-progress-dashboard.js
-            dashboard-extension.js reference-library.js admin-import.js
+            task-unit-mappings.js quality-file-routing.js north-quality-upload-adapter.js
+            regional-progress-dashboard.js dashboard-extension.js reference-library.js admin-import.js
             admin-quality-ui.js admin-quality-upload.js admin-import-v2.js
             admin-import-v2-bridge.js reference-import-mode.js
             upload-auth-reply-batch.js upload-token-default.js
@@ -97,9 +99,9 @@ jobs:
             release-staged-upload.js scripts/validate-project.js
             scripts/validate-upload-token.js scripts/validate-reply-workflow.js
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
-            scripts/validate-admin-upload-transport.js
+            scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
             scripts/build-repository-manifest.py scripts/bump-version.js
-            data/admin-import-index.json data/repository-tree.json
+            data/admin-import-index.json data/north-quality-feedback-package.json data/repository-tree.json
           )
           for file in "${required_files[@]}"; do test -f "$file"; done
 
@@ -108,12 +110,15 @@ jobs:
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check quality-file-routing.js
+          node --check north-quality-upload-adapter.js
           node --check reply-workflow-core.js
           node --check reply-upload-progress.js
           node --check upload-success-notice.js
           node --check soil-survey-logo-v1.0.2.js
           node --check admin-delete-manager.js
           node --check admin-upload-transport-fix.js
+          node --check hybrid-staged-upload.js
           node --check regional-progress-dashboard.js
           node --check dashboard-extension.js
           node --check reference-library.js
@@ -125,12 +130,14 @@ jobs:
           node --check scripts/validate-reply-upload-progress.js
           node --check scripts/validate-app-boot.js
           node --check scripts/validate-admin-upload-transport.js
+          node --check scripts/validate-north-quality-routing.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
           node scripts/validate-reply-upload-progress.js
           node scripts/validate-app-boot.js
           node scripts/validate-admin-upload-transport.js
+          node scripts/validate-north-quality-routing.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -148,7 +155,10 @@ jobs:
               raise SystemExit('静态目录清单未包含三普参考资料目录')
           if payload.get('source') != 'authenticated-github-tree-api':
               raise SystemExit('Pages 部署未使用认证 GitHub Tree API 生成目录清单')
-          print(f'静态目录清单校验通过：{len(tree)} 项，版本 {version}')
+          north = json.loads(Path('data/north-quality-feedback-package.json').read_text(encoding='utf-8'))
+          if north.get('documentCount') != 28 or len(north.get('documents') or []) != 28:
+              raise SystemExit('北部质控材料清单应为28份')
+          print(f'静态目录清单校验通过：{len(tree)} 项，版本 {version}；北部质控清单28份')
           PY
 
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
