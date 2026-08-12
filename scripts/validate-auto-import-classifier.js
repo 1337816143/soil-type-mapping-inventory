@@ -74,15 +74,18 @@ assert.strictEqual(classifier.inferBatch('第一轮/综合质控报告.docx'), '
 assert.strictEqual(classifier.inferKind('技术规范与参考资料.pdf', []), 'reference');
 assert.strictEqual(classifier.inferKind('土壤属性图质控意见.docx', ['soilAttr']), 'quality');
 
+assert.strictEqual(pkg.schemaVersion, 2, '北部权威索引应使用schemaVersion 2');
 assert.strictEqual(pkg.documentCount, 28, '北部登记材料应为28份');
-assert.strictEqual(pkg.associationStatus, 'pre-associated', '北部材料未标记为预关联');
-assert.strictEqual(pkg.associationRule, 'filename+size+sha256', '北部材料关联校验规则不正确');
-assert(pkg.importDefaults && pkg.importDefaults.autoTargets && pkg.importDefaults.autoDataKeys, '北部导入默认值未启用自动关联');
+assert.strictEqual(pkg.associationStatus, 'authoritative-confirmed', '北部材料应标记为权威确认关联');
+assert.strictEqual(pkg.associationRule, 'filename+size+sha256+associationsByDataKey', '北部材料关联校验规则不正确');
+assert(pkg.importDefaults && pkg.importDefaults.autoTargets && pkg.importDefaults.autoDataKeys && pkg.importDefaults.authoritativeAssociations, '北部导入默认值未启用权威自动关联');
 const expectedKeys = ['soilType','soilAttr','farmland','degradation','specialty','agriSuitability'];
 for (const doc of pkg.documents) {
   assert(doc.filename && doc.size > 0 && /^[a-f0-9]{64}$/.test(doc.sha256), `登记项缺少文件校验信息：${doc.filename}`);
   assert.deepStrictEqual(doc.dataKeys, expectedKeys, `登记项成果类型不完整：${doc.filename}`);
   assert(Array.isArray(doc.targets) && doc.targets.length, `登记项缺少关联地区：${doc.filename}`);
+  assert(doc.physicalPath && doc.physicalPath.includes('/北部片区共享质控/第一轮/'), `登记项缺少唯一物理路径：${doc.filename}`);
+  assert(doc.associationsByDataKey && expectedKeys.every((key) => Array.isArray(doc.associationsByDataKey[key]) && doc.associationsByDataKey[key].length), `登记项缺少权威任务关联：${doc.filename}`);
 }
 classifier.loadCatalogData(pkg);
 const screenshotDoc = pkg.documents.find((doc) => doc.filename.startsWith('乐亭县、丰南区、丰润区'));
@@ -92,7 +95,7 @@ const currentMeta = classifier.applyItemMetadata(currentItem);
 assert.strictEqual(currentMeta.catalogExact, true, '截图中的当前批次文件应按文件名+大小精确命中');
 assert.strictEqual(currentMeta.batch, '第一轮', '当前批次应自动识别为第一轮');
 assert.deepStrictEqual(arr(currentMeta.dataKeys), expectedKeys, '当前综合报告应关联6类成果');
-assert.strictEqual(currentMeta.targets.length, screenshotDoc.targets.length, '当前共享报告任务单元数量未正确恢复');
+assert.strictEqual(currentMeta.targets.length, screenshotDoc.targets.length, '当前共享报告来源地区数量未正确恢复');
 assert.strictEqual(currentMeta.unresolvedTargets.length, 0, '当前共享报告不应显示未识别');
 
 const oldSoilType = {file:{name:'土壤类型图成果质控意见_邢台市130503信都县.pdf',size:1},path:'2026年第一批/土壤类型图/土壤类型图成果质控意见_邢台市130503信都县.pdf',batch:'管理员导入'};
