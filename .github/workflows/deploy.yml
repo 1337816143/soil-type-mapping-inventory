@@ -50,6 +50,7 @@ jobs:
             admin-auto-classifier.js
             north-quality-authority-bridge.js
             north-quality-upload-adapter.js
+            mobile-file-picker-fix.js
             regional-progress-dashboard.js
             dashboard-extension.js
             reference-library.js
@@ -93,7 +94,7 @@ jobs:
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
             task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js
-            north-quality-authority-bridge.js north-quality-upload-adapter.js
+            north-quality-authority-bridge.js north-quality-upload-adapter.js mobile-file-picker-fix.js
             regional-progress-dashboard.js dashboard-extension.js reference-library.js admin-import.js
             admin-quality-ui.js admin-quality-upload.js admin-import-v2.js
             admin-import-v2-bridge.js reference-import-mode.js
@@ -105,7 +106,7 @@ jobs:
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
             scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
             scripts/validate-auto-import-classifier.js scripts/validate-north-shared-workflow.js
-            scripts/validate-north-authority.js
+            scripts/validate-north-authority.js scripts/validate-mobile-file-picker.js
             scripts/build-repository-manifest.py scripts/bump-version.js
             data/admin-import-index.json data/north-quality-feedback-package.json data/repository-tree.json
           )
@@ -120,6 +121,7 @@ jobs:
           node --check admin-auto-classifier.js
           node --check north-quality-authority-bridge.js
           node --check north-quality-upload-adapter.js
+          node --check mobile-file-picker-fix.js
           node --check reply-workflow-core.js
           node --check reply-upload-progress.js
           node --check upload-success-notice.js
@@ -142,6 +144,7 @@ jobs:
           node --check scripts/validate-auto-import-classifier.js
           node --check scripts/validate-north-shared-workflow.js
           node --check scripts/validate-north-authority.js
+          node --check scripts/validate-mobile-file-picker.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
@@ -152,6 +155,7 @@ jobs:
           node scripts/validate-auto-import-classifier.js
           node scripts/validate-north-shared-workflow.js
           node scripts/validate-north-authority.js
+          node scripts/validate-mobile-file-picker.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -187,8 +191,8 @@ jobs:
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1
           fi
-          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js; then
-            echo '北部质控脚本存在长期DOM观察器，停止部署。'
+          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js; then
+            echo '北部质控/手机文件选择脚本存在长期DOM观察器，停止部署。'
             exit 1
           fi
           echo '部署文件校验通过。'
