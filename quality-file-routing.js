@@ -11,9 +11,14 @@
     '高阳':'高阳县',
     '顺平':'顺平县',
     '雄安新区本级':'雄安新区',
+    '雄安本级':'雄安新区',
     '承德市本级':'承德市'
   };
   var GENERIC = {'合并区':true,'市级':true,'全市':true};
+  var XIONGAN_SOIL_TYPE_AGGREGATE = {'雄县':true,'安新县':true,'容城县':true,'雄安新区':true};
+  var authorityExact = {};
+  var authorityCanonical = {};
+  var authorityPayload = null;
 
   function clean(value) {
     value = String(value == null ? '' : value);
@@ -31,20 +36,80 @@
     return value.slice(value.lastIndexOf('/') + 1);
   }
 
+  function canonicalFilename(value) {
+    var text = basename(value);
+    try { text = text.normalize('NFKC'); } catch (error) {}
+    return text.toLowerCase()
+      .replace(/质量控制/g, '质控')
+      .replace(/第三次全国土壤普查/g, '三普')
+      .replace(/全国第三次土壤普查/g, '三普')
+      .replace(/\.(docx?|pdf|xlsx?|pptx?|zip|rar)$/i, '')
+      .replace(/[\s\u3000（）()【】\[\]{}《》<>“”"'·,，。:：;；_\-—–]+/g, '')
+      .replace(/以[^为]{1,20}为例/g, '以x为例');
+  }
+
+  function cloneAssociation(item, sourceTarget) {
+    return {
+      city:String(item && item.city || ''),
+      unit:String(item && item.unit || ''),
+      district:String(item && item.district || ''),
+      sourceTarget:String(sourceTarget != null ? sourceTarget : (item && item.sourceTarget || ''))
+    };
+  }
+
+  function setAuthority(payload) {
+    authorityPayload = payload && Array.isArray(payload.documents) ? payload : null;
+    authorityExact = {};
+    authorityCanonical = {};
+    (authorityPayload ? authorityPayload.documents : []).forEach(function (doc) {
+      var name = basename(doc.filename);
+      authorityExact[name] = doc;
+      var canonical = canonicalFilename(name);
+      if (!authorityCanonical[canonical]) authorityCanonical[canonical] = [];
+      authorityCanonical[canonical].push(doc);
+    });
+    try {
+      window.dispatchEvent(new CustomEvent('soil-north-authority-ready', {
+        detail:{documentCount:authorityPayload ? authorityPayload.documents.length : 0}
+      }));
+    } catch (error) {}
+    return authorityPayload;
+  }
+
+  function findAuthority(filename, size) {
+    var name = basename(filename);
+    var candidates = authorityExact[name] ? [authorityExact[name]] : (authorityCanonical[canonicalFilename(name)] || []);
+    if (!candidates.length) return null;
+    size = Number(size || 0);
+    if (size) {
+      var exactSize = candidates.filter(function (doc) { return Number(doc.size || 0) === size; })[0];
+      if (exactSize) return exactSize;
+    }
+    return candidates[0];
+  }
+
+  function authorityAssociations(filename, dataKey, size) {
+    var doc = findAuthority(filename, size);
+    if (!doc || !doc.associationsByDataKey || !Array.isArray(doc.associationsByDataKey[dataKey])) return [];
+    return doc.associationsByDataKey[dataKey].map(function (item) { return cloneAssociation(item); });
+  }
+
   function parseTargets(filename) {
+    var authority = findAuthority(filename, 0);
+    if (authority && Array.isArray(authority.targets)) return authority.targets.slice();
     var name = basename(filename).replace(/\.(docx?|pdf|xlsx?|zip|rar)$/i, '');
-    var marker = '第三次全国土壤普查成果质控报告';
-    var cut = name.indexOf(marker);
-    if (cut < 0) cut = name.indexOf('第三次全国土壤普查');
-    if (cut < 0) return [];
-    var prefix = name.slice(0, cut)
+    var marker = name.search(/(?:第三次全国土壤普查|三普).*成果.*(?:质控|质量控制).*报告/);
+    if (marker < 0) marker = name.indexOf('第三次全国土壤普查');
+    if (marker < 0) return [];
+    var prefix = name.slice(0, marker)
       .replace(/和市级$/,'、市级')
       .replace(/全市及([^、，,]+)/g,'全市、$1');
     return prefix.split(/[、，,]+/).map(function (item) { return item.trim(); }).filter(Boolean);
   }
 
   function isSharedReport(filename) {
-    return /第三次全国土壤普查\s*成果质控报告/.test(basename(filename)) && parseTargets(filename).length > 0;
+    if (findAuthority(filename, 0)) return true;
+    return /(?:第三次全国土壤普查|三普).*成果.*(?:质控|质量控制).*报告/.test(basename(filename)) && parseTargets(filename).length > 0;
   }
 
   function listFor(dataKey) {
@@ -93,6 +158,12 @@
     return result;
   }
 
+  function aggregateXiongan(label, dataKey) {
+    var normalized = normalizeLabel(label);
+    if (dataKey !== 'soilType' || !XIONGAN_SOIL_TYPE_AGGREGATE[normalized]) return [];
+    return uniqueMatch(findMatches('雄安新区', 'soilType', '雄安新区'));
+  }
+
   function nearestResolved(items, index, direction) {
     for (var i=index+direction;i>=0&&i<items.length;i+=direction) {
       if (items[i].resolved && items[i].resolved.length === 1) return items[i].resolved[0].city;
@@ -100,14 +171,19 @@
     return '';
   }
 
-  function resolveTargets(targets, dataKey) {
+  function resolveTargets(targets, dataKey, filename, size) {
+    var authoritative = filename ? authorityAssociations(filename, dataKey, size) : [];
+    if (authoritative.length) return {associations:authoritative, unresolved:[], authoritative:true};
+
     var items = (targets || []).map(function (source) {
       var label = normalizeLabel(source);
       return {source:String(source), label:label, generic:!!GENERIC[label], resolved:[]};
     });
 
     items.forEach(function (item) {
-      if (!item.generic) item.resolved = uniqueMatch(findMatches(item.label, dataKey, ''));
+      if (item.generic) return;
+      item.resolved = aggregateXiongan(item.label, dataKey);
+      if (!item.resolved.length) item.resolved = uniqueMatch(findMatches(item.label, dataKey, ''));
     });
 
     items.forEach(function (item, index) {
@@ -130,7 +206,7 @@
         unresolved.push({target:item.source, normalized:item.label, matches:item.resolved.length, hintCity:item.hintCity || ''});
         return;
       }
-      associations.push(item.resolved[0]);
+      associations.push(cloneAssociation(item.resolved[0], item.source));
     });
 
     var seen = {};
@@ -140,17 +216,46 @@
       seen[key] = true;
       return true;
     });
-    return {associations:associations, unresolved:unresolved};
+    return {associations:associations, unresolved:unresolved, authoritative:false};
+  }
+
+  function expandExplicit(record) {
+    if (!record || !record.associationsByDataKey) return [];
+    var output = [];
+    Object.keys(record.associationsByDataKey).forEach(function (dataKey) {
+      (record.associationsByDataKey[dataKey] || []).forEach(function (target) {
+        output.push({
+          kind:'quality-control',
+          dataKey:dataKey,
+          city:target.city,
+          unit:target.unit,
+          district:target.district,
+          batch:record.batch || '管理员导入',
+          path:record.path,
+          name:record.name || basename(record.path),
+          uploadedAt:record.uploadedAt || '',
+          sharedSource:true,
+          sourceTargets:Array.isArray(record.targets) ? record.targets.slice() : [],
+          sourceTarget:target.sourceTarget || '',
+          registeredOnly:!!record.registeredOnly,
+          fileAvailable:record.fileAvailable !== false,
+          associationStatus:record.associationStatus || ''
+        });
+      });
+    });
+    return output;
   }
 
   function expandRecord(record) {
     if (!record || !record.path) return [];
+    var explicit = expandExplicit(record);
+    if (explicit.length) return explicit;
     if (!Array.isArray(record.targets) || !record.targets.length || !Array.isArray(record.dataKeys) || !record.dataKeys.length) {
       return [record];
     }
     var output = [];
     record.dataKeys.forEach(function (dataKey) {
-      var result = resolveTargets(record.targets, dataKey);
+      var result = resolveTargets(record.targets, dataKey, record.name || basename(record.path), record.expectedSize || record.size || 0);
       result.associations.forEach(function (target) {
         output.push({
           kind:'quality-control',
@@ -163,25 +268,30 @@
           name:record.name || basename(record.path),
           uploadedAt:record.uploadedAt || '',
           sharedSource:true,
-          sourceTargets:record.targets.slice()
+          sourceTargets:record.targets.slice(),
+          sourceTarget:target.sourceTarget || '',
+          registeredOnly:!!record.registeredOnly,
+          fileAvailable:record.fileAvailable !== false,
+          associationStatus:record.associationStatus || ''
         });
       });
     });
     return output;
   }
 
-  function inspectFile(filename, dataKeys) {
-    var targets = parseTargets(filename);
-    var keys = Array.isArray(dataKeys) && dataKeys.length ? dataKeys : COVERED_KEYS;
-    var byKey = {}, unresolved = [];
+  function inspectFile(filename, dataKeys, size) {
+    var authority = findAuthority(filename, size);
+    var targets = authority && Array.isArray(authority.targets) ? authority.targets.slice() : parseTargets(filename);
+    var keys = authority && Array.isArray(authority.dataKeys) ? authority.dataKeys.slice() : (Array.isArray(dataKeys) && dataKeys.length ? dataKeys : COVERED_KEYS);
+    var byKey = {}, unresolved = [], authoritative = !!authority;
     keys.forEach(function (key) {
-      var result = resolveTargets(targets, key);
+      var result = resolveTargets(targets, key, filename, size);
       byKey[key] = result.associations;
       result.unresolved.forEach(function (item) {
         unresolved.push({dataKey:key,target:item.target,normalized:item.normalized,matches:item.matches,hintCity:item.hintCity});
       });
     });
-    return {filename:basename(filename),targets:targets,dataKeys:keys,byKey:byKey,unresolved:unresolved};
+    return {filename:basename(filename),targets:targets,dataKeys:keys,byKey:byKey,unresolved:unresolved,authoritative:authoritative};
   }
 
   function safeSegment(value) {
@@ -200,6 +310,11 @@
     resolveTargets:resolveTargets,
     expandRecord:expandRecord,
     inspectFile:inspectFile,
-    sharedStoragePath:sharedStoragePath
+    sharedStoragePath:sharedStoragePath,
+    setAuthority:setAuthority,
+    findAuthority:findAuthority,
+    authorityAssociations:authorityAssociations,
+    canonicalFilename:canonicalFilename,
+    getAuthority:function () { return authorityPayload; }
   };
 })();

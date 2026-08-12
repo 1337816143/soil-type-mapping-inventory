@@ -48,6 +48,7 @@ jobs:
             task-unit-mappings.js
             quality-file-routing.js
             admin-auto-classifier.js
+            north-quality-authority-bridge.js
             north-quality-upload-adapter.js
             regional-progress-dashboard.js
             dashboard-extension.js
@@ -91,7 +92,8 @@ jobs:
             app-version-guard.js repository-manifest-loader.js reply-workflow-core.js
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
-            task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js north-quality-upload-adapter.js
+            task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js
+            north-quality-authority-bridge.js north-quality-upload-adapter.js
             regional-progress-dashboard.js dashboard-extension.js reference-library.js admin-import.js
             admin-quality-ui.js admin-quality-upload.js admin-import-v2.js
             admin-import-v2-bridge.js reference-import-mode.js
@@ -103,6 +105,7 @@ jobs:
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
             scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
             scripts/validate-auto-import-classifier.js scripts/validate-north-shared-workflow.js
+            scripts/validate-north-authority.js
             scripts/build-repository-manifest.py scripts/bump-version.js
             data/admin-import-index.json data/north-quality-feedback-package.json data/repository-tree.json
           )
@@ -115,6 +118,7 @@ jobs:
           node --check repository-manifest-loader.js
           node --check quality-file-routing.js
           node --check admin-auto-classifier.js
+          node --check north-quality-authority-bridge.js
           node --check north-quality-upload-adapter.js
           node --check reply-workflow-core.js
           node --check reply-upload-progress.js
@@ -137,6 +141,7 @@ jobs:
           node --check scripts/validate-north-quality-routing.js
           node --check scripts/validate-auto-import-classifier.js
           node --check scripts/validate-north-shared-workflow.js
+          node --check scripts/validate-north-authority.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
@@ -146,6 +151,7 @@ jobs:
           node scripts/validate-north-quality-routing.js
           node scripts/validate-auto-import-classifier.js
           node scripts/validate-north-shared-workflow.js
+          node scripts/validate-north-authority.js
           node scripts/validate-project.js
 
           python3 <<'PY'
@@ -166,9 +172,11 @@ jobs:
           north = json.loads(Path('data/north-quality-feedback-package.json').read_text(encoding='utf-8'))
           if north.get('documentCount') != 28 or len(north.get('documents') or []) != 28:
               raise SystemExit('北部质控材料清单应为28份')
-          if north.get('associationStatus') != 'pre-associated':
-              raise SystemExit('北部质控材料应处于预关联状态')
-          print(f'静态目录清单校验通过：{len(tree)} 项，版本 {version}；北部质控清单28份已预关联')
+          if north.get('associationStatus') != 'authoritative-confirmed':
+              raise SystemExit('北部质控材料应处于权威确认关联状态')
+          if not all(d.get('associationsByDataKey') for d in north.get('documents') or []):
+              raise SystemExit('北部质控材料缺少权威任务关联')
+          print(f'静态目录清单校验通过：{len(tree)} 项，版本 {version}；北部质控清单28份已权威关联')
           PY
 
           if grep -q '分片区收缴进度' regional-progress-dashboard.js; then
@@ -179,8 +187,8 @@ jobs:
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1
           fi
-          if grep -q 'new MutationObserver' north-quality-upload-adapter.js; then
-            echo '北部上传适配器存在长期DOM观察器，停止部署。'
+          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js; then
+            echo '北部质控脚本存在长期DOM观察器，停止部署。'
             exit 1
           fi
           echo '部署文件校验通过。'
