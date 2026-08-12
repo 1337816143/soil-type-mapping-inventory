@@ -60,7 +60,7 @@ jobs:
           grep -q 'dataKeys: shared.dataKeys.slice()' hybrid-staged-upload.js
           grep -q 'targets: shared.targets.slice()' hybrid-staged-upload.js
           grep -q "quality.get('shared')" .github/workflows/import-chunked.yml
-          grep -q 'sharedSource' dashboard-extension.js
+          grep -q 'expandRecord(entry)' dashboard-extension.js
           grep -q '北部片区共享质控' MAINTENANCE_RULES.md
           grep -q 'documentCount' data/north-quality-feedback-package.json
 
