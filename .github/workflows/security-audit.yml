@@ -46,8 +46,8 @@ jobs:
             echo '管理员进度脚本仍长期监听全页面并可能重复包裹，停止检查。'
             exit 1
           fi
-          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js; then
-            echo '北部质控/手机文件选择增强存在长期 DOM 观察器，停止检查。'
+          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js mobile-dialog-reference-batch.js; then
+            echo '北部质控/手机文件选择/移动弹窗增强存在长期 DOM 观察器，停止检查。'
             exit 1
           fi
 
@@ -57,6 +57,7 @@ jobs:
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
           node --check file-preview-batch-download.js
+          node --check mobile-dialog-reference-batch.js
           node --check quality-file-routing.js
           node --check admin-auto-classifier.js
           node --check north-quality-authority-bridge.js
@@ -84,6 +85,7 @@ jobs:
           node --check scripts/validate-north-authority.js
           node --check scripts/validate-mobile-file-picker.js
           node --check scripts/validate-file-preview-batch-download.js
+          node --check scripts/validate-mobile-dialog-reference-batch.js
           node --check scripts/validate-embedded-token-live.js
           python3 -m py_compile scripts/build-repository-manifest.py
 
@@ -101,6 +103,7 @@ jobs:
           node scripts/validate-north-authority.js
           node scripts/validate-mobile-file-picker.js
           node scripts/validate-file-preview-batch-download.js
+          node scripts/validate-mobile-dialog-reference-batch.js
           node scripts/validate-project.js
           node scripts/validate-embedded-token-live.js
 
@@ -121,4 +124,4 @@ jobs:
               raise SystemExit('北部质控权威索引缺少任务关联')
           PY
 
-          echo '前端语法、站内文件预览、公开交叉筛选批量下载、Android/移动端ZIP文件选择、北部28份权威共享质控索引/统计/自动识别、文件包/上传工作流、管理员上传原位进度、递归防护、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
+          echo '前端语法、站内文件预览、成果公开交叉筛选批量下载、手机弹窗多尺寸适配、参考资料按成果类型批量下载、Android/移动端ZIP文件选择、北部28份权威共享质控索引/统计/自动识别、文件包/上传工作流、管理员上传原位进度、递归防护、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
