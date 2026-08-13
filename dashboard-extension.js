@@ -12,6 +12,7 @@
   };
   var NEW_KEYS = ['degradation', 'specialty', 'agriSuitability', 'landUse'];
   var appliedAssociations = {};
+  var IMPORTED_QUALITY_PREFIX = './data/质控意见反馈_管理员导入/';
 
   window.SoilDashboardTypes = Object.assign({}, window.SoilDashboardTypes || {}, TYPES);
 
@@ -20,6 +21,42 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
+
+  function importedQualityRawUrl(href) {
+    href = String(href || '');
+    if (href.indexOf(IMPORTED_QUALITY_PREFIX) !== 0) return '';
+    var repositoryPath = href.replace(/^\.\//, '');
+    var admin = window.SoilRepoAdmin;
+    if (admin && typeof admin.raw === 'function') return admin.raw(repositoryPath);
+    return 'https://raw.githubusercontent.com/1337816143/soil-type-mapping-inventory/main/' +
+      repositoryPath.split('/').map(encodeURIComponent).join('/');
+  }
+
+  function rewriteImportedQualityLinks(html) {
+    if (!html || html.indexOf(IMPORTED_QUALITY_PREFIX) < 0) return html;
+    var holder = document.createElement('div');
+    holder.innerHTML = html;
+    Array.prototype.forEach.call(holder.querySelectorAll('a[href]'), function (anchor) {
+      var rawUrl = importedQualityRawUrl(anchor.getAttribute('href'));
+      if (!rawUrl) return;
+      anchor.setAttribute('href', rawUrl);
+      anchor.setAttribute('rel', 'noopener');
+      anchor.setAttribute('data-admin-quality-source', 'github-raw');
+    });
+    return holder.innerHTML;
+  }
+
+  function wrapImportedQualityLinks() {
+    if (typeof window.renderCities !== 'function' || window.renderCities.__adminImportedRawLinks) return;
+    var original = window.renderCities;
+    var wrapped = function () {
+      return rewriteImportedQualityLinks(original.apply(this, arguments));
+    };
+    wrapped.__adminImportedRawLinks = true;
+    window.renderCities = wrapped;
+  }
+
+  window.SoilAdminQualityRawUrl = importedQualityRawUrl;
 
   function addStyles() {
     if (document.getElementById('dashboard-extension-style')) return;
@@ -264,6 +301,7 @@
     if (!window.tabData || !window.masterList) return;
     addStyles();
     ensureTabs();
+    wrapImportedQualityLinks();
     wrapMissingBanner();
     bindExistingTabs();
     refreshDashboard();
