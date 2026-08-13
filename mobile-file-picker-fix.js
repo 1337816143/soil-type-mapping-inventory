@@ -10,6 +10,7 @@
 
   function Q() { return window.SoilAdminImport; }
   function C() { return window.SoilAdminAutoClassifier; }
+  function B() { return window.SoilNorthQualityAuthorityBridge; }
 
   function addStyles() {
     if (document.getElementById('soil-mobile-picker-style')) return;
@@ -56,14 +57,36 @@
     if (q && typeof q.progress === 'function') q.progress(message, percent || 0, true);
   }
 
+  function ensureAuthorityReady() {
+    var bridge = B();
+    if (window.SoilNorthQualityAuthorityPayload) return Promise.resolve(window.SoilNorthQualityAuthorityPayload);
+    if (bridge && typeof bridge.ensureReady === 'function') {
+      progress('正在加载北部28份已确认匹配索引……', 13);
+      return bridge.ensureReady();
+    }
+    if (window.SoilNorthQualityAuthorityReady && typeof window.SoilNorthQualityAuthorityReady.then === 'function') {
+      return window.SoilNorthQualityAuthorityReady;
+    }
+    return Promise.resolve(null);
+  }
+
   function applyPreparedFiles(files) {
     var q = Q();
     if (!q) return;
     if (typeof q.normalizePreparedFiles === 'function') q.normalizePreparedFiles(files);
     else if (q.state) q.state.files = files;
+
     var classifier = C();
+    var prepared = q.state && Array.isArray(q.state.files) ? q.state.files : files;
+    // ZIP解压后的 File 是新对象，必须在权威索引已加载后重新逐项识别，
+    // 不能继续沿用解压瞬间产生的空 city/unit/district 状态。
+    if (classifier && typeof classifier.applyItemMetadata === 'function') {
+      prepared.forEach(function (item) { classifier.applyItemMetadata(item); });
+    }
     if (classifier && typeof classifier.refresh === 'function') classifier.refresh();
     if (typeof q.renderPreview === 'function') q.renderPreview();
+    var bridge = B();
+    if (bridge && typeof bridge.syncPreviewRows === 'function') bridge.syncPreviewRows();
   }
 
   function importZip(file) {
@@ -87,7 +110,7 @@
         var output = [];
         return entries.reduce(function (chain, current, index) {
           return chain.then(function () {
-            progress('正在解压并识别 ' + (index + 1) + ' / ' + entries.length, 3 + Math.round(index / Math.max(1, entries.length) * 11));
+            progress('正在解压并识别 ' + (index + 1) + ' / ' + entries.length, 3 + Math.round(index / Math.max(1, entries.length) * 9));
             return current.entry.async('blob').then(function (blob) {
               var path = stripCommonRoot(current.path) || current.path;
               output.push({
@@ -101,8 +124,10 @@
         }, Promise.resolve()).then(function () { return output; });
       })
       .then(function (files) {
-        applyPreparedFiles(files);
-        progress('ZIP解析完成：共 ' + files.length + ' 份文件，正在使用已确认索引自动匹配。', 14);
+        return ensureAuthorityReady().catch(function () { return null; }).then(function () {
+          applyPreparedFiles(files);
+          progress('ZIP解析完成：共 ' + files.length + ' 份文件，已按确认索引重新匹配归档信息。', 14);
+        });
       })
       .catch(function (error) {
         progress('ZIP解析失败：' + error.message, 0);

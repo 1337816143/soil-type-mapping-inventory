@@ -43,9 +43,13 @@
       if (!file || !router.isSharedReport(file.name)) return;
 
       var classifier = C();
-      var meta = item.autoMeta || (classifier && typeof classifier.applyItemMetadata === 'function' ? classifier.applyItemMetadata(item) : null);
-      var keys = meta && Array.isArray(meta.dataKeys) && meta.dataKeys.length ? meta.dataKeys : router.coveredKeys;
-      var inspection = router.inspectFile(file.name, keys);
+      var authority = typeof router.findAuthority === 'function' ? router.findAuthority(file.name, file.size) : null;
+      // 手机ZIP可能先生成过一次空元数据；命中权威登记时必须重新识别。
+      var meta = authority && classifier && typeof classifier.applyItemMetadata === 'function' ?
+        classifier.applyItemMetadata(item) : (item.autoMeta || (classifier && typeof classifier.applyItemMetadata === 'function' ? classifier.applyItemMetadata(item) : null));
+      var keys = authority && Array.isArray(authority.dataKeys) && authority.dataKeys.length ? authority.dataKeys :
+        (meta && Array.isArray(meta.dataKeys) && meta.dataKeys.length ? meta.dataKeys : router.coveredKeys);
+      var inspection = router.inspectFile(file.name, keys, file.size);
       var status = row.querySelector('.v2-file em');
       var destination = row.querySelector('.v2-file small');
 
@@ -58,14 +62,24 @@
         return;
       }
 
-      var batch = item.batch || (meta && meta.batch) || '管理员导入';
+      if (meta) {
+        meta.dataKeys = inspection.dataKeys.slice();
+        meta.targets = inspection.targets.slice();
+        meta.unresolvedTargets = [];
+        item.autoMeta = meta;
+      }
+      var batch = item.batch || (meta && meta.batch) || (authority && authority.batch) || '第一轮';
+      item.batch = batch;
       var path = router.sharedStoragePath(file.name, batch);
       if (destination && destination.textContent !== path) destination.textContent = path;
+      row.classList.add('north-shared-authoritative');
+      row.classList.add('auto-import-resolved');
+      row.classList.remove('auto-import-needs-review');
       if (status) {
-        var exact = meta && meta.catalogExact;
-        var text = (exact ? '北部登记材料已关联：' : '北部共享质控已识别：') +
-          '1份原文件 → ' + targetCount(inspection) + ' 个任务单元 × ' + keys.length +
-          '类成果；仓库仅保存1份，统计自动关联。';
+        var exact = !!authority || meta && meta.catalogExact;
+        var text = (exact ? '北部登记材料已完整匹配：' : '北部共享质控已识别：') +
+          '1份原文件 → ' + targetCount(inspection) + ' 个实际任务单元 × ' + inspection.dataKeys.length +
+          '类成果；归档信息完整，仓库仅保存1份，统计自动关联。';
         if (status.className !== 'ok') status.className = 'ok';
         if (status.textContent !== text) status.textContent = text;
       }
@@ -81,7 +95,7 @@
     note.className = 'north-quality-guide';
     note.style.marginTop = '6px';
     note.style.color = '#1d4ed8';
-    note.innerHTML = '<strong>北部片区共享质控：</strong>已登记的28份材料会按文件名、大小和SHA-256校验；文件名中的多个地区共用同一份原文件。导入类型、成果类型、批次和关联地区均自动识别，不需要逐项指定。可直接选择原ZIP。';
+    note.innerHTML = '<strong>北部片区共享质控：</strong>已登记的28份材料会按文件名、大小和SHA-256校验；文件名中的多个地区共用同一份原文件。当前确认对应土壤类型图、土壤属性图、耕地质量等级评价3类成果，批次和全部任务关联自动识别，不需要逐项指定。可直接选择原ZIP。';
     guide.appendChild(note);
   }
 
@@ -140,12 +154,19 @@
       })
       .then(function (files) {
         if (!files.length) throw new Error('ZIP中未找到可导入的 DOC/DOCX/PDF 文件。');
-        if (typeof q.normalizePreparedFiles === 'function') q.normalizePreparedFiles(files);
-        else q.state.files = files;
-        if (C() && typeof C().refresh === 'function') C().refresh();
-        if (typeof q.renderPreview === 'function') q.renderPreview();
-        if (typeof q.progress === 'function') q.progress('ZIP解析完成：共 ' + files.length + ' 份文件，导入类型、成果类型、批次和任务单元已自动匹配。', 14, true);
-        setTimeout(annotateRows, 0);
+        var bridge = window.SoilNorthQualityAuthorityBridge;
+        var ready = bridge && typeof bridge.ensureReady === 'function' ? bridge.ensureReady() : Promise.resolve();
+        return ready.catch(function () {}).then(function () {
+          if (typeof q.normalizePreparedFiles === 'function') q.normalizePreparedFiles(files);
+          else q.state.files = files;
+          if (C() && typeof C().applyItemMetadata === 'function') {
+            (q.state.files || []).forEach(function (item) { C().applyItemMetadata(item); });
+          }
+          if (C() && typeof C().refresh === 'function') C().refresh();
+          if (typeof q.renderPreview === 'function') q.renderPreview();
+          if (typeof q.progress === 'function') q.progress('ZIP解析完成：共 ' + files.length + ' 份文件，3类成果及任务关联已自动匹配。', 14, true);
+          setTimeout(annotateRows, 0);
+        });
       })
       .catch(function (error) {
         selected.__northZipExpanded = false;
