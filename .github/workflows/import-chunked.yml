@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: soil-hybrid-import
@@ -259,6 +260,7 @@ jobs:
           PY
 
       - name: Commit imported files once
+        id: commit
         shell: bash
         env:
           TARGET_BRANCH: ${{ steps.manifest.outputs.target_branch }}
@@ -270,10 +272,30 @@ jobs:
           git add --all
           if git diff --cached --quiet; then
             echo '没有需要提交的文件。'
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           else
             git commit -m "docs: import staged files ${UPLOAD_ID#soil-upload-}"
             git push origin "HEAD:$TARGET_BRANCH"
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Trigger Pages deployment for imported files
+        if: steps.commit.outputs.pushed == 'true' && steps.manifest.outputs.target_branch == 'main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ steps.manifest.outputs.target_branch }}
+          IMPORTED_COMMIT: ${{ steps.commit.outputs.commit_sha }}
+        run: |
+          set -euo pipefail
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/deploy.yml/dispatches" \
+            -f ref="$TARGET_BRANCH"
+          echo "已显式触发 GitHub Pages 部署：$IMPORTED_COMMIT"
 
       - name: Delete staging branch
         if: success()

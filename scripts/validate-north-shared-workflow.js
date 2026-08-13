@@ -21,8 +21,15 @@ assert(workflow.includes("if quality.get('shared')"), 'Actions归档未识别共
 assert(workflow.includes("'sharedSource': True"), 'Actions归档未写入共享索引标记');
 assert(workflow.includes("'dataKeys': data_keys"), 'Actions归档未保存成果类型列表');
 assert(workflow.includes("'targets': targets"), 'Actions归档未保存地区列表');
+assert(workflow.includes('actions: write'), '导入工作流缺少显式触发Pages部署所需的Actions写权限');
+assert(workflow.includes('actions/workflows/deploy.yml/dispatches'), '管理员导入提交后未显式触发deploy.yml');
+assert(workflow.includes("if: steps.commit.outputs.pushed == 'true' && steps.manifest.outputs.target_branch == 'main'"), 'Pages部署触发条件未绑定真实main导入提交');
+assert(workflow.includes('commit_sha=$(git rev-parse HEAD)'), '导入工作流未记录实际归档提交SHA');
 assert(dashboard.includes('expandRecord(entry)'), '页面未把紧凑共享索引展开为多个统计关联');
 assert(dashboard.includes('associationKey(entry)'), '页面仍可能按物理路径去重掉共享关联');
+assert(dashboard.includes("var IMPORTED_QUALITY_PREFIX = './data/质控意见反馈_管理员导入/';"), '管理员质控文件链接未区分动态导入目录');
+assert(dashboard.includes('https://raw.githubusercontent.com/1337816143/soil-type-mapping-inventory/main/'), '管理员质控文件未使用仓库原始文件直链兜底');
+assert(dashboard.includes('rewriteImportedQualityLinks'), '管理员质控文件渲染后未重写为可立即访问的原始文件链接');
 assert(adapter.includes('loadZip()'), '管理员上传未支持北部ZIP解析');
 assert(adapter.includes('仓库仅保存1份'), '上传预览未明确共享存储规则');
 assert(adapter.includes('3类成果'), '北部上传预览没有明确当前只确认3类成果');
@@ -42,4 +49,4 @@ assert(!bridge.includes('new MutationObserver'), '权威索引桥接不得引入
 assert(mobile.includes('ensureAuthorityReady'), '手机ZIP解压没有等待权威索引加载');
 assert(mobile.includes('classifier.applyItemMetadata(item)'), '手机ZIP解压后没有逐文件强制重新匹配');
 
-console.log('northern shared QC workflow validation passed: 3 active result types, complete mobile ZIP auto-match, one physical file per report');
+console.log('northern shared QC workflow validation passed: 3 active result types, complete mobile ZIP auto-match, raw imported-file links, explicit Pages redeploy');

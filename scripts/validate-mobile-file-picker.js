@@ -30,6 +30,6 @@ const adapterPos = loader.indexOf('north-quality-upload-adapter.js');
 const mobilePos = loader.indexOf('mobile-file-picker-fix.js');
 const refPos = loader.indexOf('reference-import-mode.js');
 assert(adapterPos >= 0 && mobilePos > adapterPos && refPos > mobilePos, '手机ZIP修复模块加载顺序错误');
-assert(loader.includes('mobile-file-picker-fix.js?v=1.0.16'), '手机ZIP修复模块未按当前版本缓存键加载');
+assert(loader.includes('mobile-file-picker-fix.js?v=1.0.17'), '手机ZIP修复模块未按当前版本缓存键加载');
 
 console.log('mobile Android ZIP picker + authoritative reclassification validation passed');
