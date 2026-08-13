@@ -56,6 +56,7 @@ jobs:
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check file-preview-batch-download.js
           node --check quality-file-routing.js
           node --check admin-auto-classifier.js
           node --check north-quality-authority-bridge.js
@@ -82,6 +83,7 @@ jobs:
           node --check scripts/validate-auto-import-classifier.js
           node --check scripts/validate-north-authority.js
           node --check scripts/validate-mobile-file-picker.js
+          node --check scripts/validate-file-preview-batch-download.js
           node --check scripts/validate-embedded-token-live.js
           python3 -m py_compile scripts/build-repository-manifest.py
 
@@ -98,6 +100,7 @@ jobs:
           node scripts/validate-auto-import-classifier.js
           node scripts/validate-north-authority.js
           node scripts/validate-mobile-file-picker.js
+          node scripts/validate-file-preview-batch-download.js
           node scripts/validate-project.js
           node scripts/validate-embedded-token-live.js
 
@@ -118,4 +121,4 @@ jobs:
               raise SystemExit('北部质控权威索引缺少任务关联')
           PY
 
-          echo '前端语法、Android/移动端ZIP文件选择、北部28份权威共享质控索引/统计/自动识别、文件包/上传工作流、管理员上传原位进度、递归防护、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
+          echo '前端语法、站内文件预览、公开交叉筛选批量下载、Android/移动端ZIP文件选择、北部28份权威共享质控索引/统计/自动识别、文件包/上传工作流、管理员上传原位进度、递归防护、原始鉴权链路、在线 Token、整改答复、原子启动、目录清单和项目规则检查通过。'
