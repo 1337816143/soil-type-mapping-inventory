@@ -5,7 +5,9 @@
   window.__soilAdminAutoClassifierInstalled = true;
 
   var PACKAGE_URL = './data/north-quality-feedback-package.json';
-  var COMPREHENSIVE_KEYS = ['soilType','soilAttr','farmland','degradation','specialty','agriSuitability'];
+  // 未明确写出成果名称的“综合/成果质控报告”默认只按当前已确认的三类主要成果处理。
+  // 后续成果若有独立文件名（如“土壤退化…”）仍由下方显式规则正常识别，不受此默认值影响。
+  var COMPREHENSIVE_KEYS = ['soilType','soilAttr','farmland'];
   var TYPE_LABELS = {
     soilType:'土壤类型图',
     soilAttr:'土壤属性图',
