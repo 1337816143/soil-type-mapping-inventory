@@ -6,6 +6,7 @@ const fs = require('fs');
 const source = fs.readFileSync('mobile-file-picker-fix.js', 'utf8');
 const loader = fs.readFileSync('page-enhancements.js', 'utf8');
 const bridge = fs.readFileSync('north-quality-authority-bridge.js', 'utf8');
+const version = fs.readFileSync('VERSION', 'utf8').trim().replace(/^v/, '');
 
 assert(source.includes("var ZIP_ACCEPT = '.zip,application/zip,application/x-zip-compressed'"), '手机ZIP专用选择器未限定ZIP MIME/扩展名');
 assert(source.includes("var GENERIC_ACCEPT = '*/*,.zip,application/zip,application/x-zip-compressed'"), '普通文件选择器未保留全类型并显式加入ZIP');
@@ -30,6 +31,6 @@ const adapterPos = loader.indexOf('north-quality-upload-adapter.js');
 const mobilePos = loader.indexOf('mobile-file-picker-fix.js');
 const refPos = loader.indexOf('reference-import-mode.js');
 assert(adapterPos >= 0 && mobilePos > adapterPos && refPos > mobilePos, '手机ZIP修复模块加载顺序错误');
-assert(loader.includes('mobile-file-picker-fix.js?v=1.0.17'), '手机ZIP修复模块未按当前版本缓存键加载');
+assert(loader.includes(`mobile-file-picker-fix.js?v=${version}`), '手机ZIP修复模块未按当前版本缓存键加载');
 
 console.log('mobile Android ZIP picker + authoritative reclassification validation passed');
