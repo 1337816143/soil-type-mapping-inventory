@@ -21,6 +21,8 @@ const releaseUi = read('app-release-ui.js');
 const versionGuard = read('app-version-guard.js');
 const loader = read('page-enhancements.js');
 const manifestLoader = read('repository-manifest-loader.js');
+const fileAccess = read('file-preview-batch-download.js');
+const mobileReference = read('mobile-dialog-reference-batch.js');
 const replyCore = read('reply-workflow-core.js');
 const replyBatch = read('upload-auth-reply-batch.js');
 const successNotice = read('upload-success-notice.js');
@@ -55,6 +57,8 @@ if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未�
 [
   'reference-library.js',
   'repository-manifest-loader.js',
+  'file-preview-batch-download.js',
+  'mobile-dialog-reference-batch.js',
   'app-release-ui.js',
   'app-version-guard.js',
   'upload-token-default.js',
@@ -76,6 +80,8 @@ const orderedScripts = [
   'dashboard-extension.js',
   'reference-library.js',
   'repository-manifest-loader.js',
+  'file-preview-batch-download.js',
+  'mobile-dialog-reference-batch.js',
   'app-release-ui.js',
   'soil-survey-logo-v1.0.2.js',
   'app-version-guard.js',
@@ -92,6 +98,16 @@ const positions = orderedScripts.map((name) => loader.indexOf(name));
 if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
   fail('页面脚本加载顺序错误');
 }
+
+if (!fileAccess.includes('openFilePreview') || !fileAccess.includes('openBatchDownload')) fail('成果文件预览/批量下载模块不完整');
+if (!fileAccess.includes('按市选择') || !fileAccess.includes('按作业单位选择') || !fileAccess.includes('按成果类型选择') || !fileAccess.includes('按区县选择')) fail('成果批量下载交叉筛选不完整');
+if (!mobileReference.includes('window.visualViewport')) fail('手机弹窗未使用实际可视区域');
+if (!mobileReference.includes('env(safe-area-inset-top)') || !mobileReference.includes('env(safe-area-inset-bottom)')) fail('手机弹窗未适配安全区');
+if (!mobileReference.includes("button.id = 'ref-batch-download'")) fail('参考资料页缺少公开批量下载按钮');
+if (!mobileReference.includes('按成果类型选择') || !mobileReference.includes('下载已选 ZIP')) fail('参考资料批量下载筛选/下载功能不完整');
+if (/credPass|ensureAdminToken/.test(mobileReference)) fail('参考资料公开批量下载错误地依赖管理员密码');
+if (!maintenance.includes('关闭按钮必须始终固定')) fail('维护约束未锁定手机弹窗关闭按钮可见性');
+if (!maintenance.includes('参考资料批量下载')) fail('维护约束未锁定参考资料批量下载');
 
 if (!adminUploadTransport.includes('function normalizeStage(text)')) fail('管理员上传状态缺少统一格式化');
 if (!adminUploadTransport.includes('function renderUploadStatus()')) fail('管理员上传状态缺少原位渲染');
@@ -135,6 +151,7 @@ if (!fs.existsSync('scripts/bump-version.js')) fail('缺少版本自动迭代脚
 if (!fs.existsSync('scripts/validate-reply-workflow.js')) fail('缺少整改答复回归测试');
 if (!fs.existsSync('scripts/validate-admin-upload-transport.js')) fail('缺少管理员上传传输回归测试');
 if (!fs.existsSync('scripts/validate-embedded-token-live.js')) fail('缺少内置 Token 实际 API 验证脚本');
+if (!fs.existsSync('scripts/validate-mobile-dialog-reference-batch.js')) fail('缺少手机弹窗/参考资料批量下载回归测试');
 if (!fs.existsSync('VERSIONING.md')) fail('缺少版本迭代规则');
 
 const logoMatch = logoPatch.match(/data:image\/png;base64,([A-Za-z0-9+/=]+)/);
