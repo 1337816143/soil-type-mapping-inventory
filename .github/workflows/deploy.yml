@@ -40,6 +40,7 @@ jobs:
             app-version-guard.js
             repository-manifest-loader.js
             file-preview-batch-download.js
+            document-preview-controls.js
             mobile-dialog-reference-batch.js
             reply-workflow-core.js
             reply-upload-progress.js
@@ -93,7 +94,7 @@ jobs:
           required_files=(
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
-            app-version-guard.js repository-manifest-loader.js file-preview-batch-download.js mobile-dialog-reference-batch.js reply-workflow-core.js
+            app-version-guard.js repository-manifest-loader.js file-preview-batch-download.js document-preview-controls.js mobile-dialog-reference-batch.js reply-workflow-core.js
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
             task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js
@@ -110,7 +111,7 @@ jobs:
             scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
             scripts/validate-auto-import-classifier.js scripts/validate-north-shared-workflow.js
             scripts/validate-north-authority.js scripts/validate-mobile-file-picker.js
-            scripts/validate-file-preview-batch-download.js scripts/validate-mobile-dialog-reference-batch.js
+            scripts/validate-file-preview-batch-download.js scripts/validate-document-preview-controls.js scripts/validate-mobile-dialog-reference-batch.js
             scripts/build-repository-manifest.py scripts/bump-version.js
             data/admin-import-index.json data/north-quality-feedback-package.json data/repository-tree.json
           )
@@ -122,6 +123,7 @@ jobs:
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
           node --check file-preview-batch-download.js
+          node --check document-preview-controls.js
           node --check mobile-dialog-reference-batch.js
           node --check quality-file-routing.js
           node --check admin-auto-classifier.js
@@ -152,6 +154,7 @@ jobs:
           node --check scripts/validate-north-authority.js
           node --check scripts/validate-mobile-file-picker.js
           node --check scripts/validate-file-preview-batch-download.js
+          node --check scripts/validate-document-preview-controls.js
           node --check scripts/validate-mobile-dialog-reference-batch.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
@@ -165,6 +168,7 @@ jobs:
           node scripts/validate-north-authority.js
           node scripts/validate-mobile-file-picker.js
           node scripts/validate-file-preview-batch-download.js
+          node scripts/validate-document-preview-controls.js
           node scripts/validate-mobile-dialog-reference-batch.js
           node scripts/validate-project.js
 
@@ -201,8 +205,8 @@ jobs:
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1
           fi
-          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js mobile-dialog-reference-batch.js; then
-            echo '北部质控/手机文件选择/移动弹窗脚本存在长期DOM观察器，停止部署。'
+          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js mobile-dialog-reference-batch.js document-preview-controls.js; then
+            echo '北部质控/手机文件选择/移动弹窗/文档预览脚本存在长期DOM观察器，停止部署。'
             exit 1
           fi
           echo '部署文件校验通过。'
