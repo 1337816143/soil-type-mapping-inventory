@@ -81,12 +81,12 @@ assert.deepStrictEqual(arr(classifier.inferDataKeys('耕地质量评价成果质
 assert.deepStrictEqual(arr(classifier.inferDataKeys('土特产品土壤适宜性评价质控意见.docx')), ['specialty']);
 assert.deepStrictEqual(arr(classifier.inferDataKeys('土壤农业利用适宜性评价质控意见.docx')), ['agriSuitability']);
 assert.deepStrictEqual(arr(classifier.inferDataKeys('土地资源评价与利用报告质控意见.docx')), ['landUse']);
-// 历史/非登记综合报告仍保留旧文件名识别能力；北部28份当前材料由权威索引收敛为3类。
-assert.deepStrictEqual(arr(classifier.inferDataKeys('某县第三次全国土壤普查成果质控报告.docx')), ['soilType','soilAttr','farmland','degradation','specialty','agriSuitability']);
+assert.deepStrictEqual(arr(classifier.inferDataKeys('某县第三次全国土壤普查成果质控报告.docx')), activeKeys, '未明确成果名的综合质控报告默认只能匹配当前3类主要成果');
 assert.strictEqual(classifier.inferBatch('2026年第二批补充/某县/土壤属性图.docx'), '第二批补充');
 assert.strictEqual(classifier.inferBatch('第一轮/综合质控报告.docx'), '第一轮');
 assert.strictEqual(classifier.inferKind('技术规范与参考资料.pdf', []), 'reference');
 assert.strictEqual(classifier.inferKind('土壤属性图质控意见.docx', ['soilAttr']), 'quality');
+assert.deepStrictEqual(arr(classifier.comprehensiveKeys), activeKeys, '自动分类器综合默认范围不是3类');
 
 assert.strictEqual(pkg.schemaVersion, 2, '北部权威索引应使用schemaVersion 2');
 assert.strictEqual(pkg.documentCount, 28, '北部登记材料应为28份');
@@ -127,6 +127,9 @@ assert.strictEqual(oldFarmland.city, '沧州市', '历史文件即使省略市�
 assert.strictEqual(oldFarmland.unit, '海兴县测试作业单位');
 assert.strictEqual(oldFarmland.district, '海兴县');
 
+const oldTypo = {file:{name:'河北省土壤类型图成果质控意见_石家市130109藁城区.pdf',size:1},path:'第一批/土壤类型图/河北省土壤类型图成果质控意见_石家市130109藁城区.pdf',batch:'管理员导入'};
+assert.deepStrictEqual(arr(classifier.inferDataKeys(oldTypo.path)), ['soilType'], '历史“石家市”等命名仍应识别成果类型');
+
 assert(source.includes("Object.defineProperty(state, 'files'"), '未安装 state.files 赋值监听，ZIP异步解压仍会绕过自动识别');
 soilAdminImport.state.files = [currentItem];
 assert(context.window.SoilAdminAutoClassifier.lastSelection && context.window.SoilAdminAutoClassifier.lastSelection.metas.length === 1, 'ZIP完成后 state.files 更新未触发自动识别刷新');
@@ -145,4 +148,4 @@ assert(adapter.includes('inspection.dataKeys.length'), '北部上传预览未使
 assert(mobile.includes('ensureAuthorityReady'), '手机ZIP未等待权威索引');
 assert(mobile.includes('prepared.forEach(function (item) { classifier.applyItemMetadata(item); })'), '手机ZIP解压后未逐项强制重新匹配');
 
-console.log('automatic import classifier validation passed: current northern package uses 3 active types; historical named types remain compatible');
+console.log('automatic import classifier validation passed: comprehensive defaults to 3 active types; explicitly named historical types remain compatible');
