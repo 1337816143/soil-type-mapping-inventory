@@ -70,6 +70,7 @@ jobs:
             release-upload-reliability.js
             release-staged-upload.js
             .github/workflows/import-chunked.yml
+            .github/workflows/deploy.yml
             scripts
             assets
             data
@@ -103,7 +104,7 @@ jobs:
             upload-auth-reply-batch.js upload-token-default.js
             pptx-auto-split.js hybrid-staged-upload.js
             chunked-staged-upload.js release-upload-reliability.js
-            release-staged-upload.js .github/workflows/import-chunked.yml scripts/validate-project.js
+            release-staged-upload.js .github/workflows/import-chunked.yml .github/workflows/deploy.yml scripts/validate-project.js
             scripts/validate-upload-token.js scripts/validate-reply-workflow.js
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
             scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
