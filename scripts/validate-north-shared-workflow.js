@@ -7,8 +7,10 @@ const hybrid = fs.readFileSync('hybrid-staged-upload.js', 'utf8');
 const workflow = fs.readFileSync('.github/workflows/import-chunked.yml', 'utf8');
 const dashboard = fs.readFileSync('dashboard-extension.js', 'utf8');
 const adapter = fs.readFileSync('north-quality-upload-adapter.js', 'utf8');
+const mobile = fs.readFileSync('mobile-file-picker-fix.js', 'utf8');
 const classifier = fs.readFileSync('admin-auto-classifier.js', 'utf8');
 const bridge = fs.readFileSync('north-quality-authority-bridge.js', 'utf8');
+const routing = fs.readFileSync('quality-file-routing.js', 'utf8');
 const pkg = JSON.parse(fs.readFileSync('data/north-quality-feedback-package.json', 'utf8'));
 
 assert(hybrid.includes('router.sharedStoragePath'), '共享报告未使用单一物理存储路径');
@@ -23,14 +25,21 @@ assert(dashboard.includes('expandRecord(entry)'), '页面未把紧凑共享索�
 assert(dashboard.includes('associationKey(entry)'), '页面仍可能按物理路径去重掉共享关联');
 assert(adapter.includes('loadZip()'), '管理员上传未支持北部ZIP解析');
 assert(adapter.includes('仓库仅保存1份'), '上传预览未明确共享存储规则');
+assert(adapter.includes('3类成果'), '北部上传预览没有明确当前只确认3类成果');
+assert(adapter.includes('归档信息完整'), '北部共享报告匹配成功后没有标记归档完整');
+assert(adapter.includes('findAuthority(file.name, file.size)'), '上传预览未按文件名+大小重新命中权威索引');
 assert(!adapter.includes('new MutationObserver'), '北部上传适配器不得长期监听预览DOM');
 assert(classifier.includes('north-package-registry'), '北部上传未接入登记材料表');
 assert.strictEqual(pkg.associationStatus, 'authoritative-confirmed', '北部28份材料未升级为权威确认关联');
 assert(pkg.importDefaults && pkg.importDefaults.authoritativeAssociations, '北部权威关联未设为自动导入依据');
 assert.strictEqual(pkg.importDefaults.batch, '第一轮', '北部材料默认批次应为第一轮');
+assert(routing.includes("var COVERED_KEYS = ['soilType','soilAttr','farmland'];"), '北部共享报告仍被错误扩展到3类以外成果');
+assert(routing.includes('scopeAuthorityDocument'), '旧权威索引未在运行时过滤未确认成果类型');
 assert(bridge.includes('applyAdminQualityIndex(records)'), '权威登记索引未同步到页面统计');
-assert(bridge.includes('已登记·待归档'), '尚未归档的物理文件未区分展示状态');
-assert(bridge.includes('一份文件对应多个任务单元是正常关系'), '共享报告仍可能被错误要求唯一任务单元');
+assert(bridge.includes('3类主要成果'), '页面统计未明确北部当前只确认3类成果');
+assert(bridge.includes('归档信息完整，可直接上传'), '共享报告成功匹配后仍可能显示归档信息不完整');
 assert(!bridge.includes('new MutationObserver'), '权威索引桥接不得引入长期DOM观察器');
+assert(mobile.includes('ensureAuthorityReady'), '手机ZIP解压没有等待权威索引加载');
+assert(mobile.includes('classifier.applyItemMetadata(item)'), '手机ZIP解压后没有逐文件强制重新匹配');
 
-console.log('northern shared QC authoritative registry/upload/index/dashboard workflow validation passed');
+console.log('northern shared QC workflow validation passed: 3 active result types, complete mobile ZIP auto-match, one physical file per report');
