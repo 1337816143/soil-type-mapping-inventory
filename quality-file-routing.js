@@ -3,7 +3,9 @@
 
   if (window.SoilQualityFileRouting) return;
 
-  var COVERED_KEYS = ['soilType','soilAttr','farmland','degradation','specialty','agriSuitability'];
+  // 北部当前收到的综合质控报告仅对应这三类主要成果。
+  // 其他成果类型仍可由普通文件名规则单独识别，但不得由北部综合报告自动扩展。
+  var COVERED_KEYS = ['soilType','soilAttr','farmland'];
   var ALIASES = {
     '徐水县':'徐水区',
     '满城':'满城区',
@@ -57,8 +59,35 @@
     };
   }
 
+  function filterKeys(keys) {
+    var seen = {};
+    return (Array.isArray(keys) ? keys : []).filter(function (key) {
+      if (COVERED_KEYS.indexOf(key) < 0 || seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+  }
+
+  function scopeAuthorityDocument(doc) {
+    doc = doc || {};
+    var keys = filterKeys(doc.dataKeys);
+    if (!keys.length) keys = COVERED_KEYS.slice();
+    var associations = {};
+    keys.forEach(function (key) {
+      associations[key] = Array.isArray(doc.associationsByDataKey && doc.associationsByDataKey[key]) ?
+        doc.associationsByDataKey[key].map(function (item) { return cloneAssociation(item); }) : [];
+    });
+    return Object.assign({}, doc, {
+      dataKeys:keys,
+      associationsByDataKey:associations
+    });
+  }
+
   function setAuthority(payload) {
-    authorityPayload = payload && Array.isArray(payload.documents) ? payload : null;
+    authorityPayload = payload && Array.isArray(payload.documents) ? Object.assign({}, payload, {
+      activeDataKeys:COVERED_KEYS.slice(),
+      documents:payload.documents.map(scopeAuthorityDocument)
+    }) : null;
     authorityExact = {};
     authorityCanonical = {};
     (authorityPayload ? authorityPayload.documents : []).forEach(function (doc) {
@@ -70,7 +99,7 @@
     });
     try {
       window.dispatchEvent(new CustomEvent('soil-north-authority-ready', {
-        detail:{documentCount:authorityPayload ? authorityPayload.documents.length : 0}
+        detail:{documentCount:authorityPayload ? authorityPayload.documents.length : 0, dataKeys:COVERED_KEYS.slice()}
       }));
     } catch (error) {}
     return authorityPayload;
@@ -89,6 +118,7 @@
   }
 
   function authorityAssociations(filename, dataKey, size) {
+    if (COVERED_KEYS.indexOf(dataKey) < 0) return [];
     var doc = findAuthority(filename, size);
     if (!doc || !doc.associationsByDataKey || !Array.isArray(doc.associationsByDataKey[dataKey])) return [];
     return doc.associationsByDataKey[dataKey].map(function (item) { return cloneAssociation(item); });
@@ -172,6 +202,7 @@
   }
 
   function resolveTargets(targets, dataKey, filename, size) {
+    if (COVERED_KEYS.indexOf(dataKey) < 0) return {associations:[], unresolved:[], authoritative:false, ignored:true};
     var authoritative = filename ? authorityAssociations(filename, dataKey, size) : [];
     if (authoritative.length) return {associations:authoritative, unresolved:[], authoritative:true};
 
@@ -222,7 +253,9 @@
   function expandExplicit(record) {
     if (!record || !record.associationsByDataKey) return [];
     var output = [];
-    Object.keys(record.associationsByDataKey).forEach(function (dataKey) {
+    var keys = filterKeys(record.dataKeys);
+    if (!keys.length) keys = COVERED_KEYS.filter(function (key) { return Array.isArray(record.associationsByDataKey[key]); });
+    keys.forEach(function (dataKey) {
       (record.associationsByDataKey[dataKey] || []).forEach(function (target) {
         output.push({
           kind:'quality-control',
@@ -254,7 +287,7 @@
       return [record];
     }
     var output = [];
-    record.dataKeys.forEach(function (dataKey) {
+    filterKeys(record.dataKeys).forEach(function (dataKey) {
       var result = resolveTargets(record.targets, dataKey, record.name || basename(record.path), record.expectedSize || record.size || 0);
       result.associations.forEach(function (target) {
         output.push({
@@ -282,7 +315,8 @@
   function inspectFile(filename, dataKeys, size) {
     var authority = findAuthority(filename, size);
     var targets = authority && Array.isArray(authority.targets) ? authority.targets.slice() : parseTargets(filename);
-    var keys = authority && Array.isArray(authority.dataKeys) ? authority.dataKeys.slice() : (Array.isArray(dataKeys) && dataKeys.length ? dataKeys : COVERED_KEYS);
+    var keys = authority && Array.isArray(authority.dataKeys) ? filterKeys(authority.dataKeys) : filterKeys(dataKeys);
+    if (!keys.length) keys = COVERED_KEYS.slice();
     var byKey = {}, unresolved = [], authoritative = !!authority;
     keys.forEach(function (key) {
       var result = resolveTargets(targets, key, filename, size);
