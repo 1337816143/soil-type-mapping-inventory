@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.1.3 — 2026-08-13
+
+- 修复移动端 Microsoft Edge 在禁用内置 PDF 阅读器时，站内 Blob iframe 预览被浏览器替换为“已禁用 PDF 阅读器/下载文件”提示的问题：PDF 默认改用固定版本 `pdfjs-dist@3.11.174` 读取文件字节并逐页渲染到 Canvas，不再依赖浏览器内置 PDF 阅读器开关。
+- PDF 预览新增缩小、放大、100%相对适宽比例显示和“适应宽度”控制；根据设备像素比和单页像素上限控制 Canvas 清晰度与内存占用，并在横竖屏/可视区域变化后自动重新适宽。
+- Word DOCX 保留现有 `docx-preview` 站内渲染方式，同时新增与 PDF 一致的缩小、放大和“适应宽度”控制，手机端默认按可视宽度适配。
+- 新预览继续复用 v1.1.2 的 `visualViewport`、刘海/挖孔安全区和固定关闭按钮规则；下载文件能力保持不变。
+- 新增 `validate-document-preview-controls.js` 回归检查，验证 PDF.js Canvas 渲染、禁止新预览依赖 iframe、PDF/Word 缩放、移动端安全弹窗复用、版本缓存键与无长期 MutationObserver。
+- 将文档预览增强模块纳入 Pages sparse-checkout、部署校验、Frontend project audit 和后续自动版本迭代；管理员上传、北部28份材料、3类成果范围、成果/参考资料批量下载、整改答复等既有功能保持不变。
+
 ## v1.1.2 — 2026-08-13
 
 - 修复 v1.1.1 首次 Pages 部署校验失败：新增的手机弹窗/参考资料批量下载回归测试会读取 `.github/workflows/deploy.yml`，但 Pages 稀疏检出列表此前只包含 `import-chunked.yml`，导致部署环境中测试文件存在而被测试读取的工作流文件缺失。
