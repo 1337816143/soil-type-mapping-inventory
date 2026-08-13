@@ -1,1 +1,584 @@
-[]
+[
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/乐亭县、丰南区、丰润区、合并区、玉田县、滦南县、曹妃甸区和市级第三次全国土壤普查成果质控报告--以乐亭县为例.docx",
+    "name": "乐亭县、丰南区、丰润区、合并区、玉田县、滦南县、曹妃甸区和市级第三次全国土壤普查成果质控报告--以乐亭县为例.docx",
+    "sourcePath": "质控资料反馈/乐亭县、丰南区、丰润区、合并区、玉田县、滦南县、曹妃甸区和市级第三次全国土壤普查成果质控报告--以乐亭县为例.docx",
+    "order": 1,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "乐亭县",
+      "丰南区",
+      "丰润区",
+      "合并区",
+      "玉田县",
+      "滦南县",
+      "曹妃甸区",
+      "市级"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/固安县、霸州市第三次全国土壤普查成果质控报告--以固安县为例.docx",
+    "name": "固安县、霸州市第三次全国土壤普查成果质控报告--以固安县为例.docx",
+    "sourcePath": "质控资料反馈/固安县、霸州市第三次全国土壤普查成果质控报告--以固安县为例.docx",
+    "order": 2,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "固安县",
+      "霸州市"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/安国市、博野县、蠡县、三河市、大厂县、香河县、雄安新区本级、容城县、阳原县第三次全国土壤普查成果质控报告--以安国市为例.docx",
+    "name": "安国市、博野县、蠡县、三河市、大厂县、香河县、雄安新区本级、容城县、阳原县第三次全国土壤普查成果质控报告--以安国市为例.docx",
+    "sourcePath": "质控资料反馈/安国市、博野县、蠡县、三河市、大厂县、香河县、雄安新区本级、容城县、阳原县第三次全国土壤普查成果质控报告--以安国市为例.docx",
+    "order": 3,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "安国市",
+      "博野县",
+      "蠡县",
+      "三河市",
+      "大厂县",
+      "香河县",
+      "雄安新区本级",
+      "容城县",
+      "阳原县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/安次区、广阳区第三次全国土壤普查成果质控报告--以安次区为例.docx",
+    "name": "安次区、广阳区第三次全国土壤普查成果质控报告--以安次区为例.docx",
+    "sourcePath": "质控资料反馈/安次区、广阳区第三次全国土壤普查成果质控报告--以安次区为例.docx",
+    "order": 4,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "安次区",
+      "广阳区"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/定兴县第三次全国土壤普查成果质控报告.docx",
+    "name": "定兴县第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/定兴县第三次全国土壤普查成果质控报告.docx",
+    "order": 5,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "定兴县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/定州市第三次全国土壤普查成果质控报告.docx",
+    "name": "定州市第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/定州市第三次全国土壤普查成果质控报告.docx",
+    "order": 6,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "定州市"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/宽城县、平泉市第三次全国土壤普查成果质控报告--以宽城县为例.docx",
+    "name": "宽城县、平泉市第三次全国土壤普查成果质控报告--以宽城县为例.docx",
+    "sourcePath": "质控资料反馈/宽城县、平泉市第三次全国土壤普查成果质控报告--以宽城县为例.docx",
+    "order": 7,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "宽城县",
+      "平泉市"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/康保县、承德市本级、合并区、丰宁县、全市及赤城县、沽源县第三次全国土壤普查成果质控报告--以康保县为例.docx",
+    "name": "康保县、承德市本级、合并区、丰宁县、全市及赤城县、沽源县第三次全国土壤普查成果质控报告--以康保县为例.docx",
+    "sourcePath": "质控资料反馈/康保县、承德市本级、合并区、丰宁县、全市及赤城县、沽源县第三次全国土壤普查成果质控报告--以康保县为例.docx",
+    "order": 8,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "康保县",
+      "承德市本级",
+      "合并区",
+      "丰宁县",
+      "全市",
+      "赤城县",
+      "沽源县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/张北县、尚义县、万全区、崇礼区第三次全国土壤普查成果质控报告--以张北县为例.docx",
+    "name": "张北县、尚义县、万全区、崇礼区第三次全国土壤普查成果质控报告--以张北县为例.docx",
+    "sourcePath": "质控资料反馈/张北县、尚义县、万全区、崇礼区第三次全国土壤普查成果质控报告--以张北县为例.docx",
+    "order": 9,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "张北县",
+      "尚义县",
+      "万全区",
+      "崇礼区"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/徐水县、满城、合并区、市级汇总第三次全国土壤普查成果质控报告--以徐水县为例.docx",
+    "name": "徐水县、满城、合并区、市级汇总第三次全国土壤普查成果质控报告--以徐水县为例.docx",
+    "sourcePath": "质控资料反馈/徐水县、满城、合并区、市级汇总第三次全国土壤普查成果质控报告--以徐水县为例.docx",
+    "order": 10,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "徐水县",
+      "满城",
+      "合并区",
+      "市级汇总"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以宣化区为例.docx",
+    "name": "怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以宣化区为例.docx",
+    "sourcePath": "质控资料反馈/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以宣化区为例.docx",
+    "order": 11,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "怀安县",
+      "宣化区",
+      "合并区"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以怀安县为例.docx",
+    "name": "怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以怀安县为例.docx",
+    "sourcePath": "质控资料反馈/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以怀安县为例.docx",
+    "order": 12,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "怀安县",
+      "宣化区",
+      "合并区"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/承德县、兴隆县第三次全国土壤普查成果质控报告--以承德县为例.docx",
+    "name": "承德县、兴隆县第三次全国土壤普查成果质控报告--以承德县为例.docx",
+    "sourcePath": "质控资料反馈/承德县、兴隆县第三次全国土壤普查成果质控报告--以承德县为例.docx",
+    "order": 13,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "承德县",
+      "兴隆县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/文安县、大城县第三次全国土壤普查成果质控报告--以文安县为例.docx",
+    "name": "文安县、大城县第三次全国土壤普查成果质控报告--以文安县为例.docx",
+    "sourcePath": "质控资料反馈/文安县、大城县第三次全国土壤普查成果质控报告--以文安县为例.docx",
+    "order": 14,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "文安县",
+      "大城县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/昌黎县、合并区第三次全国土壤普查成果质控报告--以昌黎县为例.docx",
+    "name": "昌黎县、合并区第三次全国土壤普查成果质控报告--以昌黎县为例.docx",
+    "sourcePath": "质控资料反馈/昌黎县、合并区第三次全国土壤普查成果质控报告--以昌黎县为例.docx",
+    "order": 15,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "昌黎县",
+      "合并区"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/曲阳县第三次全国土壤普查成果质控报告.docx",
+    "name": "曲阳县第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/曲阳县第三次全国土壤普查成果质控报告.docx",
+    "order": 16,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "曲阳县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/望都县、清苑、高阳第三次全国土壤普查成果质控报告--以望都县为例.docx",
+    "name": "望都县、清苑、高阳第三次全国土壤普查成果质控报告--以望都县为例.docx",
+    "sourcePath": "质控资料反馈/望都县、清苑、高阳第三次全国土壤普查成果质控报告--以望都县为例.docx",
+    "order": 17,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "望都县",
+      "清苑",
+      "高阳"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/涞水县第三次全国土壤普查成果质控报告.docx",
+    "name": "涞水县第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/涞水县第三次全国土壤普查成果质控报告.docx",
+    "order": 18,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "涞水县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/涞源县、顺平、易县第三次全国土壤普查成果质控报告--以涞源县为例.docx",
+    "name": "涞源县、顺平、易县第三次全国土壤普查成果质控报告--以涞源县为例.docx",
+    "sourcePath": "质控资料反馈/涞源县、顺平、易县第三次全国土壤普查成果质控报告--以涞源县为例.docx",
+    "order": 19,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "涞源县",
+      "顺平",
+      "易县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/滦平县第三次全国土壤普查成果质控报告.docx",
+    "name": "滦平县第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/滦平县第三次全国土壤普查成果质控报告.docx",
+    "order": 20,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "滦平县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/蔚县、涿鹿县、怀来县第三次全国土壤普查成果质控报告--以蔚县为例.docx",
+    "name": "蔚县、涿鹿县、怀来县第三次全国土壤普查成果质控报告--以蔚县为例.docx",
+    "sourcePath": "质控资料反馈/蔚县、涿鹿县、怀来县第三次全国土壤普查成果质控报告--以蔚县为例.docx",
+    "order": 21,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "蔚县",
+      "涿鹿县",
+      "怀来县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/辛集市第三次全国土壤普查成果质控报告.docx",
+    "name": "辛集市第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/辛集市第三次全国土壤普查成果质控报告.docx",
+    "order": 22,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "辛集市"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/迁西县、遵化市、迁安市第三次全国土壤普查成果质控报告--以迁西县为例.docx",
+    "name": "迁西县、遵化市、迁安市第三次全国土壤普查成果质控报告--以迁西县为例.docx",
+    "sourcePath": "质控资料反馈/迁西县、遵化市、迁安市第三次全国土壤普查成果质控报告--以迁西县为例.docx",
+    "order": 23,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "迁西县",
+      "遵化市",
+      "迁安市"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/阜平县、唐县第三次全国土壤普查成果质控报告--以阜平县为例.docx",
+    "name": "阜平县、唐县第三次全国土壤普查成果质控报告--以阜平县为例.docx",
+    "sourcePath": "质控资料反馈/阜平县、唐县第三次全国土壤普查成果质控报告--以阜平县为例.docx",
+    "order": 24,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "阜平县",
+      "唐县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/隆化县第三次全国土壤普查成果质控报告.docx",
+    "name": "隆化县第三次全国土壤普查成果质控报告.docx",
+    "sourcePath": "质控资料反馈/隆化县第三次全国土壤普查成果质控报告.docx",
+    "order": 25,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "隆化县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/雄县、安新县第三次全国土壤普查成果质控报告--以雄县为例.docx",
+    "name": "雄县、安新县第三次全国土壤普查成果质控报告--以雄县为例.docx",
+    "sourcePath": "质控资料反馈/雄县、安新县第三次全国土壤普查成果质控报告--以雄县为例.docx",
+    "order": 26,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "雄县",
+      "安新县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/青龙县、抚宁区、卢龙县第三次全国土壤普查成果质控报告--以青龙县为例.docx",
+    "name": "青龙县、抚宁区、卢龙县第三次全国土壤普查成果质控报告--以青龙县为例.docx",
+    "sourcePath": "质控资料反馈/青龙县、抚宁区、卢龙县第三次全国土壤普查成果质控报告--以青龙县为例.docx",
+    "order": 27,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "青龙县",
+      "抚宁区",
+      "卢龙县"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "第一轮",
+    "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/高碑店市、涿州市第三次全国土壤普查成果质控报告--以高碑店市为例.docx",
+    "name": "高碑店市、涿州市第三次全国土壤普查成果质控报告--以高碑店市为例.docx",
+    "sourcePath": "质控资料反馈/高碑店市、涿州市第三次全国土壤普查成果质控报告--以高碑店市为例.docx",
+    "order": 28,
+    "complete": true,
+    "uploadedAt": "2026-08-13T03:30:51.921Z",
+    "sharedSource": true,
+    "dataKeys": [
+      "soilType",
+      "soilAttr",
+      "farmland"
+    ],
+    "targets": [
+      "高碑店市",
+      "涿州市"
+    ]
+  }
+]
