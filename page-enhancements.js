@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.1.0';
+  var VERSION = '1.1.1';
 
   function loadScript(src) {
     return new Promise(function (resolve, reject) {
@@ -56,35 +56,36 @@
   }
 
   var modules = [
-    {name:'页面基础增强', src:'./page-enhancements-core.js?v=1.1.0'},
-    {name:'任务单位映射', src:'./task-unit-mappings.js?v=1.1.0'},
-    {name:'北部质控文件路由', src:'./quality-file-routing.js?v=1.1.0'},
-    {name:'片区进度统计', src:'./regional-progress-dashboard.js?v=1.1.0'},
-    {name:'成果分类扩展', src:'./dashboard-extension.js?v=1.1.0'},
-    {name:'参考文件目录', src:'./reference-library.js?v=1.1.0'},
-    {name:'仓库目录清单', src:'./repository-manifest-loader.js?v=1.1.0'},
-    {name:'文件预览与批量下载', src:'./file-preview-batch-download.js?v=1.1.0'},
-    {name:'版本界面', src:'./app-release-ui.js?v=1.1.0'},
-    {name:'三普标识', src:'./soil-survey-logo-v1.0.2.js?v=1.1.0', logo:true},
-    {name:'版本一致性', src:'./app-version-guard.js?v=1.1.0'},
-    {name:'质控导入界面', src:'./admin-quality-ui.js?v=1.1.0'},
-    {name:'质控文件上传', src:'./admin-quality-upload.js?v=1.1.0'},
-    {name:'管理员导入', src:'./admin-import-v2.js?v=1.1.0'},
-    {name:'导入数据桥接', src:'./admin-import-v2-bridge.js?v=1.1.0'},
-    {name:'导入自动识别', src:'./admin-auto-classifier.js?v=1.1.0'},
-    {name:'北部质控权威索引', src:'./north-quality-authority-bridge.js?v=1.1.0'},
-    {name:'北部共享质控上传适配', src:'./north-quality-upload-adapter.js?v=1.1.0'},
-    {name:'手机ZIP文件选择', src:'./mobile-file-picker-fix.js?v=1.1.0'},
-    {name:'参考资料导入', src:'./reference-import-mode.js?v=1.1.0'},
-    {name:'上传凭证兼容', src:'./upload-token-default.js?v=1.1.0'},
-    {name:'答复匹配核心', src:'./reply-workflow-core.js?v=1.1.0'},
-    {name:'整改答复批次', src:'./upload-auth-reply-batch.js?v=1.1.0'},
-    {name:'整改答复实时进度', src:'./reply-upload-progress.js?v=1.1.0'},
-    {name:'管理员删除', src:'./admin-delete-manager.js?v=1.1.0'},
-    {name:'PPTX自动拆分', src:'./pptx-auto-split.js?v=1.1.0'},
-    {name:'管理员上传状态修复', src:'./admin-upload-transport-fix.js?v=1.1.0'},
-    {name:'大文件混合上传', src:'./hybrid-staged-upload.js?v=1.1.0'},
-    {name:'统一成功提示', src:'./upload-success-notice.js?v=1.1.0'}
+    {name:'页面基础增强', src:'./page-enhancements-core.js?v=1.1.1'},
+    {name:'任务单位映射', src:'./task-unit-mappings.js?v=1.1.1'},
+    {name:'北部质控文件路由', src:'./quality-file-routing.js?v=1.1.1'},
+    {name:'片区进度统计', src:'./regional-progress-dashboard.js?v=1.1.1'},
+    {name:'成果分类扩展', src:'./dashboard-extension.js?v=1.1.1'},
+    {name:'参考文件目录', src:'./reference-library.js?v=1.1.1'},
+    {name:'仓库目录清单', src:'./repository-manifest-loader.js?v=1.1.1'},
+    {name:'文件预览与批量下载', src:'./file-preview-batch-download.js?v=1.1.1'},
+    {name:'移动端弹窗与参考资料批量下载', src:'./mobile-dialog-reference-batch.js?v=1.1.1'},
+    {name:'版本界面', src:'./app-release-ui.js?v=1.1.1'},
+    {name:'三普标识', src:'./soil-survey-logo-v1.0.2.js?v=1.1.1', logo:true},
+    {name:'版本一致性', src:'./app-version-guard.js?v=1.1.1'},
+    {name:'质控导入界面', src:'./admin-quality-ui.js?v=1.1.1'},
+    {name:'质控文件上传', src:'./admin-quality-upload.js?v=1.1.1'},
+    {name:'管理员导入', src:'./admin-import-v2.js?v=1.1.1'},
+    {name:'导入数据桥接', src:'./admin-import-v2-bridge.js?v=1.1.1'},
+    {name:'导入自动识别', src:'./admin-auto-classifier.js?v=1.1.1'},
+    {name:'北部质控权威索引', src:'./north-quality-authority-bridge.js?v=1.1.1'},
+    {name:'北部共享质控上传适配', src:'./north-quality-upload-adapter.js?v=1.1.1'},
+    {name:'手机ZIP文件选择', src:'./mobile-file-picker-fix.js?v=1.1.1'},
+    {name:'参考资料导入', src:'./reference-import-mode.js?v=1.1.1'},
+    {name:'上传凭证兼容', src:'./upload-token-default.js?v=1.1.1'},
+    {name:'答复匹配核心', src:'./reply-workflow-core.js?v=1.1.1'},
+    {name:'整改答复批次', src:'./upload-auth-reply-batch.js?v=1.1.1'},
+    {name:'整改答复实时进度', src:'./reply-upload-progress.js?v=1.1.1'},
+    {name:'管理员删除', src:'./admin-delete-manager.js?v=1.1.1'},
+    {name:'PPTX自动拆分', src:'./pptx-auto-split.js?v=1.1.1'},
+    {name:'管理员上传状态修复', src:'./admin-upload-transport-fix.js?v=1.1.1'},
+    {name:'大文件混合上传', src:'./hybrid-staged-upload.js?v=1.1.1'},
+    {name:'统一成功提示', src:'./upload-success-notice.js?v=1.1.1'}
   ];
 
   var chain = modules.reduce(function (promise, module, index) {
