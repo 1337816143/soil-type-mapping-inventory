@@ -4,6 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 
 const pkg = JSON.parse(fs.readFileSync('data/north-quality-feedback-package.json', 'utf8'));
+const activeKeys = ['soilType','soilAttr','farmland'];
 assert.strictEqual(pkg.documentCount, 28, '北部质控包必须登记28份报告');
 assert.strictEqual(pkg.documents.length, 28, '北部质控包文档数组数量不一致');
 assert.strictEqual(new Set(pkg.documents.map(x => x.filename)).size, 28, '北部质控包文件名不得重复');
@@ -12,6 +13,12 @@ pkg.documents.forEach((doc) => {
   assert(/^([a-f0-9]{64})$/.test(doc.sha256), `SHA-256格式错误：${doc.filename}`);
   assert(doc.targets.length >= 1, `缺少关联地区：${doc.filename}`);
   assert.strictEqual(doc.batch, '第一轮', `批次错误：${doc.filename}`);
-  assert.deepStrictEqual(doc.dataKeys, ['soilType','soilAttr','farmland','degradation','specialty','agriSuitability'], `成果类型范围错误：${doc.filename}`);
+  activeKeys.forEach((key) => {
+    assert(Array.isArray(doc.associationsByDataKey && doc.associationsByDataKey[key]) && doc.associationsByDataKey[key].length,
+      `当前确认成果缺少任务关联：${doc.filename} / ${key}`);
+  });
 });
-console.log(`northern QC package metadata validation passed: ${pkg.documentCount} documents, ${pkg.totalBytes} bytes`);
+const routing = fs.readFileSync('quality-file-routing.js', 'utf8');
+assert(routing.includes("var COVERED_KEYS = ['soilType','soilAttr','farmland'];"), '运行时北部成果范围未限制为3类');
+assert(routing.includes('scopeAuthorityDocument'), '旧登记数据未经过活动成果范围过滤');
+console.log(`northern QC package metadata validation passed: ${pkg.documentCount} documents, ${pkg.totalBytes} bytes, 3 active result types`);
