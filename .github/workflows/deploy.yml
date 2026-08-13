@@ -39,6 +39,7 @@ jobs:
             app-release-ui.js
             app-version-guard.js
             repository-manifest-loader.js
+            file-preview-batch-download.js
             reply-workflow-core.js
             reply-upload-progress.js
             upload-success-notice.js
@@ -90,7 +91,7 @@ jobs:
           required_files=(
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
-            app-version-guard.js repository-manifest-loader.js reply-workflow-core.js
+            app-version-guard.js repository-manifest-loader.js file-preview-batch-download.js reply-workflow-core.js
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
             task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js
@@ -107,6 +108,7 @@ jobs:
             scripts/validate-admin-upload-transport.js scripts/validate-north-quality-routing.js
             scripts/validate-auto-import-classifier.js scripts/validate-north-shared-workflow.js
             scripts/validate-north-authority.js scripts/validate-mobile-file-picker.js
+            scripts/validate-file-preview-batch-download.js
             scripts/build-repository-manifest.py scripts/bump-version.js
             data/admin-import-index.json data/north-quality-feedback-package.json data/repository-tree.json
           )
@@ -117,6 +119,7 @@ jobs:
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check file-preview-batch-download.js
           node --check quality-file-routing.js
           node --check admin-auto-classifier.js
           node --check north-quality-authority-bridge.js
@@ -145,6 +148,7 @@ jobs:
           node --check scripts/validate-north-shared-workflow.js
           node --check scripts/validate-north-authority.js
           node --check scripts/validate-mobile-file-picker.js
+          node --check scripts/validate-file-preview-batch-download.js
           python3 -m py_compile scripts/build-repository-manifest.py
           node scripts/validate-upload-token.js
           node scripts/validate-reply-workflow.js
@@ -156,6 +160,7 @@ jobs:
           node scripts/validate-north-shared-workflow.js
           node scripts/validate-north-authority.js
           node scripts/validate-mobile-file-picker.js
+          node scripts/validate-file-preview-batch-download.js
           node scripts/validate-project.js
 
           python3 <<'PY'
