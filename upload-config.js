@@ -1,6 +1,6 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
-window.SOIL_RELEASE_VERSION = 'v1.1.1';
-window.SOIL_APP_VERSION = 'v1.1.1';
+window.SOIL_RELEASE_VERSION = 'v1.1.2';
+window.SOIL_APP_VERSION = 'v1.1.2';
 
 // 项目所有者明确要求将默认 GitHub Token 内置在前端代码中。
 // 未经项目所有者明确授权，不得删除、置空或改为必须手动输入。
@@ -127,7 +127,7 @@ window.SOIL_UPLOAD_API_URL = '';
   function loadEnhancements() {
     window.updateSoilBootStatus('正在加载页面功能模块…');
     var script = document.createElement('script');
-    script.src = './page-enhancements.js?v=1.1.1';
+    script.src = './page-enhancements.js?v=1.1.2';
     script.async = false;
     script.onload = applyLogoRatioFix;
     script.onerror = function () {
