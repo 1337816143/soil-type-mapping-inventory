@@ -56,7 +56,8 @@ assert(source.includes("'三普参考资料_' + timestampName() + '.zip'"), '参
 assert(source.includes('referenceCatalog()'), '参考资料批量下载未从仓库目录生成目录');
 assert(source.includes('admin.referenceRoot'), '参考资料批量下载未限制到参考资料根目录');
 assert(source.includes('admin.raw(path)'), '参考资料批量下载未使用实际仓库文件地址');
-assert(!/密码|credPass|ensureAdminToken/.test(source), '公开参考资料批量下载不应要求管理员密码');
+assert(!/credPass|ensureAdminToken|promptAdminPassword|adminPassword/.test(source), '公开参考资料批量下载不应调用管理员密码/凭证逻辑');
+assert(source.includes('不需要管理员密码'), '参考资料批量下载界面未明确说明无需管理员密码');
 
 assert(loader.includes('mobile-dialog-reference-batch.js?v='), '新移动端/参考批量模块未加入页面加载器');
 assert(deploy.includes('mobile-dialog-reference-batch.js'), 'Pages部署未包含新移动端/参考批量模块');
