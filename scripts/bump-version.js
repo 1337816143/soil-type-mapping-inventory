@@ -62,6 +62,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'reference-library.js',
   'repository-manifest-loader.js',
   'file-preview-batch-download.js',
+  'mobile-dialog-reference-batch.js',
   'app-release-ui.js',
   'soil-survey-logo-v1.0.2.js',
   'app-version-guard.js',
