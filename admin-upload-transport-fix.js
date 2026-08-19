@@ -90,9 +90,10 @@
     if (!button) return false;
 
     // 保留已经验证可用的原始 fetch + Bearer / Git Data API 上传链路，
-    // 但不再把 authReady 永久置为 1。authReady=1 会绕过 upload-auth-reply-batch.js
-    // 的凭证校验与失效凭证恢复，最终把旧 Token 直接发给 GitHub 并得到 Bad credentials。
-    // 这里只负责上传状态展示；凭证校验仍由统一认证拦截器接管。
+    // 但不再把 authReady 永久置为 1。旧逻辑 `button.dataset.authReady = '1'`
+    // 会绕过 upload-auth-reply-batch.js 的凭证校验与失效凭证恢复，最终把旧 Token
+    // 直接发给 GitHub 并得到 Bad credentials。这里只负责上传状态展示；凭证校验仍由
+    // 统一认证拦截器接管。
     if (button.dataset.authReady === '1') delete button.dataset.authReady;
     button.dataset.adminStatusInPlace = '1';
     return true;
