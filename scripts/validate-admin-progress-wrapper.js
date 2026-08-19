@@ -73,5 +73,6 @@ assert.doesNotThrow(() => {
   }
 }, '管理员进度包装器发生递归或调用栈溢出');
 
-assert.strictEqual(button.dataset.authReady, '1', '管理员上传未跳过重复凭证弹窗');
-console.log('admin progress wrapper recursion validation passed');
+assert.strictEqual(button.dataset.adminStatusInPlace, '1', '管理员上传状态标记未安装');
+assert.strictEqual(button.dataset.authReady, undefined, '管理员上传状态脚本不应绕过统一凭证校验');
+console.log('admin progress wrapper recursion and credential-gate validation passed');
