@@ -39,8 +39,9 @@ assert(hybrid.includes('39 MiB 分块'), '超限文件分块策略被删除');
 
 assert(referenceMode.includes('function isReferenceContext()'), '参考资料显式导入上下文保护缺失');
 assert(referenceMode.includes("Q.state.context.kind === 'reference'"), '参考资料入口未锁定 reference 上下文');
-assert(referenceMode.includes('function ensureReferenceMode()'), '参考资料导入类型恢复逻辑缺失');
+assert(referenceMode.includes('function ensureReferenceMode('), '参考资料导入类型恢复逻辑缺失');
 assert(referenceMode.includes("closest('#adm-ok')"), '点击上传前未再次保护参考资料导入类型');
+assert(!referenceMode.includes('new MutationObserver'), '参考资料导入不得重新引入长期 DOM 观察器');
 
 const transportPosition = loader.indexOf('admin-upload-transport-fix.js');
 const hybridPosition = loader.indexOf('hybrid-staged-upload.js');
@@ -59,5 +60,6 @@ assert(config.includes('installAtomicBootScreen'), '原子启动逻辑被截断'
 assert(maintenance.includes('默认 GitHub Token 内置在前端代码中'), '维护约束未保留内置 Token');
 assert(fs.existsSync('scripts/validate-embedded-token-live.js'), '缺少内置 Token 实际 API 验证脚本');
 assert(fs.existsSync('scripts/validate-admin-progress-wrapper.js'), '缺少管理员进度递归动态回归测试');
+assert(fs.existsSync('scripts/validate-reference-upload-stability.js'), '缺少参考资料上传稳定性回归测试');
 
-console.log('reference import mode, credential validation, stale-token cleanup and original upload transport validation passed');
+console.log('reference import stability, credential validation, stale-token cleanup and original upload transport validation passed');
