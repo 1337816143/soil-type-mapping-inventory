@@ -1,6 +1,6 @@
 // 当前项目版本。自 v1.0.0 起采用语义化版本号。
-window.SOIL_RELEASE_VERSION = 'v1.1.3';
-window.SOIL_APP_VERSION = 'v1.1.3';
+window.SOIL_RELEASE_VERSION = 'v1.1.4';
+window.SOIL_APP_VERSION = 'v1.1.4';
 
 // 项目所有者明确要求将默认 GitHub Token 内置在前端代码中。
 // 未经项目所有者明确授权，不得删除、置空或改为必须手动输入。
@@ -13,8 +13,10 @@ window.SOIL_APP_VERSION = 'v1.1.3';
   var key = 'soilGithubUploadTokenV2';
   var savedToken = '';
   try {
-    // 浏览器中的 Token 只作为临时覆盖；没有覆盖时始终使用内置 Token。
-    savedToken = sessionStorage.getItem(key) || localStorage.getItem(key) || '';
+    // 临时覆盖只允许保存在当前会话。主动清理旧版本遗留的 localStorage Token，
+    // 避免已经失效的历史凭证优先覆盖项目内置默认凭证并触发 Bad credentials。
+    savedToken = sessionStorage.getItem(key) || '';
+    localStorage.removeItem(key);
   } catch (error) {}
 
   window.SOIL_GITHUB_UPLOAD_TOKEN = String(
@@ -127,7 +129,7 @@ window.SOIL_UPLOAD_API_URL = '';
   function loadEnhancements() {
     window.updateSoilBootStatus('正在加载页面功能模块…');
     var script = document.createElement('script');
-    script.src = './page-enhancements.js?v=1.1.3';
+    script.src = './page-enhancements.js?v=1.1.4';
     script.async = false;
     script.onload = applyLogoRatioFix;
     script.onerror = function () {
