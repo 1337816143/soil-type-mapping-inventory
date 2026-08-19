@@ -5,16 +5,20 @@
   var scheduled = false;
 
   function migrateCredentialStorage() {
-    var token = '';
+    var sessionToken = '';
     try {
-      token = sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY) || '';
+      sessionToken = sessionStorage.getItem(TOKEN_KEY) || '';
+      // 旧版本曾允许把临时覆盖凭证写入 localStorage。长期残留的旧 Token
+      // 会优先覆盖项目内置凭证，并在失效后直接造成 Bad credentials。
+      // 现在只保留当前会话覆盖，启动时主动清理历史持久化值。
+      localStorage.removeItem(TOKEN_KEY);
     } catch (error) {}
 
     var defaultToken = String(window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN || '').trim();
     // 内置 Token 是项目所有者明确要求的默认凭证，不得在增强脚本中删除或置空。
     window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN = defaultToken;
     window.SOIL_GITHUB_UPLOAD_TOKEN = String(
-      token || window.SOIL_GITHUB_UPLOAD_TOKEN || defaultToken
+      sessionToken || defaultToken || ''
     ).trim();
   }
 

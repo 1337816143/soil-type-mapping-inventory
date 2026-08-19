@@ -5,9 +5,23 @@
   var Q = window.SoilAdminImport;
   if (!A || !Q) return;
 
+  function isReferenceContext() {
+    return !!(Q.state && Q.state.context && Q.state.context.kind === 'reference');
+  }
+
+  function ensureReferenceMode() {
+    if (!isReferenceContext()) return false;
+    var kind = document.getElementById('adm-kind');
+    if (kind && kind.value !== 'reference') {
+      kind.value = 'reference';
+      if (typeof kind.onchange === 'function') kind.onchange();
+    }
+    return true;
+  }
+
   function isReferenceMode() {
     var kind = document.getElementById('adm-kind');
-    return !!kind && kind.value === 'reference';
+    return isReferenceContext() || (!!kind && kind.value === 'reference');
   }
 
   function relativeDirectory(path) {
@@ -31,6 +45,7 @@
     var modal = document.getElementById('soilAdminImport');
     if (!modal) return;
 
+    if (isReferenceContext()) ensureReferenceMode();
     var reference = isReferenceMode();
     modal.classList.toggle('reference-import-mode', reference);
     if (!reference) return;
@@ -59,8 +74,9 @@
 
   function scheduleDecorate() {
     setTimeout(decorateReferencePreview, 0);
-    setTimeout(decorateReferencePreview, 120);
-    setTimeout(decorateReferencePreview, 700);
+    setTimeout(decorateReferencePreview, 160);
+    setTimeout(decorateReferencePreview, 450);
+    setTimeout(decorateReferencePreview, 900);
   }
 
   function installStyles() {
@@ -84,6 +100,7 @@
       var originalNormalize = Q.normalizePreparedFiles;
       Q.normalizePreparedFiles = function (files) {
         var result = originalNormalize(files);
+        if (isReferenceContext()) ensureReferenceMode();
         clearStructuredMetadata();
         scheduleDecorate();
         return result;
@@ -94,6 +111,7 @@
       var originalAcceptSplit = Q.acceptSplitFiles;
       Q.acceptSplitFiles = function (files) {
         var result = originalAcceptSplit(files);
+        if (isReferenceContext()) ensureReferenceMode();
         clearStructuredMetadata();
         scheduleDecorate();
         return result;
@@ -113,10 +131,18 @@
     modal.dataset.referenceModeBound = '1';
 
     modal.addEventListener('change', function (event) {
+      if (event.target && event.target.id === 'adm-kind' && isReferenceContext()) {
+        ensureReferenceMode();
+      }
       if (event.target && (event.target.id === 'adm-kind' || event.target.id === 'adm-files' || event.target.id === 'adm-folder')) {
         scheduleDecorate();
       }
     });
+
+    modal.addEventListener('click', function (event) {
+      var upload = event.target && event.target.closest && event.target.closest('#adm-ok');
+      if (upload && isReferenceContext()) ensureReferenceMode();
+    }, true);
 
     var observer = new MutationObserver(function () {
       if (isReferenceMode()) decorateReferencePreview();
