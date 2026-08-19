@@ -89,10 +89,11 @@
     var button = document.getElementById('adm-ok');
     if (!button) return false;
 
-    // 管理员导入沿用替换三普 Logo 之前已经验证可用的原始 fetch + Bearer
-    // Git Data API 上传链路。这里只跳过后来新增的重复凭证弹窗，不接管请求、
-    // 不改写 window.fetch，也不删除或置空代码中的内置 Token。
-    button.dataset.authReady = '1';
+    // 保留已经验证可用的原始 fetch + Bearer / Git Data API 上传链路，
+    // 但不再把 authReady 永久置为 1。authReady=1 会绕过 upload-auth-reply-batch.js
+    // 的凭证校验与失效凭证恢复，最终把旧 Token 直接发给 GitHub 并得到 Bad credentials。
+    // 这里只负责上传状态展示；凭证校验仍由统一认证拦截器接管。
+    if (button.dataset.authReady === '1') delete button.dataset.authReady;
     button.dataset.adminStatusInPlace = '1';
     return true;
   }
