@@ -55,7 +55,9 @@ const documentStub = {
     return null;
   },
   addEventListener(type, handler, capture){
-    if (capture) listeners[type] = handler;
+    if (!capture) return;
+    if (!listeners[type]) listeners[type] = [];
+    listeners[type].push(handler);
   }
 };
 const context = {
@@ -71,7 +73,7 @@ vm.runInNewContext(source, context, {filename:'reference-import-mode.js'});
 
 q.open({kind:'reference'});
 kind.value = 'quality';
-listeners.change({target:{id:'adm-kind'}});
+(listeners.change || []).forEach((handler) => handler({target:{id:'adm-kind'}}));
 assert.strictEqual(kind.value, 'reference', '自动分类器尝试改成质控意见时未在同一事件内恢复参考资料');
 
 const selected = classifier.selectionMetadata(state.files);
@@ -80,7 +82,7 @@ assert.strictEqual(selected.unresolved, 0, '参考资料不应要求成果/批�
 assert.strictEqual(selected.metas[0].kind, 'reference', '参考资料文件元数据未锁定');
 
 const uploadButton = {closest(selector){ return selector === '#adm-ok' ? this : null; }};
-listeners.click({target:uploadButton});
+(listeners.click || []).forEach((handler) => handler({target:uploadButton}));
 assert.strictEqual(kind.value, 'reference', '点击开始上传前导入类型未保持参考资料');
 assert.strictEqual(state.files[0].batch, '', '参考资料仍携带质控批次元数据');
 assert.strictEqual(state.files[0].city, '', '参考资料仍携带质控城市元数据');
