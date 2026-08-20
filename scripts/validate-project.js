@@ -21,6 +21,7 @@ const releaseUi = read('app-release-ui.js');
 const versionGuard = read('app-version-guard.js');
 const loader = read('page-enhancements.js');
 const manifestLoader = read('repository-manifest-loader.js');
+const referenceUpload = read('reference-upload.js');
 const fileAccess = read('file-preview-batch-download.js');
 const mobileReference = read('mobile-dialog-reference-batch.js');
 const replyCore = read('reply-workflow-core.js');
@@ -57,6 +58,7 @@ if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未�
 [
   'reference-library.js',
   'repository-manifest-loader.js',
+  'reference-upload.js',
   'file-preview-batch-download.js',
   'mobile-dialog-reference-batch.js',
   'app-release-ui.js',
@@ -72,6 +74,7 @@ if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未�
 ].forEach((script) => {
   if (!loader.includes(`${script}?v=${bareVersion}`)) fail(`${script} 未按当前版本加载`);
 });
+if (loader.includes('reference-import-mode.js')) fail('旧共享参考资料导入保护仍在加载，参考资料与质控上传未彻底隔离');
 
 const orderedScripts = [
   'page-enhancements-core.js',
@@ -80,6 +83,7 @@ const orderedScripts = [
   'dashboard-extension.js',
   'reference-library.js',
   'repository-manifest-loader.js',
+  'reference-upload.js',
   'file-preview-batch-download.js',
   'mobile-dialog-reference-batch.js',
   'app-release-ui.js',
@@ -98,6 +102,18 @@ const positions = orderedScripts.map((name) => loader.indexOf(name));
 if (positions.some((position) => position < 0) || positions.some((position, index) => index && position < positions[index - 1])) {
   fail('页面脚本加载顺序错误');
 }
+
+if (!reference.includes('window.openSoilReferenceUpload()')) fail('参考文件管理员入口未切换到独立上传器');
+if (reference.includes("openSoilAdminImport({kind: 'reference'")) fail('参考文件管理员入口仍复用质控上传器');
+if (referenceUpload.includes('SoilAdminAutoClassifier') || referenceUpload.includes('SoilAdminImport')) fail('参考资料上传器仍依赖质控自动识别/状态');
+if (!referenceUpload.includes("var STAGE_ROOT = '.reference-upload';")) fail('参考资料上传未使用独立暂存目录');
+if (!referenceUpload.includes("var branch = 'reference-upload-' + uploadId;")) fail('参考资料上传未使用独立分支');
+if (!referenceUpload.includes('item.manualDirectory = true') || !referenceUpload.includes('if (!item || item.manualDirectory) return item;')) fail('参考资料人工目录选择可能被自动刷新覆盖');
+if (!referenceUpload.includes('window.visualViewport') || !referenceUpload.includes('env(safe-area-inset-top)') || !referenceUpload.includes('env(safe-area-inset-bottom)')) fail('参考资料上传窗口未完整适配手机可视区/安全区');
+if (referenceUpload.includes('new MutationObserver')) fail('参考资料独立上传器存在长期 DOM 观察器');
+if (!referenceUpload.includes(requiredNotice)) fail('参考资料上传成功提醒缺失');
+if (!fs.existsSync('.github/workflows/import-reference.yml')) fail('缺少参考资料专用归档工作流');
+if (!fs.existsSync('scripts/validate-reference-upload-isolation.js')) fail('缺少参考资料上传隔离回归测试');
 
 if (!fileAccess.includes('openFilePreview') || !fileAccess.includes('openBatchDownload')) fail('成果文件预览/批量下载模块不完整');
 if (!fileAccess.includes('按市选择') || !fileAccess.includes('按作业单位选择') || !fileAccess.includes('按成果类型选择') || !fileAccess.includes('按区县选择')) fail('成果批量下载交叉筛选不完整');
