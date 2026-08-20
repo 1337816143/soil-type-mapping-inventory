@@ -10,7 +10,8 @@ const tokenDefault = fs.readFileSync('upload-token-default.js', 'utf8');
 const loader = fs.readFileSync('page-enhancements.js', 'utf8');
 const config = fs.readFileSync('upload-config.js', 'utf8');
 const maintenance = fs.readFileSync('MAINTENANCE_RULES.md', 'utf8');
-const referenceMode = fs.readFileSync('reference-import-mode.js', 'utf8');
+const referenceUpload = fs.readFileSync('reference-upload.js', 'utf8');
+const referenceLibrary = fs.readFileSync('reference-library.js', 'utf8');
 const version = fs.readFileSync('VERSION', 'utf8').trim().slice(1);
 
 assert(source.includes('function normalizeStage(text)'), '管理员上传状态缺少统一格式化');
@@ -37,18 +38,21 @@ assert(hybrid.includes("return api('/git/blobs'"), '原始 Git Blob 创建接口
 assert(hybrid.includes('正在整文件上传'), '39 MiB 整文件上传策略被删除');
 assert(hybrid.includes('39 MiB 分块'), '超限文件分块策略被删除');
 
-assert(referenceMode.includes('function isReferenceContext()'), '参考资料显式导入上下文保护缺失');
-assert(referenceMode.includes("Q.state.context.kind === 'reference'"), '参考资料入口未锁定 reference 上下文');
-assert(referenceMode.includes('function ensureReferenceMode('), '参考资料导入类型恢复逻辑缺失');
-assert(referenceMode.includes("closest('#adm-ok')"), '点击上传前未再次保护参考资料导入类型');
-assert(!referenceMode.includes('new MutationObserver'), '参考资料导入不得重新引入长期 DOM 观察器');
+assert(referenceLibrary.includes('window.openSoilReferenceUpload()'), '参考资料入口未切换到独立上传通道');
+assert(!referenceLibrary.includes("openSoilAdminImport({kind: 'reference'"), '参考资料入口仍复用质控管理员导入');
+assert(referenceUpload.includes("var STAGE_ROOT = '.reference-upload';"), '参考资料未使用独立暂存根目录');
+assert(referenceUpload.includes("var branch = 'reference-upload-' + uploadId;"), '参考资料未使用独立上传分支');
+assert(!referenceUpload.includes('SoilAdminAutoClassifier'), '参考资料上传仍调用质控自动分类器');
+assert(!referenceUpload.includes('SoilAdminImport'), '参考资料上传仍复用质控导入状态');
+assert(!referenceUpload.includes('new MutationObserver'), '参考资料上传不得重新引入长期 DOM 观察器');
 
 const transportPosition = loader.indexOf('admin-upload-transport-fix.js');
 const hybridPosition = loader.indexOf('hybrid-staged-upload.js');
 assert(transportPosition >= 0, '页面未加载管理员上传状态修复脚本');
 assert(hybridPosition > transportPosition, '状态修复必须在混合上传脚本之前加载');
 assert(loader.includes(`admin-upload-transport-fix.js?v=${version}`), '管理员上传状态脚本缓存版本不一致');
-assert(loader.includes(`reference-import-mode.js?v=${version}`), '参考资料导入保护脚本缓存版本不一致');
+assert(loader.includes(`reference-upload.js?v=${version}`), '独立参考资料上传脚本缓存版本不一致');
+assert(!loader.includes('reference-import-mode.js'), '旧共享参考资料模式仍在加载，尚未完成隔离');
 
 assert(config.includes('var tokenCodes = ['), '内置 Token 数据被删除');
 assert(config.includes('savedToken || window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN'), '内置 Token 回退被删除');
@@ -60,6 +64,7 @@ assert(config.includes('installAtomicBootScreen'), '原子启动逻辑被截断'
 assert(maintenance.includes('默认 GitHub Token 内置在前端代码中'), '维护约束未保留内置 Token');
 assert(fs.existsSync('scripts/validate-embedded-token-live.js'), '缺少内置 Token 实际 API 验证脚本');
 assert(fs.existsSync('scripts/validate-admin-progress-wrapper.js'), '缺少管理员进度递归动态回归测试');
-assert(fs.existsSync('scripts/validate-reference-upload-stability.js'), '缺少参考资料上传稳定性回归测试');
+assert(fs.existsSync('scripts/validate-reference-upload-isolation.js'), '缺少独立参考资料上传隔离回归测试');
+assert(fs.existsSync('.github/workflows/import-reference.yml'), '缺少参考资料专用 Actions 归档工作流');
 
-console.log('reference import stability, credential validation, stale-token cleanup and original upload transport validation passed');
+console.log('quality upload transport + isolated reference upload + credential validation passed');

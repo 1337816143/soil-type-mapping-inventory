@@ -245,7 +245,7 @@
         '<button id="ref-refresh" class="ref-btn alt">刷新目录</button>' +
         '<div class="ref-note">仓库内共 ' + count + ' 个参考文件，保持原目录层级，点击可直接下载。</div></div>';
 
-      categories.forEach(function (name, index) {
+      categories.forEach(function (name) {
         var files = groups[name];
         files.sort(function (a, b) { return a.path.localeCompare(b.path, 'zh-CN'); });
         html += '<details class="ref-cat" data-category="' + A.esc(name.toLowerCase()) + '">' +
@@ -290,7 +290,11 @@
 
       document.getElementById('ref-refresh').onclick = function () { render(true); };
       document.getElementById('ref-admin').onclick = function () {
-        window.openSoilAdminImport({kind: 'reference', suggestedDirectory: A.referenceRoot});
+        if (typeof window.openSoilReferenceUpload !== 'function') {
+          alert('参考资料独立上传组件仍在加载，请稍后重试。');
+          return;
+        }
+        window.openSoilReferenceUpload();
       };
       document.getElementById('ref-delete').onclick = function () {
         if (typeof window.openSoilAdminDelete !== 'function') {
@@ -306,20 +310,9 @@
 
   window.refreshSoilReferenceLibrary = function () { return render(true); };
 
-  function load(src) {
-    return new Promise(function (resolve, reject) {
-      var script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
   function init() {
     css();
     installTab();
-    load('./admin-import.js').catch(function () { console.error('管理员导入脚本加载失败'); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
