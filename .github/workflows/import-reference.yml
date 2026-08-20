@@ -1,0 +1,239 @@
+name: Import reference staging branch
+
+on:
+  push:
+    branches:
+      - 'reference-upload-*'
+    paths:
+      - '.reference-upload/ready.json'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: soil-reference-import
+  cancel-in-progress: false
+
+jobs:
+  import-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout reference staging branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Validate and restore reference files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json
+          import shutil
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          ready_path = root / '.reference-upload' / 'ready.json'
+          ready = json.loads(ready_path.read_text(encoding='utf-8'))
+          if ready.get('schemaVersion') != 3:
+              raise SystemExit('不支持的参考资料 ready 清单版本')
+
+          manifest_rel = str(ready.get('manifestPath') or '')
+          manifest_posix = PurePosixPath(manifest_rel)
+          if not manifest_rel.startswith('.reference-upload/') or manifest_posix.is_absolute() or '..' in manifest_posix.parts:
+              raise SystemExit('manifestPath 非法')
+          manifest_path = root / manifest_rel
+          manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+          if manifest.get('schemaVersion') != 3 or manifest.get('kind') != 'reference':
+              raise SystemExit('参考资料导入清单格式无效')
+          upload_id = str(manifest.get('uploadId') or '')
+          if not upload_id or upload_id != str(ready.get('uploadId') or ''):
+              raise SystemExit('uploadId 不一致')
+          if str(manifest.get('sourceBranch') or '') != 'reference-upload-' + upload_id:
+              raise SystemExit('参考资料来源分支不一致')
+          if str(manifest.get('targetBranch') or 'main') != 'main':
+              raise SystemExit('参考资料只允许归档到 main')
+
+          reference_root = str(manifest.get('referenceRoot') or 'reference-files/third-soil-survey').strip('/')
+          if reference_root != 'reference-files/third-soil-survey':
+              raise SystemExit('参考资料根目录被修改')
+
+          direct_limit = int(manifest.get('singleBlobLimit') or 0)
+          chunk_size = int(manifest.get('chunkSize') or 0)
+          if direct_limit != 39 * 1024 * 1024 or chunk_size != 39 * 1024 * 1024:
+              raise SystemExit('参考资料上传阈值配置不一致')
+
+          files = manifest.get('files')
+          if not isinstance(files, list) or not files:
+              raise SystemExit('参考资料导入清单中没有文件')
+
+          restored = Path('/tmp/soil-reference-restored')
+          if restored.exists():
+              shutil.rmtree(restored)
+          restored.mkdir(parents=True)
+
+          def stage_file(raw):
+              value = str(raw or '')
+              posix = PurePosixPath(value)
+              if not value.startswith('.reference-upload/') or posix.is_absolute() or '..' in posix.parts:
+                  raise SystemExit(f'非法参考资料暂存路径：{value}')
+              source = root / value
+              if not source.is_file():
+                  raise SystemExit(f'找不到参考资料暂存文件：{value}')
+              return source
+
+          def target_path(raw):
+              value = str(raw or '').replace('\\', '/').strip('/')
+              posix = PurePosixPath(value)
+              if not value or posix.is_absolute() or '..' in posix.parts:
+                  raise SystemExit(f'非法参考资料目标路径：{raw}')
+              if value != reference_root and not value.startswith(reference_root + '/'):
+                  raise SystemExit(f'参考资料越界：{value}')
+              return value
+
+          for index, item in enumerate(sorted(files, key=lambda x: int(x.get('order') or 0)), start=1):
+              target_path(item.get('targetPath'))
+              storage = str(item.get('storage') or '')
+              output = restored / f'{index:04d}.bin'
+              total = 0
+
+              if storage == 'whole':
+                  whole = item.get('whole')
+                  if not isinstance(whole, dict):
+                      raise SystemExit(f'整文件 {index} 缺少 whole 信息')
+                  source = stage_file(whole.get('path'))
+                  expected = int(whole.get('size') or 0)
+                  if expected <= 0 or expected > direct_limit or source.stat().st_size != expected:
+                      raise SystemExit(f'整文件大小异常：{item.get("originalName") or index}')
+                  shutil.copy2(source, output)
+                  total = expected
+              elif storage == 'chunked':
+                  chunks = item.get('chunks')
+                  if not isinstance(chunks, list) or len(chunks) < 2:
+                      raise SystemExit(f'大文件分块无效：{item.get("originalName") or index}')
+                  with output.open('wb') as destination:
+                      for chunk in chunks:
+                          source = stage_file(chunk.get('path'))
+                          expected = int(chunk.get('size') or 0)
+                          if expected <= 0 or expected > chunk_size or source.stat().st_size != expected:
+                              raise SystemExit(f'分块大小异常：{chunk.get("path")}')
+                          with source.open('rb') as handle:
+                              shutil.copyfileobj(handle, destination, length=1024 * 1024)
+                          total += expected
+              else:
+                  raise SystemExit(f'不支持的参考资料存储方式：{storage}')
+
+              if total != int(item.get('size') or -1):
+                  raise SystemExit(f'参考资料文件大小校验失败：{item.get("originalName") or index}')
+              if total >= 100 * 1024 * 1024:
+                  raise SystemExit(f'Git 仓库不接受100 MiB及以上文件：{item.get("originalName") or index}')
+
+          Path('/tmp/soil-reference-manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Checkout main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+
+      - name: Place reference files in selected directories
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json
+          import shutil
+          from pathlib import Path, PurePosixPath
+
+          root = Path.cwd().resolve()
+          restored = Path('/tmp/soil-reference-restored')
+          manifest = json.loads(Path('/tmp/soil-reference-manifest.json').read_text(encoding='utf-8'))
+          reference_root = 'reference-files/third-soil-survey'
+          assigned = set()
+
+          def safe_target(raw):
+              value = str(raw or '').replace('\\', '/').strip('/')
+              path = PurePosixPath(value)
+              if not value or path.is_absolute() or '..' in path.parts:
+                  raise SystemExit(f'非法目标路径：{raw}')
+              if value != reference_root and not value.startswith(reference_root + '/'):
+                  raise SystemExit(f'参考资料越界：{value}')
+              return value
+
+          def unique_path(value):
+              target = root / value
+              if value not in assigned and not target.exists():
+                  assigned.add(value)
+                  return value
+              posix = PurePosixPath(value)
+              parent = '' if str(posix.parent) == '.' else str(posix.parent) + '/'
+              suffix = ''.join(posix.suffixes)
+              stem = posix.name[:-len(suffix)] if suffix else posix.name
+              number = 2
+              while True:
+                  candidate = f'{parent}{stem}_第{number}份{suffix}'
+                  if candidate not in assigned and not (root / candidate).exists():
+                      assigned.add(candidate)
+                      return candidate
+                  number += 1
+
+          files = sorted(manifest['files'], key=lambda x: int(x.get('order') or 0))
+          for index, item in enumerate(files, start=1):
+              final_path = unique_path(safe_target(item.get('targetPath')))
+              destination = root / final_path
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(restored / f'{index:04d}.bin', destination)
+              print(f'参考资料归档：{item.get("originalName")} -> {final_path}')
+          PY
+
+      - name: Commit reference files once
+        id: commit
+        shell: bash
+        env:
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reference-files/third-soil-survey
+          if git diff --cached --quiet; then
+            echo '没有需要提交的参考资料。'
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          else
+            upload_id="${SOURCE_BRANCH#reference-upload-}"
+            git commit -m "docs: import reference files ${upload_id}"
+            git push origin HEAD:main
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Trigger Pages deployment
+        if: steps.commit.outputs.pushed == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMPORTED_COMMIT: ${{ steps.commit.outputs.commit_sha }}
+        run: |
+          set -euo pipefail
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/deploy.yml/dispatches" \
+            -f ref="main"
+          echo "已显式触发参考资料 Pages 部署：$IMPORTED_COMMIT"
+
+      - name: Delete reference staging branch
+        if: success()
+        shell: bash
+        env:
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git push origin --delete "$SOURCE_BRANCH" || true
