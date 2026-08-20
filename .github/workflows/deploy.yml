@@ -39,6 +39,7 @@ jobs:
             app-release-ui.js
             app-version-guard.js
             repository-manifest-loader.js
+            reference-upload.js
             file-preview-batch-download.js
             document-preview-controls.js
             mobile-dialog-reference-batch.js
@@ -71,6 +72,7 @@ jobs:
             release-upload-reliability.js
             release-staged-upload.js
             .github/workflows/import-chunked.yml
+            .github/workflows/import-reference.yml
             .github/workflows/deploy.yml
             scripts
             assets
@@ -94,7 +96,7 @@ jobs:
           required_files=(
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
-            app-version-guard.js repository-manifest-loader.js file-preview-batch-download.js document-preview-controls.js mobile-dialog-reference-batch.js reply-workflow-core.js
+            app-version-guard.js repository-manifest-loader.js reference-upload.js file-preview-batch-download.js document-preview-controls.js mobile-dialog-reference-batch.js reply-workflow-core.js
             reply-upload-progress.js upload-success-notice.js soil-survey-logo-v1.0.2.js
             admin-delete-manager.js admin-upload-transport-fix.js
             task-unit-mappings.js quality-file-routing.js admin-auto-classifier.js
@@ -105,10 +107,10 @@ jobs:
             upload-auth-reply-batch.js upload-token-default.js
             pptx-auto-split.js hybrid-staged-upload.js
             chunked-staged-upload.js release-upload-reliability.js
-            release-staged-upload.js .github/workflows/import-chunked.yml .github/workflows/deploy.yml scripts/validate-project.js
+            release-staged-upload.js .github/workflows/import-chunked.yml .github/workflows/import-reference.yml .github/workflows/deploy.yml scripts/validate-project.js
             scripts/validate-upload-token.js scripts/validate-reply-workflow.js
             scripts/validate-reply-upload-progress.js scripts/validate-app-boot.js
-            scripts/validate-admin-upload-transport.js scripts/validate-reference-upload-stability.js scripts/validate-north-quality-routing.js
+            scripts/validate-admin-upload-transport.js scripts/validate-reference-upload-stability.js scripts/validate-reference-upload-isolation.js scripts/validate-north-quality-routing.js
             scripts/validate-auto-import-classifier.js scripts/validate-north-shared-workflow.js
             scripts/validate-north-authority.js scripts/validate-mobile-file-picker.js
             scripts/validate-file-preview-batch-download.js scripts/validate-document-preview-controls.js scripts/validate-mobile-dialog-reference-batch.js
@@ -122,6 +124,7 @@ jobs:
           node --check app-release-ui.js
           node --check app-version-guard.js
           node --check repository-manifest-loader.js
+          node --check reference-upload.js
           node --check file-preview-batch-download.js
           node --check document-preview-controls.js
           node --check mobile-dialog-reference-batch.js
@@ -150,6 +153,7 @@ jobs:
           node --check scripts/validate-app-boot.js
           node --check scripts/validate-admin-upload-transport.js
           node --check scripts/validate-reference-upload-stability.js
+          node --check scripts/validate-reference-upload-isolation.js
           node --check scripts/validate-north-quality-routing.js
           node --check scripts/validate-auto-import-classifier.js
           node --check scripts/validate-north-shared-workflow.js
@@ -165,6 +169,7 @@ jobs:
           node scripts/validate-app-boot.js
           node scripts/validate-admin-upload-transport.js
           node scripts/validate-reference-upload-stability.js
+          node scripts/validate-reference-upload-isolation.js
           node scripts/validate-north-quality-routing.js
           node scripts/validate-auto-import-classifier.js
           node scripts/validate-north-shared-workflow.js
@@ -208,8 +213,8 @@ jobs:
             echo '检测到重复的中国农业大学文字，停止部署。'
             exit 1
           fi
-          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js mobile-dialog-reference-batch.js document-preview-controls.js reference-import-mode.js; then
-            echo '北部质控/手机文件选择/移动弹窗/文档预览/参考资料导入脚本存在长期DOM观察器，停止部署。'
+          if grep -q 'new MutationObserver' north-quality-upload-adapter.js north-quality-authority-bridge.js mobile-file-picker-fix.js mobile-dialog-reference-batch.js document-preview-controls.js reference-import-mode.js reference-upload.js; then
+            echo '北部质控/手机文件选择/移动弹窗/文档预览/参考资料上传脚本存在长期DOM观察器，停止部署。'
             exit 1
           fi
           echo '部署文件校验通过。'
