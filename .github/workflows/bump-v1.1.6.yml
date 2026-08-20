@@ -1,0 +1,40 @@
+name: One-off v1.1.6 version sync
+
+on:
+  push:
+    branches:
+      - fix/reference-upload-isolation-v1.1.6
+
+permissions:
+  contents: write
+
+jobs:
+  sync-version:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/reference-upload-isolation-v1.1.6
+          fetch-depth: 0
+      - name: Sync version metadata without touching embedded credential bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat VERSION)" = "v1.1.5"
+          printf 'v1.1.6\n' > VERSION
+          sed -i "s/window.SOIL_RELEASE_VERSION = 'v1.1.5';/window.SOIL_RELEASE_VERSION = 'v1.1.6';/" upload-config.js
+          sed -i "s/window.SOIL_APP_VERSION = 'v1.1.5';/window.SOIL_APP_VERSION = 'v1.1.6';/" upload-config.js
+          sed -i "s/page-enhancements.js?v=1.1.5/page-enhancements.js?v=1.1.6/" upload-config.js
+          sed -i "s/var VERSION = 'v1.1.5';/var VERSION = 'v1.1.6';/" app-release-ui.js
+          sed -i "s/|| 'v1.1.5'/|| 'v1.1.6'/" app-version-guard.js
+          git diff --check
+      - name: Commit synchronized version metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERSION upload-config.js app-release-ui.js app-version-guard.js
+          git commit -m "chore: sync v1.1.6 version metadata"
+          git push origin HEAD:fix/reference-upload-isolation-v1.1.6
