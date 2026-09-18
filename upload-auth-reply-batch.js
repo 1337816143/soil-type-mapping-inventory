@@ -272,7 +272,7 @@
         result.push(entry.batch);
       }
     });
-    return unique(result);
+    return unique(result.map(function (batch) { return window.SoilBatchPolicy ? window.SoilBatchPolicy.format(batch) : batch; }));
   }
 
   function replyKey(city, unit, district, batch) {

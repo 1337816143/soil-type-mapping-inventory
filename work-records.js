@@ -31,7 +31,7 @@
     if (!overlayCount++) { priorOverflow=document.body.style.overflow;document.body.style.overflow='hidden'; }
     function viewport() {
       var v=window.visualViewport, width=v?v.width:innerWidth,height=v?v.height:innerHeight,left=v?v.offsetLeft:0,top=v?v.offsetTop:0;
-      var w=Math.min(1060,width-16),hh=Math.min(860,height-16);
+      var compact=(cls||'').indexOf('wr-auth')>=0;var w=Math.min(compact?480:1060,width-16),hh=Math.min(compact?320:860,height-16);
       box.style.cssText='width:'+w+'px;height:'+hh+'px;left:'+(left+(width-w)/2)+'px;top:'+(top+(height-hh)/2)+'px;';
     }
     function keyboard(e) {
@@ -125,7 +125,7 @@
   function recordCard(r){
     var card=el('article','wr-record'),left=el('div'),right=el('aside','wr-files');card.dataset.record=r.id;
     left.append(el('h3','',r.title));var meta=el('div','wr-meta');
-    meta.append(el('div','',r.time.replace('T',' ')),el('div','地点：'+(r.location||'未填写')),el('div','','人员：'+(r.people||'未填写')));
+    meta.append(el('div','',r.time.replace('T',' ')),el('div','','地点：'+(r.location||'未填写')),el('div','','人员：'+(r.people||'未填写')));
     left.append(meta,el('div','wr-notes',r.notes||'暂无备注'));var actions=el('div','wr-record-actions');
     actions.append(button('编辑','',function(){startEditor(r);}),button('删除','danger',function(){deleteRecord(r);}));left.append(actions);
     attachments(right,r.attachments||[]);card.append(left,right);return card;
