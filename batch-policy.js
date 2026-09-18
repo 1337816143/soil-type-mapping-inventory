@@ -28,9 +28,10 @@
         !Number.isInteger(+p.batch) || +p.batch < 1 || +p.batch > 999) throw new Error('请填写有效年份、质控轮次和反馈批次');
     return {year:+p.year, round:+p.round, batch:+p.batch, supplement:!!p.supplement};
   }
-  // Only recognized historical names inherit 2026/round 1. Unknown labels are never silently reassigned.
+  // Only recognized historical names inherit 2026/round 1. Unknown labels are not reassigned.
   function parse(value) {
-    var s = String(value || '').normalize('NFKC').replace(/\s+/g, '');
+    var s = String(value || '').normalize('NFKC').replace(/\s+/g, '').replace(/[()]/g,'')
+      .replace(/第三次全国土壤普查|全国第三次土壤普查/g,'三普');
     var year = s.match(/(20\d{2})年/);
     var round = s.match(/第([一二三四五六七八九十两\d]+)(?:次(?:质控)?|轮)/);
     var batch = s.match(/第([一二三四五六七八九十两\d]+)批/);
@@ -54,6 +55,7 @@
     var chosen = item.manualBatch || (selection && format(selection)) || meta.batch || item.batch;
     var p = parse(chosen);
     if (p) {
+      if (meta.catalogMatched && (p.year !== 2026 || p.round !== 1)) { meta.expectedSha256 = ''; meta.catalogExact = false; }
       meta.batch = item.batch = format(p);
       item.qcYear = p.year; item.qcRound = p.round; item.feedbackBatch = p.batch;
       item.batchSupplement = p.supplement;
