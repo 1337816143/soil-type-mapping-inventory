@@ -19,13 +19,13 @@ jobs:
           fetch-depth: 1
       - name: Integrate and validate release metadata
         run: node scripts/prepare-v1.2.0.js
-      - name: Commit deterministic integration to feature branch only
+      - name: Commit deterministic source integration to feature branch only
         run: |
           set -euo pipefail
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html page-enhancements.js scripts/bump-version.js upload-config.js VERSION app-release-ui.js app-version-guard.js reply-workflow-core.js upload-auth-reply-batch.js admin-auto-classifier.js admin-import-v2.js work-records.js batch-policy.js .github/workflows/deploy.yml .github/workflows/security-audit.yml CHANGELOG.md MAINTENANCE_RULES.md
+          git add index.html page-enhancements.js scripts/bump-version.js upload-config.js VERSION app-release-ui.js app-version-guard.js reply-workflow-core.js upload-auth-reply-batch.js admin-auto-classifier.js admin-import-v2.js work-records.js batch-policy.js CHANGELOG.md MAINTENANCE_RULES.md
           if ! git diff --cached --quiet; then
             git commit -m 'build: integrate v1.2.0 workspace release without moving report files'
             git push origin HEAD:feat/glass-work-records-v1.2.0
@@ -39,11 +39,13 @@ jobs:
           cp *.js *.css index.html VERSION /tmp/workspace-source/
           rm -f /tmp/workspace-source/upload-config.js
           cp -r scripts /tmp/workspace-source/
-          mkdir -p /tmp/workspace-source/data
+          mkdir -p /tmp/workspace-source/data /tmp/workspace-source/.github/workflows
           cp data/*.json /tmp/workspace-source/data/
+          cp .github/workflows/deploy.yml .github/workflows/security-audit.yml /tmp/workspace-source/.github/workflows/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: workspace-source
           path: /tmp/workspace-source/
+          include-hidden-files: true
           retention-days: 3
