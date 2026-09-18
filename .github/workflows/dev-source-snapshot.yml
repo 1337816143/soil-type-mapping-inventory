@@ -1,0 +1,34 @@
+name: Development source snapshot
+on:
+  push:
+    branches: [feat/glass-work-records-rounds-v1.2.0]
+    paths: [.github/workflows/dev-source-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Collect source and test metadata only
+        run: |
+          python3 - <<'PY'
+          import subprocess, zipfile, json
+          from pathlib import Path
+          files = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          tree = subprocess.check_output(['git','ls-tree','-r','--long','HEAD']).decode()
+          with zipfile.ZipFile('/tmp/source-snapshot.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in files:
+                  p = Path(name)
+                  if p.is_file() and (p.suffix.lower() in {'.js','.css','.html','.json','.md','.py','.yml','.yaml','.svg'} or name == 'VERSION'):
+                      z.write(p,name)
+              z.writestr('_test-repository-tree.txt',tree)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-snapshot
+          path: /tmp/source-snapshot.zip
+          retention-days: 2
