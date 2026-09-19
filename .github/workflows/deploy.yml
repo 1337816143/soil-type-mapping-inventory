@@ -34,6 +34,7 @@ jobs:
             CHANGELOG.md
             index.html
             glass-interface.css
+            glass-navigation.js
             work-records.css
             batch-policy.js
             batch-management.js
@@ -101,7 +102,7 @@ jobs:
           set -euo pipefail
 
           required_files=(
-            glass-interface.css work-records.css batch-policy.js batch-management.js work-records-core.js work-records.js
+            glass-navigation.js assets/cau-logo-transparent.png glass-interface.css work-records.css batch-policy.js batch-management.js work-records-core.js work-records.js
             data/work-records.json scripts/validate-workspace.js
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
@@ -128,6 +129,7 @@ jobs:
           )
           for file in "${required_files[@]}"; do test -f "$file"; done
 
+          node --check glass-navigation.js
           node --check batch-policy.js
           node --check batch-management.js
           node --check work-records-core.js
