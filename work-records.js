@@ -6,6 +6,7 @@
   var data = {schemaVersion:1,records:[]}, view = 'cards', page = 1, editor = null, panel, status;
   var searchTimer, draftTimer, saveQueue = Promise.resolve(), loading = false, loaded = false;
   var objects = new Map(), overlayCount = 0, priorOverflow = '';
+  var openingEditor = false, dataEpoch = 0;
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g,function (s) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]; }); }
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className=cls; if (text != null) n.textContent=text; return n; }
   function button(text, cls, fn) { var b=el('button','wr-button '+(cls||''),text); b.type='button'; if (fn) b.onclick=fn; return b; }
@@ -149,7 +150,12 @@
     var matches=C.query(data.records,panel.querySelector('#wr-search').value,panel.querySelector('#wr-from').value,panel.querySelector('#wr-until').value);
     var pages=Math.max(1,Math.ceil(matches.length/20));page=Math.min(page,pages);var shown=matches.slice((page-1)*20,page*20);
     panel.querySelector('#wr-count').textContent=matches.length+' 条工作记录';
-    if(!matches.length){var empty=el('div','wr-empty');empty.append(el('strong','',loaded?'从一条工作记录开始':'正在读取工作记录…'),el('span','',loaded?'记录检查、会议、培训与现场工作，材料与事项放在一起。':''));list.append(empty);}
+    if(!matches.length){
+      var filtered=!!(panel.querySelector('#wr-search').value.trim()||panel.querySelector('#wr-from').value||panel.querySelector('#wr-until').value),empty=el('div','wr-empty');
+      empty.append(el('strong','',loaded?(filtered?'没有找到匹配的工作记录':'从一条工作记录开始'):'正在读取工作记录…'),el('span','',loaded?(filtered?'请调整关键词或日期范围；已有记录没有被删除。':'记录检查、会议、培训与现场工作，材料与事项放在一起。'):''));
+      if(loaded&&filtered)empty.append(button('清除筛选','',function(){['#wr-search','#wr-from','#wr-until'].forEach(function(s){panel.querySelector(s).value='';});page=1;render();}));
+      list.append(empty);
+    }
     else if(view==='cards')shown.forEach(function(r){list.append(recordCard(r));});
     else{var wrap=el('div','wr-table-scroll'),table=el('table','wr-table');table.innerHTML='<thead><tr><th>事项</th><th>时间</th><th>地点</th><th>人员</th><th>备注</th><th>附件</th><th>操作</th></tr></thead>';var tbody=el('tbody');
       shown.forEach(function(r){var tr=el('tr');[r.title,r.time.replace('T',' '),r.location,r.people,r.notes].forEach(function(v){tr.append(el('td','',v||'—'));});var files=el('td'),act=el('td');files.append(button((r.attachments||[]).length+' 个附件','',function(){openAttachments(r);}));act.append(button('编辑','',function(){startEditor(r);}),button('删除','danger',function(){deleteRecord(r);}));tr.append(files,act);tbody.append(tr);});table.append(tbody);wrap.append(table);list.append(wrap);}
@@ -157,13 +163,13 @@
     panel.querySelectorAll('[data-view]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.view===view));});
   }
   async function refresh(force){
-    if(loading)return;loading=true;notify('正在同步工作记录…');
+    if(loading)return;loading=true;var epoch=dataEpoch;notify('正在同步工作记录…');
     var controller=new AbortController(),timer=setTimeout(function(){controller.abort();},15000);
-    try {var response=await fetch(force?raw(C.storePath)+'?t='+Date.now():'./'+C.storePath+'?v='+encodeURIComponent(window.SOIL_RELEASE_VERSION||''),{cache:'no-cache',signal:controller.signal});if(!response.ok)throw new Error('工作记录读取失败（HTTP '+response.status+'）');data=C.store(await response.json());loaded=true;notify('已同步 · '+C.query(data.records).length+' 条记录');render();}
-    catch(e){notify('同步未完成：'+e.message+'。已有显示内容未清除。',true);}finally{clearTimeout(timer);loading=false;}
+    try {var response=await fetch(force?raw(C.storePath)+'?t='+Date.now():'./'+C.storePath+'?v='+encodeURIComponent(window.SOIL_RELEASE_VERSION||''),{cache:'no-cache',signal:controller.signal});if(!response.ok)throw new Error('工作记录读取失败（HTTP '+response.status+'）');var incoming=C.store(await response.json());if(epoch!==dataEpoch)return;data=incoming;loaded=true;notify('已同步 · '+C.query(data.records).length+' 条记录');render();}
+    catch(e){if(epoch===dataEpoch)notify('同步未完成：'+e.message+'。已有显示内容未清除。',true);}finally{clearTimeout(timer);loading=false;}
   }
   async function renderDrafts(){
-    try{var drafts=await C.drafts.list(),host=panel.querySelector('.wr-drafts');host.replaceChildren();drafts.sort(function(a,b){return b.updatedAt.localeCompare(a.updatedAt);}).forEach(function(d){var chip=el('div','wr-draft-chip');chip.append(el('span','',d.fields.title||'未命名草稿'),button('继续编辑','',function(){startEditor(null,d);}),button('丢弃草稿','',async function(){if(confirm('仅删除本机这份草稿，不影响已保存的工作记录？')){await C.drafts.remove(d.id);renderDrafts();}}));host.append(chip);});}catch(e){notify('本机草稿不可用：'+e.message,true);}
+    try{var drafts=await C.drafts.list({metadataOnly:true}),host=panel.querySelector('.wr-drafts');host.replaceChildren();drafts.sort(function(a,b){return b.updatedAt.localeCompare(a.updatedAt);}).forEach(function(d){var chip=el('div','wr-draft-chip');chip.append(el('span','',d.fields.title||'未命名草稿'),button('继续编辑','',async function(){try{var restored=await C.drafts.get(d.id);if(restored)await startEditor(null,restored);else{notify('这份草稿已在另一标签页移除，请刷新草稿列表。',true);renderDrafts();}}catch(e){notify('草稿读取失败：'+e.message,true);}}),button('丢弃草稿','',async function(){if(confirm('仅删除本机这份草稿，不影响已保存的工作记录？')){await C.drafts.remove(d.id);renderDrafts();}}));host.append(chip);});}catch(e){notify('本机草稿不可用：'+e.message,true);}
   }
   function currentDraft(){return C.draft({id:editor.draftId,recordId:editor.recordId,baseRevision:editor.baseRevision,fields:readFields(),attachments:editor.attachments,files:editor.files});}
   function readFields(){var result={};['title','time','location','people','notes'].forEach(function(k){result[k]=document.getElementById('wr-field-'+k).value;});return result;}
@@ -174,16 +180,22 @@
   }
   async function closeEditor(){
     if(!editor||editor.busy)return;
-    try{await persist();}catch(e){if(!confirm('本机暂存失败。仍然关闭会丢失未保存内容，确定关闭？'))return;}
-    var m=editor.modal;editor=null;clearTimeout(draftTimer);m.dispose();objects.forEach(function(u){URL.revokeObjectURL(u);});objects.clear();renderDrafts();
+    var state=editor;
+    // Close is a single-flight operation too; freeze inputs before the first await.
+    state.busy=true;state.modal.box.querySelectorAll('button,input,textarea').forEach(function(n){n.disabled=true;});
+    try{
+      try{await persist();}catch(e){if(!confirm('本机暂存失败。仍然关闭会丢失未保存内容，确定关闭？'))return;}
+      editor=null;clearTimeout(draftTimer);state.modal.dispose();objects.forEach(function(u){URL.revokeObjectURL(u);});objects.clear();renderDrafts();
+    }finally{if(editor===state){state.busy=false;state.modal.box.querySelectorAll('button,input,textarea').forEach(function(n){n.disabled=false;});}}
   }
   function renderEditorAttachments(){var host=editor.modal.body.querySelector('#wr-editor-files');host.replaceChildren();attachments(host,editor.attachments.concat(editor.files),function(a){if(editor.busy)return;editor.attachments=editor.attachments.filter(function(x){return x.id!==a.id;});editor.files=editor.files.filter(function(x){return x.id!==a.id;});renderEditorAttachments();persist().catch(function(){});});}
   async function startEditor(record,resume){
-    if(editor)return;
+    if(editor||openingEditor)return;
     if(resume&&(resume.files||[]).some(function(f){return !f.file;})){notify('该草稿的部分附件在本机存储中丢失。草稿已保留，请勿清理浏览器数据。',true);return;}
     var savedId=resume?resume.recordId:record&&record.id;
-    var permitted=savedId?await authorize('修改'):false;
-    if(savedId&&!permitted)return;
+    var permitted=false;openingEditor=true;
+    try{permitted=savedId?await authorize('修改'):false;}finally{openingEditor=false;}
+    if((savedId&&!permitted)||editor)return;
     var f=resume?resume.fields:record||{},m=modal(savedId?'编辑工作记录':'新增工作记录','',closeEditor);
     var now=new Date(),local=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
     editor={modal:m,recordId:savedId||null,baseRevision:resume?resume.baseRevision:record?record.revision:null,
@@ -211,7 +223,7 @@
       await persist();
       var result=await C.save({operation:'save',id:e.id,baseRevision:e.baseRevision,authorized:e.authorized,fields:values,attachments:e.attachments,files:e.files},
         {progress:function(text,p){msg.textContent=text;document.getElementById('wr-editor-progress').style.width=p+'%';}});
-      data=result.data;loaded=true;clearTimeout(draftTimer);await saveQueue.catch(function(){});
+      dataEpoch++;data=result.data;loaded=true;clearTimeout(draftTimer);await saveQueue.catch(function(){});
       var cleanup='';
       try{await C.drafts.remove(e.draftId);}catch(error){cleanup='（已保存到仓库，但本机草稿清理失败，请删除残留草稿，不要再次提交。）';}
       editor=null;e.modal.dispose();objects.forEach(function(u){URL.revokeObjectURL(u);});objects.clear();render();renderDrafts();
@@ -221,7 +233,7 @@
   }
   async function deleteRecord(record){
     if(!await authorize('删除'))return;
-    try{var result=await C.save({operation:'delete',id:record.id,baseRevision:record.revision,authorized:true},{progress:function(t){notify(t);}});data=result.data;render();notify('工作记录已删除。历史版本和附件保留用于追溯。');}catch(e){notify('删除未完成：'+e.message,true);}
+    try{var result=await C.save({operation:'delete',id:record.id,baseRevision:record.revision,authorized:true},{progress:function(t){notify(t);}});dataEpoch++;data=result.data;render();notify('工作记录已删除。历史版本和附件保留用于追溯。');}catch(e){notify('删除未完成：'+e.message,true);}
   }
   function enter(){document.querySelectorAll('.tab,.tab-content').forEach(function(n){n.classList.remove('active');});panel.classList.add('active');document.querySelector('[data-tab="workRecords"]').classList.add('active');var banner=document.getElementById('missingBanner');if(banner)banner.style.display='none';render();renderDrafts();if(!loaded)refresh(false);}
   function install(){

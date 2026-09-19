@@ -67,7 +67,7 @@ async function main(){
  assert(core.includes('indexedDB.open'));assert(source.includes('Numpad8'));assert(source.includes('visualViewport'));
  assert(fs.readFileSync('glass-interface.css','utf8').includes('prefers-reduced-motion'));
  const loader=fs.readFileSync('page-enhancements.js','utf8');
- for(const file of ['batch-policy.js','batch-management.js','work-records-core.js','work-records.js']) assert(loader.includes(file+'?v=1.2.0'),file+' 缓存版本或部署入口缺失');
+ for(const file of ['batch-policy.js','batch-management.js','work-records-core.js','work-records.js']) assert(loader.includes(file+'?v='+fs.readFileSync('VERSION','utf8').trim().slice(1)),file+' 缓存版本或部署入口缺失');
  console.log('Workspace behavioral checks passed: legacy aliases, three-level batches, atomic save/delete, conflicts, attachments, drafts and isolation.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

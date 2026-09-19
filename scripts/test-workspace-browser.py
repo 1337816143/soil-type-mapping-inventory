@@ -5,6 +5,9 @@ ROOT=pathlib.Path(__file__).resolve().parent.parent
 OUT=ROOT/'test-artifacts'; OUT.mkdir(exist_ok=True)
 HARNESS='''<!doctype html><html class="glass-ui" lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif}.container{max-width:1300px;margin:auto;padding:18px}.tabs{display:flex}.tab{cursor:pointer}.tab-content{display:none}.tab-content.active{display:block}</style><link rel="stylesheet" href="glass-interface.css"><link rel="stylesheet" href="work-records.css"></head><body><header><div class="container"><h1>河北省第三次全国土壤普查 · 质量控制意见交流平台</h1><div class="tabs"></div></div></header><div class="container"></div><script>window.SOIL_RELEASE_VERSION='v1.2.0';window.SOIL_GITHUB_UPLOAD_TOKEN='test-credential';window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN='test-credential';window.SoilAdminImport={PASS:'478666'};window.SoilDocumentPreview={open:function(url,name){window.lastPreview={url:url,name:name};}};</script><script src="batch-policy.js"></script><script src="work-records-core.js"></script><script src="work-records.js"></script></body></html>'''
 BOOT="window.SOIL_RELEASE_VERSION='v1.2.0';window.SOIL_APP_VERSION='v1.2.0';window.SOIL_GITHUB_DEFAULT_UPLOAD_TOKEN='test-credential';window.SOIL_GITHUB_UPLOAD_TOKEN='test-credential';window.SOIL_UPLOAD_API_URL='';var s=document.createElement('script');s.src='./page-enhancements.js';document.head.appendChild(s);"
+VERSION=(ROOT/'VERSION').read_text().strip()
+HARNESS=HARNESS.replace('v1.2.0',VERSION)
+BOOT=BOOT.replace('v1.2.0',VERSION)
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*a,**kw):super().__init__(*a,directory=str(ROOT),**kw)
     def log_message(self,*a):pass
@@ -57,6 +60,21 @@ with sync_playwright() as p:
         try:
             page.goto(URL+'/__workspace_test__.html');page.locator('[data-tab="workRecords"]').click()
             expect(page.locator('#wr-count')).to_have_text('0 条工作记录')
+            # Draft metadata lists must not hydrate every attachment; orphan cleanup
+            # must preserve files still referenced by another draft.
+            page.evaluate('''async()=>{
+              const C=SoilWorkCore, file={id:'shared-test',file:new File(['bytes'],'keep.txt',{type:'text/plain'})};
+              const a={id:'gc-a',fields:{title:'a'},files:[file]},b={id:'gc-b',fields:{title:'b'},files:[file]};
+              await C.drafts.put(a);await C.drafts.put(b);
+              const metadata=await C.drafts.list({metadataOnly:true});
+              if(metadata.some(d=>d.files.some(f=>f.file)))throw Error('Metadata hydrated attachment bytes');
+              a.files=[];await C.drafts.put(a);
+              if(await (await C.drafts.get('gc-b')).files[0].file.text()!=='bytes')throw Error('Shared attachment was lost');
+              b.files=[];await C.drafts.put(b);
+              const count=await new Promise((resolve,reject)=>{const r=indexedDB.open('soil-work-record-drafts',2);r.onerror=()=>reject(r.error);r.onsuccess=()=>{const db=r.result,tx=db.transaction('files'),q=tx.objectStore('files').count();q.onsuccess=()=>resolve(q.result);tx.oncomplete=()=>db.close();};});
+              if(count!==0)throw Error('Removed attachment bytes were not collected');
+              await C.drafts.remove('gc-a');await C.drafts.remove('gc-b');
+            }''')
             page.locator('#wr-new').click()
             page.locator('#wr-field-title').fill('北部片区质控交流会')
             page.locator('#wr-field-time').fill('2026-09-18T09:30')
@@ -76,7 +94,7 @@ with sync_playwright() as p:
                     b=page.locator(selector).bounding_box();assert b and b['y']>=0 and b['y']+b['height']<=height+1,(engine,width,height,selector,b)
                 if width in (390,844):page.screenshot(path=str(OUT/f'{engine}-editor-{width}x{height}.png'))
             page.set_viewport_size({'width':1280,'height':900})
-            page.get_by_role('button',name='暂存并关闭',exact=True).click();expect(page.locator('.wr-overlay')).to_have_count(0)
+            page.get_by_role('button',name='暂存并关闭',exact=True).evaluate('(b)=>{b.click();b.click();}');expect(page.locator('.wr-overlay')).to_have_count(0)
             page.reload();page.locator('[data-tab="workRecords"]').click();page.get_by_role('button',name='继续编辑',exact=True).click()
             expect(page.locator('#wr-field-title')).to_have_value('北部片区质控交流会');expect(page.locator('#wr-editor-files .wr-file')).to_have_count(4)
             restored=page.evaluate('''async()=>{let rows=await SoilWorkCore.drafts.list();return Promise.all(rows[0].files.map(async x=>{let a=new Uint8Array(await x.file.arrayBuffer()),s='';for(let b of a)s+=String.fromCharCode(b);return {name:x.file.name,bytes:btoa(s)};}));}''')
@@ -95,14 +113,19 @@ with sync_playwright() as p:
             page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(OUT/f'{engine}-cards-mobile.png'),full_page=True)
             page.locator('[data-view="table"]').click();expect(page.locator('.wr-table tbody tr')).to_have_count(1)
             page.locator('#wr-search').fill('不存在的检索');expect(page.locator('.wr-table')).to_have_count(0)
+            expect(page.locator('.wr-empty')).to_contain_text('没有找到匹配的工作记录')
             page.locator('#wr-search').fill('张三 第二次');expect(page.locator('.wr-table tbody tr')).to_have_count(1)
             page.locator('#wr-search').fill('');page.locator('[data-view="cards"]').click()
-            page.get_by_role('button',name='编辑',exact=True).click();expect(page.locator('#wr-auth-password')).to_be_visible()
+            # Hold a stale refresh response while an edit commits, then release it.
+            page.evaluate('''()=>{const native=window.fetch;window.releaseStaleRefresh=null;window.fetch=(url,options)=>String(url).includes('raw.githubusercontent.com')&&String(url).includes('data/work-records.json')?new Promise(resolve=>{window.releaseStaleRefresh=()=>{window.fetch=native;resolve(new Response(JSON.stringify({schemaVersion:1,records:[]})));};}):native(url,options);void SoilWorkRecords.refresh(true);}''')
+            page.get_by_role('button',name='编辑',exact=True).evaluate('(b)=>{b.click();b.click();}');expect(page.locator('.wr-auth')).to_have_count(1);expect(page.locator('#wr-auth-password')).to_be_visible()
             page.locator('#wr-auth-password').fill('wrong');page.get_by_role('button',name='验证并继续').click();expect(page.locator('.wr-auth')).to_contain_text('不正确')
             assert not page.locator('#wr-field-title').count()
             page.locator('#wr-auth-password').fill('478666');page.get_by_role('button',name='验证并继续').click();expect(page.locator('#wr-field-title')).to_be_visible()
             page.locator('#wr-field-location').fill('保定 · 现场');page.get_by_role('button',name='正式保存',exact=True).click();expect(page.locator('.wr-overlay')).to_have_count(0)
             assert remote['records'][0]['revision']==2
+            page.evaluate('window.releaseStaleRefresh()');page.wait_for_timeout(100)
+            expect(page.locator('.wr-record')).to_have_count(1);expect(page.locator('.wr-record')).to_contain_text('保定 · 现场')
             page.get_by_role('button',name='删除',exact=True).click();expect(page.locator('#wr-auth-password')).to_be_visible()
             page.locator('#wr-auth-password').fill('478666');page.get_by_role('button',name='验证并继续').click();expect(page.locator('.wr-record')).to_have_count(0)
             assert remote['records'][0].get('deletedAt')
@@ -118,7 +141,7 @@ with sync_playwright() as p:
             assert page.evaluate("SoilAdminImport.state.batchSelection.round")==2
             page.locator('#soilAdminImport .adm-close').click();page.screenshot(path=str(OUT/f'{engine}-full-site.png'),full_page=True)
             report['engines'].append(engine)
-            report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration')
+            report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save/close/authorization, attachment garbage collection, metadata-only draft listing, stale-refresh protection, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration')
         except Exception:
             page.screenshot(path=str(OUT/f'{engine}-failure.png'),full_page=True)
             (OUT/f'{engine}-errors.json').write_text(json.dumps(errors,ensure_ascii=False))
