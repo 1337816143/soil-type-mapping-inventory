@@ -1,0 +1,38 @@
+name: Prepare UI review v123
+on:
+  push:
+    branches: [feat/liquid-navigation-v1.2.3]
+    paths: [.github/workflows/prepare-ui-v123.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Export current source without embedded credential
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, re, zipfile
+          with zipfile.ZipFile('/tmp/ui-review-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
+                  p=Path(name)
+                  if not p.is_file(): continue
+                  if name.startswith('assets/'):
+                      z.write(p,name); continue
+                  if p.suffix not in {'.js','.css','.html','.json','.py','.yml','.md'} and name!='VERSION': continue
+                  text=p.read_text(encoding='utf-8')
+                  if name=='upload-config.js':
+                      fake=','.join(str(ord(c)) for c in 'github_pat_'+'x'*82)
+                      text=re.sub(r'var tokenCodes = \[[^\]]+\]', 'var tokenCodes = ['+fake+']', text)
+                  z.writestr(name,text)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui-review-source
+          path: /tmp/ui-review-source.zip
+          retention-days: 1
