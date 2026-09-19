@@ -86,6 +86,9 @@
 
   function inferBatch(text) {
     text = normalize(text);
+    var policy = window.SoilBatchPolicy;
+    var roundInfo = policy && policy.parse(text);
+    if (roundInfo && roundInfo.explicit) return policy.format(roundInfo);
     var special = text.match(/第[一二三四五六七八九十0-9]+批\s*补充/);
     if (special) return special[0].replace(/\s+/g, '');
     var round = text.match(/第[一二三四五六七八九十0-9]+轮/);
@@ -320,6 +323,7 @@
 
   function applyItemMetadata(item) {
     var meta = classifyItem(item);
+    if (window.SoilBatchPolicy) window.SoilBatchPolicy.applyToItem(item, meta, Q() && Q().state && Q().state.batchSelection);
     item.autoMeta = meta;
     if (meta.batch) item.batch = meta.batch;
     if (meta.association) {

@@ -54,6 +54,10 @@ replace('app-version-guard.js', /\|\| 'v\d+\.\d+\.\d+'/, `|| '${next}'`);
 replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION = '${bare}';`);
 
 [
+  'batch-policy.js',
+  'batch-management.js',
+  'work-records-core.js',
+  'work-records.js',
   'page-enhancements-core.js',
   'task-unit-mappings.js',
   'quality-file-routing.js',
@@ -86,6 +90,8 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'hybrid-staged-upload.js',
   'upload-success-notice.js'
 ].forEach(replaceLoaderVersion);
+
+replace('index.html', /((?:glass-interface|work-records)\.css\?v=)\d+\.\d+\.\d+/g, '$1' + bare);
 
 console.log(`${current} -> ${next}`);
 console.log('请在 CHANGELOG.md 顶部补充本次变更说明后再提交。');

@@ -1,0 +1,63 @@
+name: Workspace browser regression
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: workspace-browser-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect credential-free source diagnostics
+        if: github.event_name == 'pull_request'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, re, zipfile
+          files = subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with zipfile.ZipFile('/tmp/workspace-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in files:
+                  p=Path(name)
+                  if not p.is_file() or (p.suffix not in {'.js','.css','.html','.json','.py','.yml','.md'} and name!='VERSION'):
+                      continue
+                  text=p.read_text(encoding='utf-8')
+                  if name=='upload-config.js':
+                      fake=','.join(str(ord(c)) for c in 'github_pat_'+'x'*82)
+                      text=re.sub(r'var tokenCodes = \[[^\]]+\]', 'var tokenCodes = ['+fake+']', text)
+                  z.writestr(name,text)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'pull_request'
+        with:
+          name: workspace-source-diagnostics
+          path: /tmp/workspace-source.zip
+          retention-days: 1
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Run data and concurrency tests
+        run: node scripts/validate-workspace.js
+      - name: Test workspace in Chromium and WebKit
+        env:
+          BROWSER_ENGINES: chromium,webkit
+        run: python scripts/test-workspace-browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workspace-browser-results
+          path: test-artifacts/
+          retention-days: 5

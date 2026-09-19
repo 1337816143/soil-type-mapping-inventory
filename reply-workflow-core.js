@@ -19,14 +19,19 @@
       .replace(/\(市级\)/g, '');
   }
 
+  function batchCanonical(batch) {
+    var policy = typeof globalThis !== 'undefined' && globalThis.SoilBatchPolicy;
+    return policy ? policy.identity(batch) : canonical(batch);
+  }
+
   function replyKey(city, unit, district, batch) {
     var base = [city, unit, district].map(canonical).join('_');
-    return batch ? base + '_批次-' + canonical(batch) : base;
+    return batch ? base + '_批次-' + batchCanonical(batch) : base;
   }
 
   function keyFromBase(base, batch) {
     var normalized = canonical(base);
-    return batch ? normalized + '_批次-' + canonical(batch) : normalized;
+    return batch ? normalized + '_批次-' + batchCanonical(batch) : normalized;
   }
 
   function basename(path) {

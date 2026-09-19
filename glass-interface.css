@@ -1,0 +1,36 @@
+/* Liquid glass: blur only a handful of large surfaces, never every table row. */
+html.glass-ui{--bg:#edf3f7;--bg2:#f4f8fc;--ink:#172b40;--text:#172b40;--muted:#53677b;--rule:#d5e2ed;--accent:#2563a8;--accent2:#118b8a;--success:#137552;--glass-shadow:0 8px 30px rgba(38,64,98,.07),inset 0 1px 0 rgba(255,255,255,.98)}
+html.glass-ui body{background:radial-gradient(ellipse at 4% 0%,#d7eef0 0,transparent 42%),radial-gradient(ellipse at 97% 2%,#e1e7fb 0,transparent 42%),#edf3f7;color:var(--ink);background-attachment:scroll}
+html.glass-ui body>header{margin:12px;border:1px solid rgba(255,255,255,.9);border-radius:24px;padding:22px 0 10px;color:var(--ink);background:linear-gradient(135deg,rgba(255,255,255,.87),rgba(242,250,255,.7));box-shadow:var(--glass-shadow);backdrop-filter:blur(14px) saturate(1.25);-webkit-backdrop-filter:blur(14px) saturate(1.25)}
+html.glass-ui header h1,html.glass-ui header .page-title-text{color:var(--ink)!important;letter-spacing:.02em}
+html.glass-ui header h1{font-weight:750!important;line-height:1.5}
+html.glass-ui .tabs{gap:5px;border:0;overflow-x:auto;scrollbar-width:thin;padding:4px 2px 6px;flex-wrap:nowrap!important;max-width:100%}
+html.glass-ui .tabs .tab{flex:0 0 auto;border:1px solid transparent;border-radius:14px;padding:9px 15px;color:#52667b;background:transparent;font-weight:650;transition:background-color .18s,color .18s,box-shadow .18s;white-space:nowrap}
+html.glass-ui .tabs .tab:hover{background:rgba(255,255,255,.72);color:#164f83}
+html.glass-ui .tabs .tab.active{color:#174c7f;background:linear-gradient(150deg,#fff,rgba(230,242,255,.92));border-color:rgba(255,255,255,.98);box-shadow:0 3px 12px #34557b17,inset 0 1px 0 #fff}
+html.glass-ui .app-version-badge{background:#e6eef8;color:#365773;border:1px solid #c8dced}
+html.glass-ui .summary-card,html.glass-ui .regional-progress-chip,html.glass-ui .ref-cat,html.glass-ui .table-wrap{background:rgba(255,255,255,.84);border:1px solid rgba(255,255,255,.98);border-radius:15px;box-shadow:var(--glass-shadow)}
+html.glass-ui .table-wrap{overflow:auto}html.glass-ui table{background:transparent}
+html.glass-ui thead th{background:#eef4f9;color:#26415e;border-bottom:1px solid #cbdce8}
+html.glass-ui tbody td{border-bottom:1px solid #e1eaf1}html.glass-ui tbody tr:hover{background:#eff7fc}
+html.glass-ui .city-section h2{color:#1d496b;border-bottom:1px solid #ccdce6;padding-bottom:12px}
+html.glass-ui .ref-cat summary{background:rgba(244,249,255,.8)}
+html.glass-ui .ref-tools,html.glass-ui .wr-toolbar{background:rgba(255,255,255,.76);border:1px solid #fff;border-radius:18px;box-shadow:var(--glass-shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+html.glass-ui .ref-btn,html.glass-ui .soil-file-action,html.glass-ui .v2-mini,html.glass-ui .btn,html.glass-ui .wr-button{border-radius:11px;transition:transform .16s,background-color .16s,box-shadow .16s;touch-action:manipulation}
+html.glass-ui :is(.ref-btn,.soil-file-action,.v2-mini,.btn,.wr-button):active{transform:translateY(1px) scale(.98)}
+html.glass-ui .district-link,html.glass-ui .district-group .group-label{border-radius:8px;background:#f1f7fb;border-color:#d4e2ee}
+html.glass-ui .batch-tag,html.glass-ui .reply-batch-tag{border-radius:7px;padding:2px 6px}
+html.glass-ui :is(.adm-card,.soil-file-dialog,.cred-card,.delete-card){border-radius:20px!important;border:1px solid #fff;background:#fafdff!important;box-shadow:0 24px 70px #19374c30,inset 0 1px 0 #fff}
+html.glass-ui :is(input,select,textarea){border-radius:10px;accent-color:#2563a8}
+html.glass-ui :is(button,input,select,textarea,a,[tabindex]):focus-visible{outline:3px solid #3795c8;outline-offset:3px}
+.glass-controls{display:flex;justify-content:flex-end;gap:6px;margin-bottom:6px}.glass-controls button{font-size:12px;padding:4px 10px;border:1px solid #c5d8e7;background:#ffffffa6;color:#385976;border-radius:20px;cursor:pointer}
+html.glass-ui footer{border-top:1px solid #d7e3eb;color:#506679}
+.qc-round-controls{display:flex;align-items:end;gap:8px;flex-wrap:wrap;padding:12px;border:1px solid #c4dcea;border-radius:12px;background:#edf7fb;margin-bottom:12px}
+.qc-round-controls label{display:flex;flex-direction:column;font-size:12px;gap:4px}.qc-round-controls input{width:88px;padding:8px;border:1px solid #bacfdf}.qc-round-controls input[type=checkbox]{width:18px;height:18px}.qc-round-controls small{flex-basis:100%;color:#48627a}
+@media(max-width:760px){html.glass-ui body>header{margin:6px;border-radius:18px;padding:16px 0 5px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}html.glass-ui .tabs .tab{padding:8px 12px;font-size:13px}.glass-controls{margin-top:8px}html.glass-ui .ref-tools{backdrop-filter:none;-webkit-backdrop-filter:none}html.glass-ui header h1{font-size:17px!important}html.glass-ui .summary-card{box-shadow:inset 0 1px 0 #fff}}
+html.glass-lite body>header,html.glass-lite .ref-tools,html.glass-lite .wr-toolbar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#f8fbfe!important}
+html.glass-lite .wr-photo{transition:none!important}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html.glass-ui body>header,html.glass-ui .ref-tools{background:#f8fbfe}}
+@media(prefers-reduced-motion:reduce){html.glass-ui *,html.glass-ui *::before,html.glass-ui *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+/* Keep expanded legacy group buttons legible on glass surfaces. */
+html.glass-ui .district-group .group-label{color:#24557e}html.glass-ui .district-group .group-label.active,html.glass-ui .district-group .group-label.open{background:#dbeafa;color:#183f65}
