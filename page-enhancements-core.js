@@ -40,7 +40,7 @@
       '.footer-brand img{display:block;width:auto;object-fit:contain;flex:0 0 auto}' +
       '.footer-brand.survey span{font-size:.84rem;font-weight:600;white-space:nowrap}' +
       '.footer-brand.survey img{width:44px;height:44px;min-width:44px;max-width:44px;min-height:44px;max-height:44px;aspect-ratio:1/1;object-fit:contain;border-radius:0;flex:0 0 44px}' +
-      '.footer-brand.cau img{height:68px;max-height:68px}' +
+      '.footer-brand.cau img{height:56px;max-height:56px}' +
       '.missing-layout{display:grid;grid-template-columns:minmax(500px,1.35fr) minmax(300px,.65fr);gap:18px;align-items:stretch}' +
       '.missing-stats-panel,.missing-details-panel{min-width:0}' +
       '.missing-panel-title{font-size:.82rem;font-weight:700;color:#92400e;margin-bottom:7px}' +
@@ -54,7 +54,7 @@
       '@media(max-width:1200px){.city-section thead th,.city-section tbody td{padding-left:5px!important;padding-right:5px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:21%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:34%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:10%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:35%!important}}' +
       '@media(max-width:980px){.missing-layout{grid-template-columns:1fr}.missing-details-panel{border-left:0;border-top:1px solid #fde68a;padding-left:0;padding-top:12px}}' +
       '@media(max-width:760px){.container{padding-left:8px!important;padding-right:8px!important}header h1.page-title-with-logo{gap:8px}header h1 .page-title-logo{width:32px;height:32px;min-width:32px;max-width:32px;flex-basis:32px}.city-section h2 .badge{white-space:normal}.city-section thead th,.city-section tbody td{padding-left:4px!important;padding-right:4px!important}.city-section thead th:first-child,.city-section tbody td:first-child{width:24%!important}.city-section thead th:nth-child(2),.city-section tbody td:nth-child(2){width:31%!important}.city-section thead th:nth-child(3),.city-section tbody td:nth-child(3){width:12%!important}.city-section thead th:last-child,.city-section tbody td:last-child{width:33%!important}.reply-item{white-space:normal;flex-wrap:wrap}}' +
-      '@media(max-width:640px){.footer-brands{gap:16px}.footer-brand{gap:7px}.footer-brand.survey span{font-size:.78rem}.footer-brand.survey img{width:38px;height:38px;min-width:38px;max-width:38px;min-height:38px;max-height:38px;flex-basis:38px}.footer-brand.cau img{height:56px;max-height:56px}}';
+      '@media(max-width:640px){.footer-brands{gap:16px}.footer-brand{gap:7px}.footer-brand.survey span{font-size:.78rem}.footer-brand.survey img{width:38px;height:38px;min-width:38px;max-width:38px;min-height:38px;max-height:38px;flex-basis:38px}.footer-brand.cau img{height:44px;max-height:44px}}';
     document.head.appendChild(style);
   }
 
@@ -73,7 +73,7 @@
     var container = document.querySelector('footer .container');
     if (!container || container.querySelector('.footer-brands')) return;
     var oldLogo = container.querySelector('img');
-    var cauSrc = oldLogo ? oldLogo.getAttribute('src') : './assets/logo.jpg';
+    var cauSrc = oldLogo ? oldLogo.getAttribute('src') : './assets/cau-logo-transparent.png';
     container.innerHTML = '<div class="footer-brands">' +
       '<div class="footer-brand survey"><img src="' + SOIL_SURVEY_LOGO + '" alt="第三次全国土壤普查"><span>第三次全国土壤普查</span></div>' +
       '<div class="footer-brand cau"><img src="' + cauSrc + '" alt="中国农业大学"></div>' +
@@ -90,7 +90,7 @@
 
     var mobile = window.matchMedia('(max-width:640px)').matches;
     var surveySize = mobile ? '38px' : '44px';
-    var cauHeight = mobile ? '56px' : '68px';
+    var cauHeight = mobile ? '44px' : '56px';
 
     brands.style.setProperty('gap', mobile ? '16px' : '26px', 'important');
     survey.style.setProperty('gap', mobile ? '7px' : '8px', 'important');

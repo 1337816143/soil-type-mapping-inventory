@@ -38,3 +38,45 @@ html.glass-ui .district-group .group-label{color:#24557e}html.glass-ui .district
 /* Annual QC names must stay inside the original narrow batch column. */
 html.glass-ui .city-section td:nth-child(3) .batch-tag{display:inline-block;box-sizing:border-box;max-width:100%;margin-right:0;white-space:normal;overflow-wrap:anywhere;line-height:1.4;vertical-align:top}
 html.glass-ui .reply-batch-tag{max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}
+
+/* v1.2.3: two-level navigation. No backdrop blur on repeated cells or tabs. */
+html.glass-ui body>header{padding:20px 0 12px;border-radius:26px}
+html.glass-ui header>.container{padding-inline:18px!important}
+.glass-header-top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:17px;min-width:0}
+html.glass-ui .glass-header-top h1{margin:0!important;min-width:0;font-size:clamp(18px,1.65vw,25px)!important;line-height:1.5;flex:1}
+.glass-header-top .page-title-text{min-width:0;overflow-wrap:anywhere}
+.glass-header-top .glass-controls{flex:0 0 auto;margin:0;align-self:flex-start;padding-top:8px}
+.glass-header-top .glass-controls button{min-height:36px;padding:7px 13px;font-weight:650;background:linear-gradient(155deg,#fff,#eaf4fa);box-shadow:inset 0 1px 0 #fff,0 3px 9px #2b526e0c;white-space:nowrap}
+.glass-nav-frame{position:relative;min-width:0;padding:0 0 1px}
+html.glass-ui .glass-nav-frame .tabs{display:flex;gap:6px;padding:8px;margin:0;border:1px solid #ffffffdb;border-radius:19px;background:linear-gradient(125deg,#e9f3f8ab,#eef2fc85);box-shadow:inset 0 1px 2px #4166800c;scrollbar-width:none;overscroll-behavior-x:contain;scroll-padding:8px}
+html.glass-ui .glass-nav-frame .tabs::-webkit-scrollbar{display:none}
+html.glass-ui .glass-nav-frame .tab{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;padding:10px 13px 12px;border:1px solid #d4e2edb3;border-radius:12px;background:linear-gradient(160deg,#ffffffd9,#f6faffaa);font-size:14px;font-weight:650;color:#466079;box-shadow:inset 0 1px 0 #fff,0 1px 3px #30567b06;transition:color .18s,background-color .18s,transform .18s}
+html.glass-ui .glass-nav-frame .tab.active{color:#174c7f;background:linear-gradient(145deg,#fff,#ddecfc);border-color:#a7c7e4;box-shadow:inset 0 1px 0 #fff,0 3px 9px #31557816}
+html.glass-ui .glass-nav-frame .tab::after{content:"";position:absolute;left:14px;right:14px;bottom:5px;height:3px;border-radius:3px;background:linear-gradient(90deg,#2d6ba7,#27a1a4);opacity:0;transform:scaleX(.4);transition:opacity .18s,transform .18s}
+html.glass-ui .glass-nav-frame .tab.active::after{opacity:1;transform:scaleX(1)}
+html.glass-ui .glass-nav-frame .tab[data-tab=references]{margin-left:8px}
+html.glass-ui .glass-nav-frame .tab[data-tab=workRecords]{color:#216c67;background:linear-gradient(145deg,#ffffffeb,#e8f7f1c9)}
+html.glass-ui .glass-nav-frame .tab[data-tab=workRecords].active{border-color:#85bcb3;background:linear-gradient(145deg,#fff,#d6eee8);color:#125c55}
+html.glass-ui .glass-nav-frame .tab:focus-visible{outline:2px solid #2563a8;outline-offset:2px}
+.glass-nav-arrow{position:absolute;top:12px;width:34px;height:38px;display:grid;place-items:center;border:1px solid #bad0e1;border-radius:11px;background:#f6fbff;color:#285373;cursor:pointer;box-shadow:0 2px 7px #2e597c12}
+.glass-nav-arrow.prev{left:0}.glass-nav-arrow.next{right:0}.glass-nav-arrow:disabled{opacity:.38;cursor:default;box-shadow:none}
+.glass-nav-arrow[hidden],.glass-nav-hint[hidden]{display:none!important}
+.glass-nav-frame.is-overflowing{padding-inline:40px;padding-bottom:18px}
+.glass-nav-hint{position:absolute;right:42px;bottom:0;font-size:11px;line-height:16px;color:#5a7185;pointer-events:none}
+html.glass-ui .missing-banner{border-radius:18px;border-color:#eadbb2;background:linear-gradient(145deg,#fffcefef,#fffcf2e6);box-shadow:inset 0 1px 0 #fff,0 5px 18px #645b1f05}
+html.glass-ui .missing-banner>h3{flex-wrap:wrap;gap:8px}
+html.glass-ui :is(.admin-import-trigger,.admin-delete-trigger,.soil-batch-download-trigger){min-height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:5px 11px;line-height:1.4;box-shadow:inset 0 1px 0 #fff,0 2px 5px #37516608}
+html.glass-ui .progress-overview-summary .summary-card{border-radius:12px!important}
+/* Keep primary, danger, disabled and administrative actions distinguishable. */
+html.glass-ui .btn-primary{background:linear-gradient(125deg,#245e9b,#238c96);color:#fff}
+html.glass-ui :is(.btn,.wr-button,.soil-file-action,.ref-btn,.v2-mini):disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+html.glass-ui .district-link.merged-link,html.glass-ui .district-group.merged .group-label{background:#dceaff;color:#205991;border-color:#b6d1f0;font-weight:650}
+html.glass-ui .district-link.municipal-link,html.glass-ui .district-group.municipal .group-label{background:#244f8d;color:#fff;border-color:#1d4278;font-weight:700}
+html.glass-ui footer{background:transparent;padding:26px 12px 30px}
+html.glass-ui .footer-brands{padding:4px 0;row-gap:20px}
+html.glass-ui .footer-brand.cau img{background:transparent;box-shadow:none;border:0;border-radius:0;object-fit:contain}
+html.glass-ui .footer-brand.survey{color:#4a647a}
+@media(hover:hover){html.glass-ui .glass-nav-frame .tab:hover{color:#174c7f;background:#ffffffed;transform:translateY(-1px)}html.glass-ui .glass-nav-frame .tab.active:hover{background:linear-gradient(145deg,#fff,#ddecfc)}.glass-nav-arrow:not(:disabled):hover{background:#fff;color:#17549c}}
+@media(max-width:760px){html.glass-ui body>header{padding:14px 0 8px;border-radius:20px}html.glass-ui header>.container{padding-inline:10px!important}.glass-header-top{flex-wrap:wrap;gap:8px;margin-bottom:10px}.glass-header-top h1{flex-basis:100%!important}.glass-header-top .glass-controls{width:100%;padding-top:0}.glass-header-top .glass-controls button{min-height:32px;font-size:11px;padding:5px 10px}html.glass-ui .glass-nav-frame .tab{font-size:13px;min-height:42px;padding:9px 11px 11px}html.glass-ui .glass-nav-frame .tabs{padding:7px;border-radius:15px;gap:5px}.glass-nav-frame.is-overflowing{padding-inline:32px}.glass-nav-arrow{top:10px;width:28px;height:38px}.glass-nav-hint{right:33px}html.glass-ui footer{padding:22px 10px}}
+html.glass-lite .glass-nav-frame .tabs,html.glass-lite .glass-nav-frame .tab{box-shadow:none}
+html.glass-lite .glass-nav-frame .tab,html.glass-lite .glass-nav-frame .tab::after{transition:none!important;transform:none!important}
