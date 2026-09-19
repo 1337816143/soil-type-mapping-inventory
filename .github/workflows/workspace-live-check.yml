@@ -18,6 +18,7 @@ jobs:
           sparse-checkout: |
             VERSION
             scripts/test-live-workspace.py
+            scripts/glass-ui-checks.py
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
