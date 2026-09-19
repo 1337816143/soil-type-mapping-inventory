@@ -26,11 +26,13 @@ jobs:
           node scripts/validate-project.js
           node scripts/validate-workspace.js
           git diff --quiet -- assets/logo.jpg data work-records.js work-records-core.js batch-policy.js batch-management.js replies
-      - name: Commit only the feature branch and remove preparation files
+      - name: Commit ordinary source files on the feature branch
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = 'feat/liquid-navigation-v1.2.3'
-          git rm .github/apply-ui-v123.py .github/ui-polish.css .github/ui-v123.patch.b64 .github/workflows/prepare-ui-v123.yml
+          # Workflow edits will be applied separately by the repository connection.
+          git restore --source=HEAD -- .github/workflows/deploy.yml .github/workflows/security-audit.yml .github/workflows/workspace-live-check.yml
+          git rm .github/apply-ui-v123.py .github/ui-polish.css .github/ui-v123.patch.b64
           git add -u
           git add assets/cau-logo-transparent.png
           git config user.name 'github-actions[bot]'
