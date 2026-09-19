@@ -4,35 +4,37 @@ on:
     branches: [feat/liquid-navigation-v1.2.3]
     paths: [.github/workflows/prepare-ui-v123.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Export current source without embedded credential
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import subprocess, re, zipfile
-          with zipfile.ZipFile('/tmp/ui-review-source.zip','w',zipfile.ZIP_DEFLATED) as z:
-              for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
-                  p=Path(name)
-                  if not p.is_file(): continue
-                  if name.startswith('assets/'):
-                      z.write(p,name); continue
-                  if p.suffix not in {'.js','.css','.html','.json','.py','.yml','.md'} and name!='VERSION': continue
-                  text=p.read_text(encoding='utf-8')
-                  if name=='upload-config.js':
-                      fake=','.join(str(ord(c)) for c in 'github_pat_'+'x'*82)
-                      text=re.sub(r'var tokenCodes = \[[^\]]+\]', 'var tokenCodes = ['+fake+']', text)
-                  z.writestr(name,text)
-          PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: ui-review-source
-          path: /tmp/ui-review-source.zip
-          retention-days: 1
+          python-version: '3.12'
+      - name: Apply bounded presentation changes
+        run: |
+          set -euo pipefail
+          python .github/apply-ui-v123.py
+          python -m pip install Pillow==11.3.0
+          python scripts/build-transparent-logo.py
+          node --check glass-navigation.js
+          node scripts/validate-project.js
+          node scripts/validate-workspace.js
+          git diff --quiet -- assets/logo.jpg data work-records.js work-records-core.js batch-policy.js batch-management.js replies
+      - name: Commit only the feature branch and remove preparation files
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'feat/liquid-navigation-v1.2.3'
+          git rm .github/apply-ui-v123.py .github/ui-polish.css .github/ui-v123.patch.b64 .github/workflows/prepare-ui-v123.yml
+          git add -u
+          git add assets/cau-logo-transparent.png
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'feat: integrate v1.2.3 glass navigation and transparent CAU footer'
+          git push origin HEAD:feat/liquid-navigation-v1.2.3
+          git rev-parse HEAD
