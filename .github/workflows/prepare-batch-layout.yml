@@ -1,0 +1,53 @@
+name: Prepare batch label layout correction
+on:
+  push:
+    branches: [fix/batch-label-layout-v1.2.2]
+    paths: [.github/workflows/prepare-batch-layout.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/batch-label-layout-v1.2.2
+          fetch-depth: 1
+      - name: Bound long labels without touching table data or handlers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess
+          assert Path('VERSION').read_text().strip()=='v1.2.1'
+          token=re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group(0)
+          p=Path('glass-interface.css')
+          p.write_text(p.read_text()+'\n/* Annual QC names must stay inside the original narrow batch column. */\nhtml.glass-ui .city-section td:nth-child(3) .batch-tag{display:inline-block;box-sizing:border-box;max-width:100%;margin-right:0;white-space:normal;overflow-wrap:anywhere;line-height:1.4;vertical-align:top}\nhtml.glass-ui .reply-batch-tag{max-width:100%;box-sizing:border-box;white-space:normal;overflow-wrap:anywhere}\n')
+          bounds="""page.locator('.city-section tbody td:nth-child(3) .batch-tag').evaluate_all('''nodes=>nodes.filter(n=>{if(!n.getClientRects().length)return false;const r=n.getBoundingClientRect(),c=n.closest('td').getBoundingClientRect();return r.right>c.right-2||r.left<c.left;}).map(n=>n.textContent)''')"""
+          p=Path('scripts/test-workspace-browser.py');s=p.read_text();anchor="            assert page.locator('.batch-tag').first.text_content().startswith('2026年第一次')"
+          assert s.count(anchor)==1
+          s=s.replace(anchor,anchor+"\n            for width in [1440,1024,760,390]:\n                page.set_viewport_size({'width':width,'height':1000})\n                assert not "+bounds+",'Batch label overlaps another column'\n            page.set_viewport_size({'width':1440,'height':1000})")
+          s=s.replace('full application/tab/round integration','full application/tab/round integration, long batch label containment at four widths')
+          p.write_text(s)
+          p=Path('scripts/test-live-workspace.py');s=p.read_text();anchor="        expect(page.locator('.batch-tag').first).to_contain_text('2026年第一次')"
+          assert s.count(anchor)==1
+          s=s.replace(anchor,anchor+'\n        assert not '+bounds+",'Batch label overlaps another column'")
+          s=s.replace("'historical batch labels'","'historical batch labels and column containment'")
+          p.write_text(s)
+          subprocess.run(['node','scripts/bump-version.js','patch'],check=True)
+          assert token==re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group(0)
+          p=Path('CHANGELOG.md');s=p.read_text();p.write_text(s.replace('# Changelog\n','# Changelog\n\n## v1.2.2 — 2026-09-19\n\n- 截图复核发现年度质控批次长标签可能越过窄列边界；标签现可在原单元格内换行，保留完整名称，不遮挡整改答复。\n- Chromium/WebKit 增加四种页面宽度的批次标签边界断言；线上只读检查同步覆盖列边界。\n- 原有表格列结构、批次数据、附件路径、整改答复与凭证保持不变。\n',1))
+          PY
+          python3 -m py_compile scripts/test-workspace-browser.py scripts/test-live-workspace.py
+          node scripts/validate-workspace.js
+          node scripts/validate-project.js
+      - name: Commit only feature-branch patch and remove this completed one-off workflow
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/prepare-batch-layout.yml
+          git add VERSION CHANGELOG.md app-release-ui.js app-version-guard.js index.html page-enhancements.js upload-config.js glass-interface.css scripts/test-workspace-browser.py scripts/test-live-workspace.py
+          git commit -m 'fix: v1.2.2 keep long QC batch labels inside their table cells'
+          git push origin HEAD:fix/batch-label-layout-v1.2.2
