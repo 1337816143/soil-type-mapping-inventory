@@ -133,6 +133,9 @@ with sync_playwright() as p:
             # Real application smoke check with network writes intercepted above.
             page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html')
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
+            import runpy
+            visual=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,engine)
+            (OUT/(engine+'-glass-report.json')).write_text(json.dumps(visual,ensure_ascii=False,indent=2))
             page.locator('[data-tab="workRecords"]').click();expect(page.locator('#wr-new')).to_be_visible()
             page.locator('[data-tab="soilType"]').click();page.wait_for_timeout(300)
             assert page.locator('.batch-tag').first.text_content().startswith('2026年第一次')

@@ -76,6 +76,10 @@ if (!maintenance.includes('不得擅自删除、置空')) fail('维护约束未�
 });
 if (loader.includes('reference-import-mode.js')) fail('旧共享参考资料导入保护仍在加载，参考资料与质控上传未彻底隔离');
 
+if (!loader.includes(`glass-navigation.js?v=${bareVersion}`)) fail('玻璃导航缓存版本未更新');
+if (loader.indexOf('glass-navigation.js') < loader.indexOf('work-records.js')) fail('玻璃导航应在原标签完成安装后加载');
+if (!read('index.html').includes('./assets/cau-logo-transparent.png') || !fs.existsSync('assets/cau-logo-transparent.png')) fail('缺少透明 CAU 标识');
+
 const orderedScripts = [
   'page-enhancements-core.js',
   'task-unit-mappings.js',
