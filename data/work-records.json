@@ -1,4 +1,39 @@
 {
   "schemaVersion": 1,
-  "records": []
+  "records": [
+    {
+      "id": "wr-8dda7680-2f89-46c0-8923-a6399030a10a",
+      "title": "质控人员工作报告",
+      "time": "2026-09-19T13:05",
+      "location": "中国农业大学",
+      "people": "李建伟",
+      "notes": "",
+      "attachments": [
+        {
+          "id": "wr-6b08ce91-b784-4c59-afc7-cbdb2fb14c44",
+          "name": "01_李建伟三普工作报告_20260915.docx",
+          "path": "work-record-attachments/wr-8dda7680-2f89-46c0-8923-a6399030a10a/wr-773e22c4-e35b-4262-a343-152053de29ba/01_李建伟三普工作报告_20260915.docx",
+          "size": 8527134,
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        {
+          "id": "wr-f22a50e2-bdfa-4ca5-8125-9991f8c8bab3",
+          "name": "02_平台展示报告.docx",
+          "path": "work-record-attachments/wr-8dda7680-2f89-46c0-8923-a6399030a10a/wr-a9913bc5-979d-4e24-8dcf-4d1cd0cc405d/02_平台展示报告.docx",
+          "size": 419383,
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        {
+          "id": "wr-d122de4d-ac97-4218-9a3a-2a7b09887b58",
+          "name": "03_质控Skill说明报告.docx",
+          "path": "work-record-attachments/wr-8dda7680-2f89-46c0-8923-a6399030a10a/wr-2b763069-9cfd-46b1-bc8c-e0ace8e09f0a/03_质控Skill说明报告.docx",
+          "size": 265665,
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "revision": 1,
+      "createdAt": "2026-09-19T05:08:19.209Z",
+      "updatedAt": "2026-09-19T05:08:19.209Z"
+    }
+  ]
 }
