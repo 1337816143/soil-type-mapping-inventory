@@ -32,3 +32,5 @@ html.glass-lite body>header,html.glass-lite .ref-tools,html.glass-lite .wr-toolb
 html.glass-lite .wr-photo{transition:none!important}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html.glass-ui body>header,html.glass-ui .ref-tools{background:#f8fbfe}}
 @media(prefers-reduced-motion:reduce){html.glass-ui *,html.glass-ui *::before,html.glass-ui *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+/* Keep expanded legacy group buttons legible on glass surfaces. */
+html.glass-ui .district-group .group-label{color:#24557e}html.glass-ui .district-group .group-label.active,html.glass-ui .district-group .group-label.open{background:#dbeafa;color:#183f65}
