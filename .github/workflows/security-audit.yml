@@ -51,6 +51,7 @@ jobs:
             exit 1
           fi
 
+          node --check glass-navigation.js
           node --check upload-config.js
           node --check page-enhancements.js
           node --check app-release-ui.js
