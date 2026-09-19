@@ -97,11 +97,28 @@
     d.files=d.files.map(function(f){return {id:f.id,persisted:true};});
     return transaction(['drafts','files'],'readwrite',function(tx) {
       pending.forEach(function(f){tx.objectStore('files').put(f);});
-      tx.objectStore('drafts').put(d);
+      var ds=tx.objectStore('drafts');
+      ds.put(d);
+      // Metadata and garbage collection share a transaction: retain every file
+      // referenced by any draft, including drafts edited in another browser tab.
+      var all=ds.getAll();
+      all.onsuccess=function(){
+        var kept=new Set();
+        all.result.forEach(function(row){(row.files||[]).forEach(function(f){kept.add(f.id);});});
+        var cursor=tx.objectStore('files').openKeyCursor();
+        cursor.onsuccess=function(){var c=cursor.result;if(c){if(!kept.has(c.key))tx.objectStore('files').delete(c.key);c.continue();}};
+      };
     });
   }
-  async function listDrafts() {
+  async function listDrafts(options) {
     var list=await transaction(['drafts'],'readonly',function(tx,done){var req=tx.objectStore('drafts').getAll();req.onsuccess=function(){done(req.result);};});
+    return options && options.metadataOnly ? list : hydrateDrafts(list);
+  }
+  async function getDraft(id) {
+    var row=await transaction(['drafts'],'readonly',function(tx,done){var req=tx.objectStore('drafts').get(id);req.onsuccess=function(){done(req.result);};});
+    return row ? (await hydrateDrafts([row]))[0] : null;
+  }
+  async function hydrateDrafts(list) {
     return transaction(['files'],'readonly',function(tx,done) {
       done(list);
       list.forEach(function(d){(d.files||[]).forEach(function(entry){
@@ -126,7 +143,7 @@
       };
     });
   }
-  var drafts = {put:putDraft,remove:removeDraft,list:listDrafts};
+  var drafts = {put:putDraft,remove:removeDraft,list:listDrafts,get:getDraft};
   function encodeBlob(file) {
     return new Promise(function (resolve,reject) {
       var reader = new FileReader();
