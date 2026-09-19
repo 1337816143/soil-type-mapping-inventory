@@ -31,6 +31,7 @@ with sync_playwright() as p:
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')
         page.locator('[data-tab="soilType"]').click()
         expect(page.locator('.batch-tag').first).to_contain_text('2026年第一次')
+        assert not page.locator('.city-section tbody td:nth-child(3) .batch-tag').evaluate_all('''nodes=>nodes.filter(n=>{if(!n.getClientRects().length)return false;const r=n.getBoundingClientRect(),c=n.closest('td').getBoundingClientRect();return r.right>c.right-2||r.left<c.left;}).map(n=>n.textContent)'''),'Batch label overlaps another column'
         page.screenshot(path=str(OUT/'live-home-desktop.png'))
         page.locator('[data-tab="workRecords"]').click()
         expect(page.locator('#wr-new')).to_be_visible()
@@ -56,7 +57,7 @@ with sync_playwright() as p:
         expect(page.locator('.wr-overlay')).to_have_count(0)
         assert not writes,'Unexpected write request attempted'
         assert not errors,errors
-        report['checks']+=['historical batch labels','work-record query and view switches','editor fields and attachment controls','mobile dialog close/save visibility','no runtime errors or network writes during smoke interactions']
+        report['checks']+=['historical batch labels and column containment','work-record query and view switches','editor fields and attachment controls','mobile dialog close/save visibility','no runtime errors or network writes during smoke interactions']
         report['status']='passed'
     except Exception:
         report['status']='failed';page.screenshot(path=str(OUT/'live-failure.png'));raise

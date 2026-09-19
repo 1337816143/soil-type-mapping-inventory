@@ -136,12 +136,16 @@ with sync_playwright() as p:
             page.locator('[data-tab="workRecords"]').click();expect(page.locator('#wr-new')).to_be_visible()
             page.locator('[data-tab="soilType"]').click();page.wait_for_timeout(300)
             assert page.locator('.batch-tag').first.text_content().startswith('2026年第一次')
+            for width in [1440,1024,760,390]:
+                page.set_viewport_size({'width':width,'height':1000})
+                assert not page.locator('.city-section tbody td:nth-child(3) .batch-tag').evaluate_all('''nodes=>nodes.filter(n=>{if(!n.getClientRects().length)return false;const r=n.getBoundingClientRect(),c=n.closest('td').getBoundingClientRect();return r.right>c.right-2||r.left<c.left;}).map(n=>n.textContent)'''),'Batch label overlaps another column'
+            page.set_viewport_size({'width':1440,'height':1000})
             page.evaluate("openSoilAdminImport({kind:'quality',dataKey:'soilType'})")
             expect(page.locator('#qc-round-controls')).to_be_visible();page.locator('#qc-round').fill('2');page.locator('#qc-apply-round').click()
             assert page.evaluate("SoilAdminImport.state.batchSelection.round")==2
             page.locator('#soilAdminImport .adm-close').click();page.screenshot(path=str(OUT/f'{engine}-full-site.png'),full_page=True)
             report['engines'].append(engine)
-            report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save/close/authorization, attachment garbage collection, metadata-only draft listing, stale-refresh protection, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration')
+            report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save/close/authorization, attachment garbage collection, metadata-only draft listing, stale-refresh protection, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration, long batch label containment at four widths')
         except Exception:
             page.screenshot(path=str(OUT/f'{engine}-failure.png'),full_page=True)
             (OUT/f'{engine}-errors.json').write_text(json.dumps(errors,ensure_ascii=False))
