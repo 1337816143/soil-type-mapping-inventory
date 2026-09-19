@@ -30,9 +30,18 @@
     heading.append(h,close);box.append(heading,body,foot);mask.append(box);document.body.append(mask);
     if (!overlayCount++) { priorOverflow=document.body.style.overflow;document.body.style.overflow='hidden'; }
     function viewport() {
-      var v=window.visualViewport, width=v?v.width:innerWidth,height=v?v.height:innerHeight,left=v?v.offsetLeft:0,top=v?v.offsetTop:0;
-      var compact=(cls||'').indexOf('wr-auth')>=0;var w=Math.min(compact?480:1060,width-16),hh=Math.min(compact?320:860,height-16);
-      box.style.cssText='width:'+w+'px;height:'+hh+'px;left:'+(left+(width-w)/2)+'px;top:'+(top+(height-hh)/2)+'px;';
+      // CSS bounds remain authoritative if WebKit briefly reports a stale visualViewport.
+      var v=window.visualViewport, lw=document.documentElement.clientWidth||innerWidth, lh=innerHeight;
+      var width=Math.min(lw,v&&v.width||lw),height=Math.min(lh,v&&v.height||lh);
+      var left=Math.max(0,Math.min(v&&v.offsetLeft||0,lw-width));
+      var top=Math.max(0,Math.min(v&&v.offsetTop||0,lh-height));
+      mask.style.left=left+'px';mask.style.top=top+'px';
+      mask.style.width='min(100vw, '+width+'px)';
+      mask.style.height='min(100vh, '+height+'px)';
+      if(CSS.supports('height','100dvh'))mask.style.height='min(100dvh, '+height+'px)';
+      var compact=(cls||'').indexOf('wr-auth')>=0;
+      box.style.width='min('+(compact?480:1060)+'px, 100%)';
+      box.style.height='min('+(compact?320:860)+'px, 100%)';
     }
     function keyboard(e) {
       if (mask !== document.querySelectorAll('.wr-overlay')[document.querySelectorAll('.wr-overlay').length-1] || document.querySelector('.soil-file-modal')) return;
@@ -77,14 +86,19 @@
     function update(){var a=items[index];img.src=url(a);img.alt=a.name||a.file.name;label.textContent=(index+1)+' / '+items.length;zoom=1;img.style.transform='';}
     var go=function(d){index=(index+d+items.length)%items.length;update();};
     m.foot.append(button('上一张','',function(){go(-1);}),label,button('下一张','',function(){go(1);}),button('缩放','',function(){zoom=zoom===1?1.5:1;img.style.transform='scale('+zoom+')';}),button('下载原图','primary',function(){download(items[index]);}));
-    stage.tabIndex=0;stage.onkeydown=function(e){if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(-1);}if(['ArrowRight','ArrowDown'].includes(e.key)){e.preventDefault();go(1);}};
-    update();
+    stage.tabIndex=0;stage.setAttribute('aria-label','原图查看，滚轮、方向键或左右滑动切换');
+    stage.onkeydown=function(e){var prev=['ArrowLeft','ArrowUp'].includes(e.key)||['Numpad4','Numpad8'].includes(e.code),next=['ArrowRight','ArrowDown'].includes(e.key)||['Numpad2','Numpad6'].includes(e.code);if(prev||next){e.preventDefault();go(next?1:-1);}};
+    var lastWheel=0,touch=null;
+    stage.addEventListener('wheel',function(e){if(items.length<2||zoom!==1)return;e.preventDefault();if(performance.now()-lastWheel<280)return;lastWheel=performance.now();go((e.deltaY||e.deltaX)>0?1:-1);},{passive:false});
+    stage.onpointerdown=function(e){touch={x:e.clientX,y:e.clientY};};
+    stage.onpointerup=function(e){if(!touch)return;var x=e.clientX-touch.x,y=e.clientY-touch.y;touch=null;if(zoom===1&&Math.abs(x)>40&&Math.abs(x)>Math.abs(y)*1.2)go(x<0?1:-1);};
+    update();stage.focus({preventScroll:true});
   }
   function gallery(items) {
     var outer=el('div','wr-gallery');
     if(!items.length){outer.append(el('div','wr-gallery-empty','图片附件会直接展示在这里'));return outer;}
-    var index=0,last=0,pointer=null,deck=el('div','wr-deck');deck.tabIndex=0;deck.setAttribute('aria-label','图片卡片；滚轮、方向键或左右滑动切换');
-    var cards=items.map(function(a,i){var p=el('div','wr-photo'),im=el('img');im.alt=a.name||a.file.name;im.decoding='async';p.append(im);p.onclick=function(){if(i===index)showImage(items,index);};deck.append(p);return p;});
+    var index=0,last=0,pointer=null,suppressClickUntil=0,deck=el('div','wr-deck');deck.tabIndex=0;deck.setAttribute('aria-label','图片卡片；滚轮、方向键或左右滑动切换');
+    var cards=items.map(function(a,i){var p=el('div','wr-photo'),im=el('img');im.alt=a.name||a.file.name;im.decoding='async';p.append(im);p.onclick=function(){if(i===index&&performance.now()>suppressClickUntil)showImage(items,index);};deck.append(p);return p;});
     var controls=el('div','wr-gallery-controls'),label=el('span');label.setAttribute('aria-live','polite');
     function position(){
       cards.forEach(function(card,i){var rank=(i-index+items.length)%items.length, visible=rank<4;
@@ -97,7 +111,7 @@
     function step(delta){if(items.length<2)return;index=(index+delta+items.length)%items.length;position();}
     deck.addEventListener('wheel',function(e){if(items.length<2||Math.abs(e.deltaY)+Math.abs(e.deltaX)<3)return;e.preventDefault();var now=performance.now();if(now-last<260)return;last=now;step((e.deltaY||e.deltaX)>0?1:-1);},{passive:false});
     deck.addEventListener('keydown',function(e){var next=['ArrowRight','ArrowDown'].includes(e.key)||['Numpad2','Numpad6'].includes(e.code),prev=['ArrowLeft','ArrowUp'].includes(e.key)||['Numpad4','Numpad8'].includes(e.code);if(next||prev){e.preventDefault();step(next?1:-1);}if(e.key==='Enter')showImage(items,index);});
-    deck.onpointerdown=function(e){pointer={x:e.clientX,y:e.clientY};};deck.onpointerup=function(e){if(!pointer)return;var dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;pointer=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.2)step(dx<0?1:-1);};
+    deck.onpointerdown=function(e){pointer={x:e.clientX,y:e.clientY};};deck.onpointerup=function(e){if(!pointer)return;var dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;pointer=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.2){suppressClickUntil=performance.now()+400;step(dx<0?1:-1);}};
     controls.append(button('‹','',function(){step(-1);}),label,button('›','',function(){step(1);}));outer.append(deck,controls,el('div','wr-gallery-hint','滚轮 / 方向键切换 · 点击查看原图'));position();return outer;
   }
   async function download(a) {
@@ -166,6 +180,7 @@
   function renderEditorAttachments(){var host=editor.modal.body.querySelector('#wr-editor-files');host.replaceChildren();attachments(host,editor.attachments.concat(editor.files),function(a){if(editor.busy)return;editor.attachments=editor.attachments.filter(function(x){return x.id!==a.id;});editor.files=editor.files.filter(function(x){return x.id!==a.id;});renderEditorAttachments();persist().catch(function(){});});}
   async function startEditor(record,resume){
     if(editor)return;
+    if(resume&&(resume.files||[]).some(function(f){return !f.file;})){notify('该草稿的部分附件在本机存储中丢失。草稿已保留，请勿清理浏览器数据。',true);return;}
     var savedId=resume?resume.recordId:record&&record.id;
     var permitted=savedId?await authorize('修改'):false;
     if(savedId&&!permitted)return;
@@ -187,11 +202,20 @@
     };renderEditorAttachments();m.body.querySelector('#wr-field-title').focus();
   }
   async function saveEditor(){
-    if(!editor||editor.busy)return;var e=editor,msg=e.modal.body.querySelector('#wr-editor-message');
-    try{var values=C.fields(readFields(),true);await persist();e.busy=true;e.modal.box.querySelectorAll('button,input,textarea').forEach(function(n){n.disabled=true;});
+    if(!editor||editor.busy)return;
+    var e=editor,msg=e.modal.body.querySelector('#wr-editor-message'),values;
+    try{values=C.fields(readFields(),true);}catch(error){msg.textContent=error.message;return;}
+    // Gate synchronously, before any IndexedDB/network await: a double tap saves only once.
+    e.busy=true;e.modal.box.querySelectorAll('button,input,textarea').forEach(function(n){n.disabled=true;});
+    try{
+      await persist();
       var result=await C.save({operation:'save',id:e.id,baseRevision:e.baseRevision,authorized:e.authorized,fields:values,attachments:e.attachments,files:e.files},
         {progress:function(text,p){msg.textContent=text;document.getElementById('wr-editor-progress').style.width=p+'%';}});
-      data=result.data;loaded=true;clearTimeout(draftTimer);await saveQueue.catch(function(){});await C.drafts.remove(e.draftId);editor=null;e.modal.dispose();objects.forEach(function(u){URL.revokeObjectURL(u);});objects.clear();render();renderDrafts();notify('工作记录已正式保存并同步 GitHub。上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。');
+      data=result.data;loaded=true;clearTimeout(draftTimer);await saveQueue.catch(function(){});
+      var cleanup='';
+      try{await C.drafts.remove(e.draftId);}catch(error){cleanup='（已保存到仓库，但本机草稿清理失败，请删除残留草稿，不要再次提交。）';}
+      editor=null;e.modal.dispose();objects.forEach(function(u){URL.revokeObjectURL(u);});objects.clear();render();renderDrafts();
+      notify('工作记录已正式保存并同步 GitHub。上传成功！稍等3~5分钟刷新网站即可查看新上传的文件。'+cleanup);
     }catch(error){msg.textContent='保存未完成：'+error.message+'；草稿保留在本机。';msg.classList.add('error');}
     finally{if(editor===e){e.busy=false;e.modal.box.querySelectorAll('button,input,textarea').forEach(function(n){n.disabled=false;});}}
   }
