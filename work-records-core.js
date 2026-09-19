@@ -45,34 +45,88 @@
     }).sort(function (a,b) { return String(b.time).localeCompare(String(a.time)) || String(b.updatedAt).localeCompare(String(a.updatedAt)); });
   }
   function draft(value) {
-    // Explicit allowlist: credentials and temporary admin authorization are never persisted.
+    // Credentials and temporary edit authorization never enter a saved draft.
     return {id:String(value.id), recordId:value.recordId || null, baseRevision:value.baseRevision == null ? null : +value.baseRevision,
       fields:fields(value.fields,false), attachments:(value.attachments || []).map(function (a) { return {id:a.id,name:a.name,path:a.path,size:a.size,type:a.type}; }),
       files:(value.files || []).map(function (f) { return {id:f.id,file:f.file}; }), updatedAt:new Date().toISOString()};
   }
   function draftsDB() {
     return new Promise(function (resolve,reject) {
-      var req = indexedDB.open('soil-work-record-drafts',1);
-      req.onupgradeneeded = function () { req.result.createObjectStore('drafts',{keyPath:'id'}); };
-      req.onsuccess = function () { resolve(req.result); };
+      var req = indexedDB.open('soil-work-record-drafts',2);
+      req.onupgradeneeded = function () {
+        var db = req.result;
+        if (!db.objectStoreNames.contains('drafts')) db.createObjectStore('drafts',{keyPath:'id'});
+        if (!db.objectStoreNames.contains('files')) db.createObjectStore('files',{keyPath:'id'});
+      };
+      req.onsuccess = function () {
+        req.result.onversionchange = function () { req.result.close(); };
+        resolve(req.result);
+      };
       req.onerror = function () { reject(req.error || new Error('当前浏览器不支持草稿暂存')); };
+      req.onblocked = function () { reject(new Error('草稿数据库正在另一标签页更新，请关闭旧编辑页后重试')); };
     });
   }
-  async function draftOperation(mode, action, value) {
+  async function transaction(stores, mode, action) {
     var db = await draftsDB();
     try {
       return await new Promise(function (resolve,reject) {
-        var tx = db.transaction('drafts',mode), result;
-        var req = tx.objectStore('drafts')[action](value);
-        req.onsuccess = function () { result = req.result; };
+        var tx = db.transaction(stores,mode), result, failure;
         tx.oncomplete = function () { resolve(result); };
-        tx.onabort = tx.onerror = function () { reject(tx.error || new Error('草稿暂存失败，可能是设备存储空间不足')); };
+        tx.onabort = tx.onerror = function () {
+          var e = failure || tx.error;
+          reject(new Error('草稿暂存失败' + (e ? '（'+e.name+'：'+e.message+'）' : '，请检查设备存储空间与浏览器权限')));
+        };
+        try { action(tx, function (v) { result=v; }); }
+        catch(e) { failure=e; try { tx.abort(); } catch(ignore) { reject(e); } }
       });
     } finally { db.close(); }
   }
-  var drafts = {put:function (d) { return draftOperation('readwrite','put',draft(d)); },
-    remove:function (id) { return draftOperation('readwrite','delete',id); },
-    list:function () { return draftOperation('readonly','getAll'); }};
+  async function putDraft(value) {
+    var d = draft(value);
+    // Some WebKit versions fail to persist a file-backed Blob. Store plain bytes
+    // separately, and only write each attachment once. Typing saves metadata only.
+    var existing = await transaction(['files'],'readonly',function(tx,done) {
+      var req=tx.objectStore('files').getAllKeys();req.onsuccess=function(){done(req.result);};
+    });
+    var known = new Set(existing), pending=[];
+    for (var i=0;i<d.files.length;i++) {
+      var entry=d.files[i], f=entry.file;
+      if (!f || typeof f.arrayBuffer !== 'function') throw new Error('草稿附件无法读取；现有草稿未被覆盖');
+      if (!known.has(entry.id)) pending.push({id:entry.id,name:f.name,type:f.type,lastModified:f.lastModified,bytes:await f.arrayBuffer()});
+    }
+    d.files=d.files.map(function(f){return {id:f.id,persisted:true};});
+    return transaction(['drafts','files'],'readwrite',function(tx) {
+      pending.forEach(function(f){tx.objectStore('files').put(f);});
+      tx.objectStore('drafts').put(d);
+    });
+  }
+  async function listDrafts() {
+    var list=await transaction(['drafts'],'readonly',function(tx,done){var req=tx.objectStore('drafts').getAll();req.onsuccess=function(){done(req.result);};});
+    return transaction(['files'],'readonly',function(tx,done) {
+      done(list);
+      list.forEach(function(d){(d.files||[]).forEach(function(entry){
+        if (entry.file) return; // Read older draft schema without losing its files.
+        var req=tx.objectStore('files').get(entry.id);
+        req.onsuccess=function(){
+          var f=req.result;
+          if(f)entry.file=new File([f.bytes],f.name,{type:f.type||'',lastModified:f.lastModified||0});
+          else entry.missing=true;
+        };
+      });});
+    });
+  }
+  async function removeDraft(id) {
+    return transaction(['drafts','files'],'readwrite',function(tx) {
+      var ds=tx.objectStore('drafts'),req=ds.getAll();
+      req.onsuccess=function(){
+        var rows=req.result,kept=new Set();
+        rows.filter(function(d){return d.id!==id;}).forEach(function(d){(d.files||[]).forEach(function(f){kept.add(f.id);});});
+        rows.filter(function(d){return d.id===id;}).forEach(function(d){(d.files||[]).forEach(function(f){if(!kept.has(f.id))tx.objectStore('files').delete(f.id);});});
+        ds.delete(id);
+      };
+    });
+  }
+  var drafts = {put:putDraft,remove:removeDraft,list:listDrafts};
   function encodeBlob(file) {
     return new Promise(function (resolve,reject) {
       var reader = new FileReader();
