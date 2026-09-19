@@ -56,7 +56,6 @@
   }
 
   var modules = [
-    {name:'年份与质控轮次', src:'./batch-policy.js?v=1.1.6'},
     {name:'年份与质控轮次', src:'./batch-policy.js?v=1.2.0'},
     {name:'页面基础增强', src:'./page-enhancements-core.js?v=1.2.0'},
     {name:'任务单位映射', src:'./task-unit-mappings.js?v=1.2.0'},
