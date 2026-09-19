@@ -1,0 +1,36 @@
+name: Live workspace smoke check
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: live-workspace-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            VERSION
+            scripts/test-live-workspace.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          python -m pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Verify deployed version and interactions without production writes
+        run: python scripts/test-live-workspace.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workspace-live-results
+          path: test-artifacts/
+          retention-days: 5
