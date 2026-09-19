@@ -1,5 +1,5 @@
-"""Browser tests with mocked GitHub requests: never create production test records."""
-import base64, http.server, json, os, pathlib, threading, urllib.parse
+"""Browser regression with mock records and mocked GitHub requests; no production writes."""
+import base64, http.server, json, os, pathlib, threading, urllib.parse, traceback
 from playwright.sync_api import sync_playwright, expect
 ROOT=pathlib.Path(__file__).resolve().parent.parent
 OUT=ROOT/'test-artifacts'; OUT.mkdir(exist_ok=True)
@@ -26,7 +26,7 @@ with sync_playwright() as p:
         browser=getattr(p,engine).launch(**args)
         ctx=browser.new_context(viewport={'width':1280,'height':900},has_touch=True)
         page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-        remote={'schemaVersion':1,'records':[]};trees={};commits={};uploaded={};requests=[]
+        remote={'schemaVersion':1,'records':[]};trees={};commits={};uploaded={};attachment_paths={};requests=[]
         def route(r):
             u=r.request.url
             if '/data/work-records.json' in u:
@@ -42,11 +42,12 @@ with sync_playwright() as p:
                 elif path=='/git/refs/heads/main':
                     assert body['force'] is False
                     entries=trees[commits[body['sha']]];content=next(x['content'] for x in entries if x['path']=='data/work-records.json')
-                    remote.clear();remote.update(json.loads(content));r.fulfill(json={'object':{'sha':body['sha']}})
+                    attachment_paths.update({x['path']:uploaded[x['sha']] for x in entries if x.get('sha') in uploaded});remote.clear();remote.update(json.loads(content));r.fulfill(json={'object':{'sha':body['sha']}})
                 else:r.fulfill(json={'tree':[],'login':'test'})
                 return
             if 'raw.githubusercontent.com' in u:
-                if '/work-record-attachments/' in u:r.fulfill(body=next(iter(uploaded.values()),b''),content_type='image/png');return
+                if '/work-record-attachments/' in u:
+                    ap=urllib.parse.unquote(urllib.parse.urlsplit(u).path.split('/main/',1)[-1]);r.fulfill(body=attachment_paths.get(ap,b''),content_type='image/png');return
                 suffix=urllib.parse.unquote(urllib.parse.urlsplit(u).path.split('/main/',1)[-1]);f=ROOT/suffix
                 if f.is_file() and f.suffix=='.json':r.fulfill(body=f.read_bytes(),content_type='application/json')
                 else:r.fulfill(status=404,body='Not Found')
@@ -61,7 +62,7 @@ with sync_playwright() as p:
             page.locator('#wr-field-time').fill('2026-09-18T09:30')
             page.locator('#wr-field-location').fill('石家庄 · 会议室')
             page.locator('#wr-field-people').fill('张三、李四')
-            page.locator('#wr-field-notes').fill('核对第一次质控意见，安排第二次材料收集。<img src=x onerror=alert(1)>')
+            page.locator('#wr-field-notes').fill('核对第一次质控意见，安排第二次材料收集。<b>原样保存测试</b>')
             images=page.evaluate('''() => [0,1,2].map(i=>{let c=document.createElement('canvas');c.width=700;c.height=420;let x=c.getContext('2d'),g=x.createLinearGradient(0,0,700,420);g.addColorStop(0,['#dcebed','#e1e8f6','#e6ecd9'][i]);g.addColorStop(1,['#698d9f','#7b86af','#6f8e7d'][i]);x.fillStyle=g;x.fillRect(0,0,700,420);x.fillStyle='#ffffff';x.font='bold 45px sans-serif';x.fillText('FIELD NOTES 0'+(i+1),50,210);return c.toDataURL('image/png').split(',')[1];})''')
             page.locator('#wr-attachments').set_input_files([{'name':f'现场{i+1}.png','mimeType':'image/png','buffer':base64.b64decode(v)} for i,v in enumerate(images)]+[{'name':'会议资料.pdf','mimeType':'application/pdf','buffer':b'%PDF-1.4\n% fixture only'}])
             expect(page.locator('#wr-editor-files .wr-file')).to_have_count(4)
@@ -78,10 +79,14 @@ with sync_playwright() as p:
             page.get_by_role('button',name='暂存并关闭',exact=True).click();expect(page.locator('.wr-overlay')).to_have_count(0)
             page.reload();page.locator('[data-tab="workRecords"]').click();page.get_by_role('button',name='继续编辑',exact=True).click()
             expect(page.locator('#wr-field-title')).to_have_value('北部片区质控交流会');expect(page.locator('#wr-editor-files .wr-file')).to_have_count(4)
-            page.get_by_role('button',name='正式保存',exact=True).click();expect(page.locator('.wr-overlay')).to_have_count(0,timeout=15000)
+            restored=page.evaluate('''async()=>{let rows=await SoilWorkCore.drafts.list();return Promise.all(rows[0].files.map(async x=>{let a=new Uint8Array(await x.file.arrayBuffer()),s='';for(let b of a)s+=String.fromCharCode(b);return {name:x.file.name,bytes:btoa(s)};}));}''')
+            assert [x['bytes'] for x in restored[:3]]==images, 'Draft image bytes changed across reload'
+            assert base64.b64decode(restored[3]['bytes'])==b'%PDF-1.4\n% fixture only'
+            page.get_by_role('button',name='正式保存',exact=True).evaluate('(b)=>{b.click();b.click();}');expect(page.locator('.wr-overlay')).to_have_count(0,timeout=15000)
+            assert requests.count('/git/refs/heads/main')==1, 'Double tap submitted twice'
             expect(page.locator('.wr-record')).to_have_count(1);expect(page.locator('.wr-record')).to_contain_text('石家庄 · 会议室')
             assert len(remote['records'][0]['attachments'])==4
-            assert not page.locator('.wr-notes img').count(),'Notes were not escaped'
+            assert not page.locator('.wr-notes b').count(),'Notes were not escaped'
             expect(page.locator('.wr-draft-chip')).to_have_count(0)
             deck=page.locator('.wr-deck');deck.focus();deck.press('ArrowRight');expect(page.locator('.wr-gallery-controls span')).to_have_text('2 / 3')
             page.wait_for_timeout(300);deck.hover();page.mouse.wheel(0,150);expect(page.locator('.wr-gallery-controls span')).to_have_text('3 / 3')
@@ -102,7 +107,7 @@ with sync_playwright() as p:
             page.locator('#wr-auth-password').fill('478666');page.get_by_role('button',name='验证并继续').click();expect(page.locator('.wr-record')).to_have_count(0)
             assert remote['records'][0].get('deletedAt')
             assert not errors,errors
-            # Also load the real application, with source data reads and network writes isolated.
+            # Real application smoke check with network writes intercepted above.
             page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html')
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
             page.locator('[data-tab="workRecords"]').click();expect(page.locator('#wr-new')).to_be_visible()
@@ -110,14 +115,14 @@ with sync_playwright() as p:
             assert page.locator('.batch-tag').first.text_content().startswith('2026年第一次')
             page.evaluate("openSoilAdminImport({kind:'quality',dataKey:'soilType'})")
             expect(page.locator('#qc-round-controls')).to_be_visible();page.locator('#qc-round').fill('2');page.locator('#qc-apply-round').click()
-            value=page.evaluate("SoilAdminImport.state.batchSelection.round")
-            assert value==2
+            assert page.evaluate("SoilAdminImport.state.batchSelection.round")==2
             page.locator('#soilAdminImport .adm-close').click();page.screenshot(path=str(OUT/f'{engine}-full-site.png'),full_page=True)
             report['engines'].append(engine)
-            report['checks'].append(engine+': CRUD/password, persistent IndexedDB attachments, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration')
+            report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration')
         except Exception:
             page.screenshot(path=str(OUT/f'{engine}-failure.png'),full_page=True)
             (OUT/f'{engine}-errors.json').write_text(json.dumps(errors,ensure_ascii=False))
+            (OUT/f'{engine}-failure.txt').write_text(traceback.format_exc())
             raise
         finally:ctx.close();browser.close()
 server.shutdown()
