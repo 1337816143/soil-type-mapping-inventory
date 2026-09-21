@@ -57,7 +57,46 @@ def check_glass_ui(page, out, prefix):
     assert tabs.first.evaluate('(n)=>getComputedStyle(n).transitionDuration')=='0s'
     page.emulate_media(reduced_motion='no-preference')
     first.click();page.evaluate('window.scrollTo(0,0)')
-    return {'status':'passed','tabs':keys,'widths':[320,390,430,760,1024,1440],
+    gutters = check_page_gutters(page, out, prefix)
+    return {'status':'passed','pageGutters':gutters,'tabs':keys,'widths':[320,390,430,760,1024,1440],
             'checks':['original tab/panel integration','keyboard navigation','active tab visibility',
                       'header overflow bounds','transparent source logo alpha','lightweight mode','reduced motion'],
             'logo':alpha}
+
+
+def check_page_gutters(page, out, prefix):
+    """Compare actual outer edges for every tab, including the breakpoint."""
+    widths = [320, 360, 390, 430, 760, 761, 1024, 1440, 1920]
+    keys = page.locator('header .tabs .tab').evaluate_all('(ns)=>ns.map(n=>n.dataset.tab)')
+    results = []
+    for width in widths:
+        page.set_viewport_size({'width':width, 'height':1000 if width >= 1024 else 844})
+        for key in keys:
+            page.locator('[data-tab="'+key+'"]').click()
+            page.wait_for_timeout(240)
+            geometry = page.evaluate("""()=>{
+              const rect=n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right};};
+              const header=rect(document.querySelector('body>header'));
+              const main=document.querySelector('body>.container'), m=rect(main), s=getComputedStyle(main);
+              const panel=rect(main.querySelector('.tab-content.active'));
+              const surfaces=Array.from(main.querySelectorAll('#missingBanner,.tab-content.active .city-section .table-wrap,.tab-content.active .wr-page'))
+                .filter(n=>n.getClientRects().length&&getComputedStyle(n).display!=='none').map(rect);
+              return {header,content:{left:m.left+parseFloat(s.paddingLeft),right:m.right-parseFloat(s.paddingRight)},
+                panel,footer:rect(document.querySelector('body>footer')),surfaces,viewport:document.documentElement.clientWidth};
+            }""")
+            h = geometry['header']
+            expected = 6 if width <= 760 else 12
+            assert abs(h['left']-expected)<1 and abs(geometry['viewport']-h['right']-expected)<1, ('header changed',width,key,geometry)
+            for name in ['content','panel','footer']:
+                r = geometry[name]
+                assert abs(r['left']-h['left'])<1 and abs(r['right']-h['right'])<1, (name,width,key,geometry)
+            for r in geometry['surfaces']:
+                assert abs(r['left']-h['left'])<1 and abs(r['right']-h['right'])<1, ('surface alignment',width,key,r,h)
+            results.append({'width':width,'tab':key,'left':h['left'],'rightGutter':geometry['viewport']-h['right']})
+            if (width==1440 and key in ['soilType','references','workRecords']) or (width==390 and key=='soilType'):
+                page.evaluate('window.scrollTo(0,0)')
+                page.screenshot(path=str(out/(prefix+'-gutters-'+key+'-'+str(width)+'.png')))
+    page.set_viewport_size({'width':1440,'height':1000})
+    page.locator('[data-tab="soilType"]').click()
+    page.evaluate('window.scrollTo(0,0)')
+    return {'status':'passed','widths':widths,'tabCount':len(keys),'measurements':results}
