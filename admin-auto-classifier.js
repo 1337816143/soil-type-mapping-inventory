@@ -273,19 +273,31 @@
   }
 
   // Read-only, result-specific comparison; never rewrite the directory.
+  // Sidecar lookup over immutable lists; never add directory entries.
+  var directoryIndexes=Object.create(null);
   function directoryStatus(key, city, district, unit) {
     if (!key || !city || !district || !unit) return {status:'incomplete',mismatch:false,listedUnits:[]};
-    var listed=flattenTasks([key]).filter(function(r){
-      if (compact(r.city)!==compact(city)) return false;
-      if (regionForms(r.district).includes(compact(district))) return true;
-      if ((r.district===r.city || /市级|本级|汇总/.test(r.district)) && /^(?:市级|市本级|市级汇总|全市)$/.test(district)) return true;
-      var subs=window.mergeSubDistricts && window.mergeSubDistricts[city] || [];
-      return r.district==='合并区' && subs.some(function(d){return compact(d)===compact(district);});
+    var source=listForKey(key), index=directoryIndexes[key];
+    if (!index || index.source!==source) {
+      var cities=Object.create(null);
+      flattenTasks([key]).forEach(function(r){
+        var c=compact(r.city);
+        (cities[c]||(cities[c]=[])).push({unit:r.unit,forms:regionForms(r.district),
+          municipal:r.district===r.city || /市级|本级|汇总/.test(r.district),merged:r.district==='合并区'});
+      });
+      index=directoryIndexes[key]={source:source,cities:cities};
+    }
+    var task=compact(district), municipal=/^(?:市级|市本级|市级汇总|全市)$/.test(district);
+    var subs=window.mergeSubDistricts && window.mergeSubDistricts[city] || [];
+    var merged=subs.some(function(d){return compact(d)===task;});
+    var listed=(index.cities[compact(city)]||[]).filter(function(r){
+      return r.forms.includes(task) || r.municipal&&municipal || r.merged&&merged;
     });
     var units=unique(listed.map(function(r){return r.unit;}));
     var status=!listed.length?'unlisted-task':units.some(function(u){return unitMatches(u,unit);})?'matched':'unit-mismatch';
     return {status:status,mismatch:status!=='matched',listedUnits:units};
   }
+
   // Only explicit delimiter-separated city/task fields can become a candidate.
   function unlistedCandidate(text,key,company,city) {
     var parts=normalize(basename(text)).replace(/\.[^.]+$/,'').split(/[_;；|]+/).map(function(p){return p.trim();});
