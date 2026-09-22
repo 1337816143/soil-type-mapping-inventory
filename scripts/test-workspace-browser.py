@@ -146,6 +146,8 @@ with sync_playwright() as p:
             import runpy
             assignment_ui=runpy.run_path(str(ROOT/'scripts/check-assignment-ui.py'))['check_assignment_ui'](page,OUT,engine)
             (OUT/(engine+'-assignment-ui-report.json')).write_text(json.dumps(assignment_ui,ensure_ascii=False,indent=2))
+            directory_ui=runpy.run_path(str(ROOT/'scripts/check-directory-ui.py'))['check_directory_ui'](page,OUT,engine)
+            (OUT/(engine+'-directory-ui-report.json')).write_text(json.dumps(directory_ui,ensure_ascii=False,indent=2))
             page.evaluate("openSoilAdminImport({kind:'quality',dataKey:'soilType'})")
             expect(page.locator('#qc-round-controls')).to_be_visible();page.locator('#qc-round').fill('2');page.locator('#qc-apply-round').click()
             assert page.evaluate("SoilAdminImport.state.batchSelection.round")==2

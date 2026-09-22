@@ -17,7 +17,7 @@ for fixture in fixtures:
         for i,f in enumerate(fixture['files'],1):(restored/f'{i:04d}.bin').write_bytes(b'fixture-content!')
         script=base/'writer.py'
         script.write_text(code.replace("Path('/tmp/soil-hybrid-restored')",'Path('+repr(str(restored))+')').replace("Path('/tmp/soil-hybrid-manifest.json')",'Path('+repr(str(manifest))+')'))
-        result=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True)
+        result=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True,timeout=10)
         assert result.returncode==0,result.stderr
         rows=json.loads(index.read_text());assert rows[0]==prior
         source=fixture['files'][0];expected=source['quality']['associationsByDataKey']
@@ -25,11 +25,23 @@ for fixture in fixtures:
         assert len(rows[1:])==sum(len(v) for v in expected.values())
         for key,group in expected.items():
             for association in group:
-                assert any(all(r[k]==association[k] for k in ['city','unit','district']) and r['dataKey']==key for r in rows[1:])
+                saved=next(r for r in rows[1:] if all(r[k]==association[k] for k in ['city','unit','district']) and r['dataKey']==key)
+                assert saved['directoryStatus']==association.get('directoryStatus','')
+                assert saved['directoryMismatch']==(association.get('directoryStatus') in ['unlisted-task','unit-mismatch'])
+                if saved['directoryStatus']=='unlisted-task':
+                    assert saved['outsideDirectoryConfirmed'] is True
+                    assert saved['directoryConfirmedAt']
+                    missing=json.loads(json.dumps(fixture))
+                    for group in missing['files'][0]['quality']['associationsByDataKey'].values():
+                        for a in group:a.pop('outsideDirectoryConfirmed',None)
+                    manifest.write_text(json.dumps(missing));before=index.read_bytes()
+                    denied=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True,timeout=10)
+                    assert denied.returncode!=0 and index.read_bytes()==before
+                    checks+=1
         assert all(r['complete'] is True for r in rows[1:]);checks+=1
         # A malformed keyed assignment must not be flattened to a global company.
         broken=json.loads(json.dumps(fixture));next(iter(broken['files'][0]['quality']['associationsByDataKey'].values()))[0]['unit']=''
         manifest.write_text(json.dumps(broken));before=index.read_bytes()
-        result=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True)
+        result=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True,timeout=10)
         assert result.returncode!=0 and index.read_bytes()==before;checks+=1
 print(f'Actions index-writer checks passed: {checks}; per-type companies persist, one physical file, prior index untouched.')

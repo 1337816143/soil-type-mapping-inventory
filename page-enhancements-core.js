@@ -154,6 +154,17 @@
     }
     if (window.mergeSubDistricts) window.mergeSubDistricts['沧州市'] = ['运河区','新华区'];
 
+    function escaped(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+    function directoryReview(key,city,unit,d){
+      var c=window.SoilAdminAutoClassifier;
+      var s=c&&c.directoryStatus?c.directoryStatus(key,city, d.label,unit):{mismatch:false,status:''};
+      var flags=(d.docs||[]).filter(function(doc){return doc.directoryMismatch||doc.directoryStatus==='unlisted-task';});
+      var mismatch=s.mismatch||flags.length>0;
+      var unlisted=s.status==='unlisted-task'||flags.some(function(doc){return doc.directoryStatus==='unlisted-task';});
+      var text=[city,d.label,unit].join(' / ');
+      if(mismatch)text+='\n与作业单位通讯录不一致'+(unlisted?'：该类成果、该地区不在原清单中；单独归档展示，不计入原清单收缴进度。':'：本次归档单位与该类成果清单单位不同。');
+      return {mismatch:mismatch,title:text,attributes:mismatch?' data-directory-mismatch="true" title="'+escaped(text)+'" aria-label="'+escaped(text)+'"':''};
+    }
     window.renderCities = function(cities, dataKey) {
       var s = window.calculateDashboardStats(dataKey);
       var html = '<div class="summary-bar">';
@@ -169,14 +180,17 @@
         city.units.forEach(function(unit){
           var outcomes=unit.districts||[];if(!outcomes.length)return;var batches=[];
           outcomes.forEach(function(d){(d.docs||[]).forEach(function(doc){if(batches.indexOf(doc.batch)<0)batches.push(doc.batch);});});
-          html += '<tr><td>'+unit.name+'</td><td><div class="district-list">';
+          var reviews=outcomes.map(function(d){return directoryReview(dataKey,city.name,unit.name,d);});
+          var warned=reviews.filter(function(r){return r.mismatch;});
+          html += '<tr><td'+(warned.length?' class="directory-mismatch-unit" title="'+escaped(warned.map(function(r){return r.title;}).join('\n'))+'"':'')+'>'+escaped(unit.name)+'</td><td><div class="district-list">';
           outcomes.forEach(function(d){
+            var review=directoryReview(dataKey,city.name,unit.name,d);
             var isM=window.isMunicipalTask(d.label,city.name), isG=!isM&&String(d.label||'').indexOf('合并区')>=0;
-            var link='district-link'+(isM?' municipal-link':(isG?' merged-link':''));
+            var link='district-link'+(review.mismatch?' directory-mismatch':'')+(isM?' municipal-link':(isG?' merged-link':''));
             var group='district-group'+(isM?' municipal':(isG?' merged':''));var docs=d.docs||[];
-            if(docs.length===1){html+='<a class="'+link+'" href="'+window.BASE+'/'+docs[0].file+'" target="_blank">'+d.label+' '+window.PDF_ICON+'</a>';}
-            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label">'+d.label+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){html+='<a class="doc-btn" href="'+window.BASE+'/'+doc.file+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
-            else html+='<span class="'+link+'">'+d.label+'</span>';
+            if(docs.length===1){html+='<a class="'+link+'"'+review.attributes+' href="'+escaped(window.BASE+'/'+docs[0].file)+'" target="_blank">'+escaped(d.label)+' '+window.PDF_ICON+'</a>';}
+            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label'+(review.mismatch?' directory-mismatch':'')+'"'+review.attributes+' tabindex="0">'+escaped(d.label)+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){html+='<a class="doc-btn'+(review.mismatch?' directory-mismatch':'')+'"'+review.attributes+' href="'+escaped(window.BASE+'/'+doc.file)+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
+            else html+='<span class="'+link+'"'+review.attributes+'>'+escaped(d.label)+'</span>';
           });
           html+='</div></td><td>';batches.forEach(function(b){html+='<span class="batch-tag '+(window.batchClass[b]||'')+'">'+b+'</span>';});
           html+='</td><td class="reply-cell"><div class="reply-list">';

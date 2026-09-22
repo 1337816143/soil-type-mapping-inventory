@@ -226,7 +226,7 @@
     }
     var relativeFile = String(entry.path).replace(/^data\//, '');
     if (!district.docs.some(function (doc) { return doc.file === relativeFile && doc.batch === (entry.batch || '管理员导入'); })) {
-      district.docs.push({batch: entry.batch || '管理员导入', file: relativeFile});
+      district.docs.push({batch: entry.batch || '管理员导入', file: relativeFile, directoryStatus:entry.directoryStatus||'', directoryMismatch:!!entry.directoryMismatch, outsideDirectoryConfirmed:!!entry.outsideDirectoryConfirmed});
     }
     appliedAssociations[key] = true;
   }
