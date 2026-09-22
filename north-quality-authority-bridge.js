@@ -86,7 +86,7 @@
       anchor.removeAttribute('target');
       anchor.classList.add('north-registered-pending');
       anchor.setAttribute('aria-disabled', 'true');
-      anchor.title = '关联关系和统计已确认；原始文件仍待归档到仓库，归档后自动恢复查看链接。';
+      anchor.title = [anchor.title,'关联关系和统计已确认；原始文件仍待归档到仓库，归档后自动恢复查看链接。'].filter(Boolean).join('\n');
       if (!anchor.querySelector('.north-pending-badge')) {
         var badge = document.createElement('span');
         badge.className = 'north-pending-badge';

@@ -89,3 +89,11 @@ html.glass-ui body>header{margin-inline:var(--page-inline-gutter)}
 html.glass-ui body>.container{box-sizing:border-box;min-width:0;padding-inline:var(--page-inline-gutter)!important}
 html.glass-ui body>footer{margin-inline:var(--page-inline-gutter);padding-inline:0}
 @media(max-width:760px){html.glass-ui{--page-inline-gutter:6px}}
+
+/* Directory exceptions: only the affected task/file, never the whole table. */
+html.glass-ui :is(.district-link,.doc-btn).directory-mismatch,
+html.glass-ui .district-group.directory-mismatch>.group-label{color:#b91c1c!important;background:#fff1f2!important;border-color:#f1a8ad!important}
+html.glass-ui :is(.district-link,.doc-btn).directory-mismatch:hover,
+html.glass-ui .district-group.directory-mismatch>.group-label:hover{background:#ffe4e6!important;border-color:#dc2626!important}
+html.glass-ui .directory-mismatch-unit,html.glass-ui .directory-mismatch-preview .v2-file em{color:#b91c1c!important}
+.confirm-outside-task{align-self:flex-start;display:inline-block;margin-top:8px;padding:7px 12px;border:1px solid #c2410c;border-radius:9px;background:#fff7ed;color:#9a3412;cursor:pointer;font:inherit;font-weight:650;white-space:normal;max-width:100%}

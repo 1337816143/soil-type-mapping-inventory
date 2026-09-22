@@ -79,9 +79,47 @@ for(const {i,m} of [multi,shared,namedShared]){
  assert.deepStrictEqual(JSON.parse(JSON.stringify(file.quality.associationsByDataKey)),JSON.parse(JSON.stringify(m.assignment.byKey)));
  checks++;
 }
+
+// Exact screenshot regression: a valid filename with a task absent from the roster.
+const outsideName='邯郸市_永年区_土特产品土壤适宜性评价_河北省农林科学院农业资源环境研究所_质控意见_2026年第二次第1批.docx';
+const outside=classify(outsideName);
+assert(!outside.m.assignment.complete);assert(outside.m.assignment.canConfirmOutside);
+assert.strictEqual(outside.i.city,'邯郸市');assert.strictEqual(outside.i.district,'永年区');
+assert.strictEqual(outside.i.unit,'河北省农林科学院农业资源环境研究所');
+assert.strictEqual(outside.i.batch,'2026年第二次第1批');
+assert.throws(()=>w.__testManifest([outside.i],'base','outside-pending'),/清单外任务/);
+C.confirmOutside(outside.i);
+let confirmed=C.applyItemMetadata(outside.i);assert(confirmed.assignment.complete);
+assert.strictEqual(confirmed.assignment.byKey.specialty[0].directoryStatus,'outside-list');
+assert.strictEqual(confirmed.assignment.byKey.specialty[0].unlistedConfirmed,true);
+const outsideManifest=w.__testManifest([outside.i],'base','outside-confirmed');
+assert.strictEqual(outsideManifest.files[0].quality.associationsByDataKey.specialty[0].unlistedConfirmed,true);
+// Changing company/type/filename invalidates the prior confirmation.
+let stale=classify(outsideName.replace('农业资源环境研究所','新单位有限公司'),{unlistedConfirmation:outside.i.unlistedConfirmation});
+assert(!stale.m.assignment.complete);assert(stale.m.assignment.canConfirmOutside);
+let missingUnit=classify('邯郸市_永年区_土特产品土壤适宜性评价_质控意见_2026年第二次第1批.docx');
+assert(!missingUnit.m.assignment.complete);assert(!missingUnit.m.assignment.canConfirmOutside);
+assert.strictEqual(missingUnit.i.city,'邯郸市');assert.strictEqual(missingUnit.i.district,'永年区');
+assert.strictEqual(missingUnit.i.unit,'');assert(missingUnit.m.assignment.issues.some(x=>x.code==='outside-missing-unit'));
+assert.throws(()=>C.confirmOutside(missingUnit.i));
+let ambiguous=classify(outsideName.replace('永年区','永年区_丛台区'));
+assert(!ambiguous.m.assignment.canConfirmOutside);
+let unknownCity=classify(outsideName.replace('邯郸市','不存在市'));
+assert(!unknownCity.m.assignment.canConfirmOutside);
+const otherCo=unitFor('soilAttr','石家庄市','平山县');
+assert.strictEqual(C.directoryStatus('soilType','石家庄市',otherCo,'平山县').code,'unit-mismatch');
+assert.strictEqual(C.directoryStatus('soilAttr','石家庄市',otherCo,'平山县').code,'matched');
+assert(C.directoryAttributes('specialty','邯郸市',outside.i.unit,'永年区',outside.i.batch,outsideName).title.includes('与作业单位通讯录不一致'));
+let mOutside=classify(outsideName,{manualAssociation:{city:'邯郸市',district:'永年区',unit:'人工指定有限公司'}});
+assert(mOutside.m.assignment.canConfirmOutside);assert(!mOutside.m.assignment.complete);
+C.confirmOutside(mOutside.i);assert(C.applyItemMetadata(mOutside.i).assignment.complete);
+fs.mkdirSync('test-artifacts',{recursive:true});
+fs.writeFileSync('test-artifacts/outside-manifest.json',JSON.stringify(outsideManifest,null,2));
+checks+=24;
+
 assert.strictEqual(JSON.stringify(w.SoilTaskUnitLists),registryBefore);assert.strictEqual(JSON.stringify(w.masterList),masterBefore);
 assert.strictEqual(fs.readFileSync('task-unit-mappings.js','utf8'),originalMapping);
-const samples=[multi,shared,namedShared].map(({i},index)=>w.__testManifest([i],'base','test-'+index));
+const samples=[multi,shared,namedShared].map(({i},index)=>w.__testManifest([i],'base','test-'+index));samples.push(outsideManifest);
 fs.mkdirSync('test-artifacts',{recursive:true});fs.writeFileSync('test-artifacts/assignment-manifests.json',JSON.stringify(samples,null,2));
 fs.writeFileSync('test-artifacts/assignment-report.json',JSON.stringify({status:'passed',checks,realListTasks:audited,registryUnchanged:true,indexMasterListSHA256:crypto.createHash('sha256').update(originalList).digest('hex'),mappingSHA256:crypto.createHash('sha256').update(originalMapping).digest('hex')},null,2));
 console.log('Assignment matching passed:',checks,'cases;',audited,'actual result-type task rows; both embedded lists unchanged.');

@@ -236,6 +236,11 @@ jobs:
                               values = {k: str(association.get(k) or '').strip() for k in ['city','unit','district']}
                               if not all(values.values()):
                                   raise SystemExit(f'独立任务关联不完整：{final_path}')
+                              directory_status = str(association.get('directoryStatus') or '')
+                              if directory_status and directory_status not in {'matched','unit-mismatch','outside-list'}:
+                                  raise SystemExit(f'通讯录核对状态无效：{final_path}')
+                              if directory_status == 'outside-list' and association.get('unlistedConfirmed') is not True:
+                                  raise SystemExit(f'清单外任务尚未确认：{final_path}')
                               identity = tuple(values[k] for k in ['city','unit','district'])
                               if identity in seen_rows:
                                   continue
@@ -243,6 +248,9 @@ jobs:
                               row = dict(common)
                               row.update(values)
                               row.update({'dataKey': data_key, 'complete': True,
+                                          'directoryStatus': directory_status,
+                                          'directoryMessage': str(association.get('directoryMessage') or ''),
+                                          'unlistedConfirmed': association.get('unlistedConfirmed') is True,
                                           'unitSource': str(association.get('unitSource') or ''),
                                           'listedUnits': association.get('listedUnits') or []})
                               quality_records.append(row)
