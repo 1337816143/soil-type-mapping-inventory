@@ -577,7 +577,7 @@
     summary.innerHTML = '<strong>自动识别：</strong>' + kindText + (state.batch ? ' · ' + state.batch : '') + ' · ' + typeSummary(state.metas) + matchText + reviewText +
       '<div class="auto-import-actions"><button type="button" data-auto-import-toggle="1">' + (manualMode ? '恢复自动模式' : '显示人工调整') + '</button></div>';
     var button = summary.querySelector('[data-auto-import-toggle]');
-    if (button) button.onclick = function () { manualMode = !manualMode; if(!manualMode){var q=Q();(q&&q.state&&q.state.files||[]).forEach(function(item){delete item.manualAssociation;delete item.manualDataKey;});} refresh(); };
+    if (button) button.onclick = function () { manualMode = !manualMode; if(!manualMode){var q=Q();(q&&q.state&&q.state.files||[]).forEach(function(item){delete item.manualAssociation;delete item.manualDataKey;});} refresh(); var current=Q();if(current&&typeof current.renderPreview==='function')current.renderPreview(); };
     setManualFieldsVisible(manualMode || state.unresolved > 0 || state.kind === 'mixed');
   }
 
