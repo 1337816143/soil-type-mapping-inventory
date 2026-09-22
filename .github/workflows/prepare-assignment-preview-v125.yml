@@ -1,0 +1,87 @@
+name: Prepare assignment preview correction
+on:
+  push:
+    branches: [fix/result-specific-company-v1.2.5]
+    paths: [.github/workflows/prepare-assignment-preview-v125.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Correct local preview callbacks without changing task lists
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          import re, hashlib
+          assert Path('VERSION').read_text().strip() == 'v1.2.5'
+          def change(path, old, new):
+              p=Path(path); s=p.read_text(); assert s.count(old)==1,(path,old,s.count(old)); p.write_text(s.replace(old,new))
+          change('admin-auto-classifier.js', "      item.city='';item.unit='';item.district='';", "      var manual=item.manualAssociation;\n      item.city=manual?String(manual.city||''):'';item.unit=manual?String(manual.unit||''):'';item.district=manual?String(manual.district||''):'';")
+          helper='''  // Projection only: local dropdown renders do not pass through Q.renderPreview.
+            // Keep their summaries current without recursively changing form defaults.
+            function renderPreviewSummary(state) {
+              if (!state) return;
+              annotateRows();
+              renderSummary(state);
+              if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;
+            }
+
+          '''.replace('\n          ', '\n')
+          change('admin-auto-classifier.js','  function refresh() {\n', helper+'  function refresh() {\n')
+          change('admin-auto-classifier.js','    applySelectionDefaults(state);\n    annotateRows();\n    renderSummary(state);\n    if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;','    applySelectionDefaults(state);\n    renderPreviewSummary(state);')
+          change('admin-auto-classifier.js','    refresh:refresh,','    renderPreviewSummary:renderPreviewSummary,\n    refresh:refresh,')
+          change('admin-import-v2.js',"function dopts(c,v,d,key){return opt('','留空 / 未识别',!d)+districts(c,v,key).map(function(x){", "function dopts(c,v,d,key){var choices=districts(c,v,key);if(v&&!choices.length)choices=districts(c,'',key);return opt('','留空 / 未识别',!d)+(d&&!choices.some(function(x){return x.value===d})?opt(d,d,true):'')+choices.map(function(x){")
+          change('admin-import-v2.js',"if(!b)return;b.innerHTML=S.files.length?S.files.map(row).join('')", "if(!b)return;var classifier=window.SoilAdminAutoClassifier,previewState=classifier?classifier.selectionMetadata(S.files):null;b.innerHTML=S.files.length?S.files.map(row).join('')")
+          change('admin-import-v2.js',"remember(x);render()}})}\n", "remember(x);render()}});if(classifier&&classifier.renderPreviewSummary)classifier.renderPreviewSummary(previewState)}\n")
+          change('admin-import-v2.js',"x.unit=this.value;if(!x.city&&o&&o.dataset.city)x.city=o.dataset.city;if(x.district&&!districts(x.city,x.unit,itemKey(x))", "x.unit=this.value;if(!x.city&&o&&o.dataset.city)x.city=o.dataset.city;if(x.district&&!districts(x.city,'',itemKey(x))")
+          change('scripts/validate-assignment-matching.js','// New multi-area reports and the existing 28 registered reports keep one source.', "const partial=classify('平山县_土壤类型图_质控意见.docx',{manualAssociation:{city:'沧州市',unit:'',district:''}});\nassert(!partial.m.assignment.complete);assert.strictEqual(partial.i.city,'沧州市');assert.strictEqual(partial.i.unit,'');\n// New multi-area reports and the existing 28 registered reports keep one source.")
+          change('scripts/check-assignment-ui.py',"    unit.select_option('中地科勘察设计有限公司')", "    expect(page.locator('#adm-list .v2-row').nth(2).locator('.rd')).to_have_value('平山县')\n    unit.select_option('中地科勘察设计有限公司')")
+          extra='''    # Check a genuine, multi-step correction rather than only reselecting defaults.
+              page.locator('[data-auto-import-toggle]').click()
+              first=page.locator('#adm-list .v2-row').nth(0)
+              first.locator('.rc').select_option('沧州市')
+              expect(first.locator('.rc')).to_have_value('沧州市')
+              expect(first.locator('.ru')).to_have_value('')
+              expect(first.locator('.rd')).to_have_value('')
+              expect(statuses.nth(0)).to_contain_text('人工调整尚未填写完整')
+              assert page.evaluate('SoilAdminAutoClassifier.lastSelection.unresolved')==1
+              first.locator('.ru').select_option('河北司南测绘服务有限公司')
+              expect(first.locator('.rc')).to_have_value('沧州市')
+              expect(first.locator('.ru')).to_have_value('河北司南测绘服务有限公司')
+              first.locator('.rd').select_option('东光县')
+              expect(statuses.nth(0)).to_contain_text('人工指定')
+              expect(statuses.nth(0)).to_contain_text('东光县')
+              page.evaluate('SoilAdminImport.renderPreview()')
+              expect(first.locator('.rd')).to_have_value('东光县')
+              assert page.evaluate('SoilAdminAutoClassifier.lastSelection.unresolved')==0
+              page.locator('[data-auto-import-toggle]').click()
+              expect(statuses.nth(0)).to_contain_text('平山县')
+              expect(statuses.nth(0)).to_contain_text('按该类成果清单匹配')
+          '''.replace('\n          ', '\n')
+          change('scripts/check-assignment-ui.py',"    page.locator('#soilAdminImport .adm-card').screenshot",extra+"    page.locator('#soilAdminImport .adm-card').screenshot")
+          mapping=Path('task-unit-mappings.js').read_bytes(); master=re.search(r'var masterList = \[[\s\S]*?\n\];',Path('index.html').read_text()).group().encode()
+          assert hashlib.sha256(mapping).hexdigest()=='00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8'
+          assert hashlib.sha256(master).hexdigest()=='ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52'
+          PY
+          node --check admin-auto-classifier.js
+          node --check admin-import-v2.js
+          python3 -m py_compile scripts/check-assignment-ui.py
+          node scripts/validate-auto-import-classifier.js
+          node scripts/validate-project.js
+          node scripts/validate-reference-upload-isolation.js
+      - name: Commit the bounded ordinary-source correction
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'fix/result-specific-company-v1.2.5'
+          git diff --quiet -- task-unit-mappings.js index.html data replies assets upload-config.js .github/workflows
+          git add admin-auto-classifier.js admin-import-v2.js scripts/check-assignment-ui.py scripts/validate-assignment-matching.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: preserve partial manual choices and project matching summaries after local renders'
+          git push origin HEAD:fix/result-specific-company-v1.2.5
