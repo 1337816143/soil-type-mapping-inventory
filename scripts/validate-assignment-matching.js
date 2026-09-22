@@ -62,6 +62,8 @@ for(const key of Object.keys(C.typeLabels)){
 const manual={city:'石家庄市',unit:'人工指定有限公司',district:'平山县'};
 const mr=row('平山县_土壤类型图_质控意见.docx','soilType',{manualAssociation:manual});assert.strictEqual(mr.unit,manual.unit);assert.strictEqual(mr.unitSource,'manual');
 assert(!classify('平山县_土壤类型图_质控意见.docx',{manualAssociation:{city:'石家庄市'}}).m.assignment.complete);
+const partial=classify('平山县_土壤类型图_质控意见.docx',{manualAssociation:{city:'沧州市',unit:'',district:''}});
+assert(!partial.m.assignment.complete);assert.strictEqual(partial.i.city,'沧州市');assert.strictEqual(partial.i.unit,'');
 // New multi-area reports and the existing 28 registered reports keep one source.
 let shared=classify('乐亭县、丰南区三普成果质控报告_2026年第二次第1批.docx');
 assert(shared.m.assignment.complete);assert.notStrictEqual(shared.m.assignment.byKey.soilType[0].unit,shared.m.assignment.byKey.soilAttr[0].unit);

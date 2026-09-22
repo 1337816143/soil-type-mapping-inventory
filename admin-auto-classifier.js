@@ -456,7 +456,8 @@
     if (meta.assignment) {
       // Discard stale guesses from the legacy importer; a different result type
       // must not inherit its company. Human overrides live separately.
-      item.city='';item.unit='';item.district='';
+      var manual=item.manualAssociation;
+      item.city=manual?String(manual.city||''):'';item.unit=manual?String(manual.unit||''):'';item.district=manual?String(manual.district||''):'';
       var assigned=[];Object.keys(meta.assignment.byKey).forEach(function(k){assigned=assigned.concat(meta.assignment.byKey[k]);});
       if(meta.assignment.complete && assigned.length){
         ['city','unit','district'].forEach(function(k){if(assigned.every(function(r){return r[k]===assigned[0][k];}))item[k]=assigned[0][k];});
@@ -629,6 +630,15 @@
     }
   }
 
+  // Projection only: local dropdown renders do not pass through Q.renderPreview.
+  // Keep their summaries current without recursively changing form defaults.
+  function renderPreviewSummary(state) {
+    if (!state) return;
+    annotateRows();
+    renderSummary(state);
+    if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;
+  }
+
   function refresh() {
     refreshQueued = false;
     ensureStyles();
@@ -636,9 +646,7 @@
     var files = q && q.state && Array.isArray(q.state.files) ? q.state.files : [];
     var state = selectionMetadata(files);
     applySelectionDefaults(state);
-    annotateRows();
-    renderSummary(state);
-    if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;
+    renderPreviewSummary(state);
     return state;
   }
 
@@ -719,6 +727,7 @@
     applyItemMetadata:applyItemMetadata,
     selectionMetadata:selectionMetadata,
     loadCatalogData:function (payload) { registerCatalog(payload); return payload; },
+    renderPreviewSummary:renderPreviewSummary,
     refresh:refresh,
     get lastSelection() { return this._lastSelection || null; },
     set lastSelection(value) { this._lastSelection = value; },
