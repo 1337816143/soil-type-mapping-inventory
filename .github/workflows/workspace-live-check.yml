@@ -19,6 +19,7 @@ jobs:
             VERSION
             scripts/test-live-workspace.py
             scripts/glass-ui-checks.py
+            scripts/check-directory-ui.py
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:

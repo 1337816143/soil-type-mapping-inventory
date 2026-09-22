@@ -245,6 +245,15 @@ jobs:
                               row.update({'dataKey': data_key, 'complete': True,
                                           'unitSource': str(association.get('unitSource') or ''),
                                           'listedUnits': association.get('listedUnits') or []})
+                              status = str(association.get('directoryStatus') or '')
+                              if status and status not in ('matched', 'unit-mismatch', 'unlisted-task'):
+                                  raise SystemExit(f'通讯录核对状态无效：{final_path}')
+                              if status == 'unlisted-task' and association.get('outsideDirectoryConfirmed') is not True:
+                                  raise SystemExit(f'清单外任务尚未确认：{final_path}')
+                              row.update({'directoryStatus': status,
+                                          'directoryMismatch': status in ('unit-mismatch', 'unlisted-task'),
+                                          'outsideDirectoryConfirmed': association.get('outsideDirectoryConfirmed') is True,
+                                          'directoryConfirmedAt': str(association.get('directoryConfirmedAt') or '')})
                               quality_records.append(row)
                   elif quality.get('shared'):
                       targets = [str(x) for x in (quality.get('targets') or []) if str(x)]
