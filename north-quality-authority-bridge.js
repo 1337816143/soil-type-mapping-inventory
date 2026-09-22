@@ -147,7 +147,7 @@
       if (authority && classifier && typeof classifier.applyItemMetadata === 'function') {
         meta = classifier.applyItemMetadata(item);
       }
-      if (!meta) return;
+      if (!meta || meta.assignment) return;
 
       var keys = authority && Array.isArray(authority.dataKeys) && authority.dataKeys.length ? authority.dataKeys.slice() : (meta.dataKeys || []).slice();
       var inspection = typeof router.inspectFile === 'function' ? router.inspectFile(file.name, keys, file.size) : null;

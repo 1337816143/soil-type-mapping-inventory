@@ -164,6 +164,11 @@
   function sharedInspection(item, dataKeys) {
     var router = R();
     if (!router || !item || !item.file || !router.isSharedReport(item.file.name)) return null;
+    var meta = itemMetadata(item);
+    if(meta && meta.assignment){
+      if(!meta.assignment.complete)throw new Error(C().matchingDescription(meta));
+      return {targets:meta.targets.slice(),dataKeys:meta.dataKeys.slice(),byKey:meta.assignment.byKey};
+    }
     var inspection = router.inspectFile(item.file.name, dataKeys && dataKeys.length ? dataKeys : router.coveredKeys);
     if (!inspection.targets.length) return null;
     if (inspection.unresolved.length) {
@@ -247,6 +252,11 @@
               complete: !!(item.city && item.unit && item.district)
             };
           }
+        }
+        if(kind==='quality' && meta && meta.assignment && meta.assignment.complete){
+          record.quality.associationsByDataKey=meta.assignment.byKey;
+          record.quality.assignmentVersion=2;
+          record.quality.complete=true;
         }
         return record;
       })
@@ -388,6 +398,8 @@
     if (kind === 'quality') {
       var fallbackDataKey = document.getElementById('adm-data-key').value;
       var incomplete = files.filter(function (item) {
+        var meta=itemMetadata(item);
+        if(meta && meta.assignment)return !meta.assignment.complete;
         return !isSharedItem(item) && (!itemDataKeys(item, fallbackDataKey).length || !item.city || !item.unit || !item.district);
       });
       if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，仍会上传但不计入统计。是否继续？')) return;
@@ -426,7 +438,7 @@
         if (sharedCount) {
           progress('已识别 ' + sharedCount + ' 份北部共享质控报告：每份文件只上传一次，并自动关联地区、成果类型和批次。', 4);
         } else if (kind === 'quality' && autoTypedCount) {
-          progress('已自动识别 ' + autoTypedCount + ' 份质控文件的成果类型、批次和任务单元，无需手动指定。', 4);
+          progress('已准备 ' + autoTypedCount + ' 份质控文件，按预览中的成果类型、单位与任务关联归档；未完整匹配项不计入统计。', 4);
         }
         return stageFiles(files, manifest, entries);
       })
