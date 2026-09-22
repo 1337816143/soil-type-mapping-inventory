@@ -26,6 +26,20 @@ with sync_playwright() as p:
             if time.monotonic()>deadline:raise AssertionError('Pages version differs from the tested commit')
             page.wait_for_timeout(10000)
         errors.clear()
+        report['directoryMatching']=page.evaluate("""()=>{
+          const C=SoilAdminAutoClassifier,name='邯郸市_永年区_土特产品土壤适宜性评价_河北省农林科学院农业资源环境研究所_质控意见_2026年第二次第1批.docx';
+          const before=JSON.stringify(SoilTaskUnitLists),i={file:{name,size:1},path:name,sourcePath:name};
+          let m=C.applyItemMetadata(i);
+          if(m.assignment.complete||!m.assignment.canConfirmOutside||i.district!=='永年区'||i.batch!=='2026年第二次第1批')throw Error('Unlisted detection failed');
+          C.confirmOutside(i);m=C.applyItemMetadata(i);
+          if(!m.assignment.complete||!m.assignment.byKey.specialty[0].unlistedConfirmed)throw Error('Unlisted confirmation failed');
+          const html=renderCities([{name:'邯郸市',units:[{name:i.unit,districts:[{label:'永年区',docs:[{file:'fixture-only.docx',batch:i.batch}]}]}]}],'specialty');
+          if(!html.includes('directory-mismatch')||!html.includes('与作业单位通讯录不一致'))throw Error('Missing warning markup');
+          if(C.directoryStatus('soilAttr','石家庄市','河北湛泸软件开发有限公司','平山县').mismatch)throw Error('Normal type marked red');
+          if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Roster changed');
+          return {status:'passed',mode:'memory-only; no file upload',checks:['exact Yongnian name','explicit acknowledgement','red warning markup','normal matched type','roster immutable']};
+        }""")
+
         tabs=page.locator('header .tabs .tab').all_text_contents()
         assert '工作记录' in tabs and len(tabs)>=9,tabs
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')

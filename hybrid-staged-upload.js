@@ -213,6 +213,7 @@
 
         var meta = itemMetadata(item);
         var dataKeys = kind === 'quality' ? itemDataKeys(item, dataKey) : [];
+        if(kind==='quality' && meta && meta.assignment && !meta.assignment.complete)throw new Error(classifier.matchingDescription(meta));
         var shared = kind === 'quality' ? sharedInspection(item, dataKeys) : null;
         var targetPath = shared && router ?
           uniquePath(router.sharedStoragePath(item.file.name, item.batch || '管理员导入'), used) :

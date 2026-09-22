@@ -154,6 +154,13 @@
     }
     if (window.mergeSubDistricts) window.mergeSubDistricts['沧州市'] = ['运河区','新华区'];
 
+
+    function escapeAttribute(value){return String(value||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');}
+    function directoryInfo(key,city,unit,district,batch,file){
+      var c=window.SoilAdminAutoClassifier;
+      return c&&c.directoryAttributes?c.directoryAttributes(key,city,unit,district,batch,file):{mismatch:false,title:''};
+    }
+    function directoryAttrs(info){return info.mismatch?' data-directory-status="'+info.code+'" title="'+escapeAttribute(info.title)+'" aria-label="'+escapeAttribute(info.title)+'"':'';}
     window.renderCities = function(cities, dataKey) {
       var s = window.calculateDashboardStats(dataKey);
       var html = '<div class="summary-bar">';
@@ -169,14 +176,18 @@
         city.units.forEach(function(unit){
           var outcomes=unit.districts||[];if(!outcomes.length)return;var batches=[];
           outcomes.forEach(function(d){(d.docs||[]).forEach(function(doc){if(batches.indexOf(doc.batch)<0)batches.push(doc.batch);});});
-          html += '<tr><td>'+unit.name+'</td><td><div class="district-list">';
+          var warnings=outcomes.map(function(d){return directoryInfo(dataKey,city.name,unit.name,d.label);}).filter(function(i){return i.mismatch;});
+          var allMismatch=warnings.length===outcomes.length;
+          html += '<tr><td'+(allMismatch?' class="directory-mismatch-unit" title="'+escapeAttribute(warnings.map(function(i){return i.title;}).join('\n\n'))+'"':'')+'>'+escapeAttribute(unit.name)+'</td><td><div class="district-list">';
           outcomes.forEach(function(d){
             var isM=window.isMunicipalTask(d.label,city.name), isG=!isM&&String(d.label||'').indexOf('合并区')>=0;
             var link='district-link'+(isM?' municipal-link':(isG?' merged-link':''));
             var group='district-group'+(isM?' municipal':(isG?' merged':''));var docs=d.docs||[];
-            if(docs.length===1){html+='<a class="'+link+'" href="'+window.BASE+'/'+docs[0].file+'" target="_blank">'+d.label+' '+window.PDF_ICON+'</a>';}
-            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label">'+d.label+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){html+='<a class="doc-btn" href="'+window.BASE+'/'+doc.file+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
-            else html+='<span class="'+link+'">'+d.label+'</span>';
+            var info=directoryInfo(dataKey,city.name,unit.name,d.label,docs.map(function(doc){return doc.batch;}).join('、'));
+            if(info.mismatch){link+=' directory-mismatch';group+=' directory-mismatch';}
+            if(docs.length===1){html+='<a class="'+link+'"'+directoryAttrs(directoryInfo(dataKey,city.name,unit.name,d.label,docs[0].batch,docs[0].file))+' href="'+window.BASE+'/'+docs[0].file+'" target="_blank">'+escapeAttribute(d.label)+' '+window.PDF_ICON+'</a>';}
+            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label"'+directoryAttrs(info)+(info.mismatch?' tabindex="0"':'')+'>'+escapeAttribute(d.label)+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){html+='<a class="doc-btn'+(info.mismatch?' directory-mismatch':'')+'"'+directoryAttrs(directoryInfo(dataKey,city.name,unit.name,d.label,doc.batch,doc.file))+' href="'+window.BASE+'/'+doc.file+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
+            else html+='<span class="'+link+'"'+directoryAttrs(info)+'>'+escapeAttribute(d.label)+'</span>';
           });
           html+='</div></td><td>';batches.forEach(function(b){html+='<span class="batch-tag '+(window.batchClass[b]||'')+'">'+b+'</span>';});
           html+='</td><td class="reply-cell"><div class="reply-list">';

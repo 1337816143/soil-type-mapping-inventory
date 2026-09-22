@@ -27,6 +27,17 @@ for fixture in fixtures:
             for association in group:
                 assert any(all(r[k]==association[k] for k in ['city','unit','district']) and r['dataKey']==key for r in rows[1:])
         assert all(r['complete'] is True for r in rows[1:]);checks+=1
+        for row in rows[1:]:
+            source_row=next(a for a in expected[row['dataKey']] if all(a[k]==row[k] for k in ['city','unit','district']))
+            assert row.get('directoryStatus')==source_row.get('directoryStatus','')
+            if row.get('directoryStatus')=='outside-list':
+                assert row['unlistedConfirmed'] is True
+                broken=json.loads(json.dumps(fixture))
+                for group in broken['files'][0]['quality']['associationsByDataKey'].values():
+                    for a in group:a.pop('unlistedConfirmed',None)
+                manifest.write_text(json.dumps(broken));before=index.read_bytes()
+                result=subprocess.run([sys.executable,str(script)],cwd=repo,capture_output=True,text=True)
+                assert result.returncode!=0 and index.read_bytes()==before;checks+=1
         # A malformed keyed assignment must not be flattened to a global company.
         broken=json.loads(json.dumps(fixture));next(iter(broken['files'][0]['quality']['associationsByDataKey'].values()))[0]['unit']=''
         manifest.write_text(json.dumps(broken));before=index.read_bytes()

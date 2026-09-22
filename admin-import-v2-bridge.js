@@ -3,7 +3,7 @@
   var Q=window.SoilAdminImport;
   if(!Q)return;
   var snapshot=[];
-  function clone(item){return{path:item.path,sourcePath:item.sourcePath||item.path,batch:item.batch||'',manualBatch:item.manualBatch,manualDataKey:item.manualDataKey,manualAssociation:item.manualAssociation,city:item.city||'',unit:item.unit||'',district:item.district||''}}
+  function clone(item){return{path:item.path,sourcePath:item.sourcePath||item.path,batch:item.batch||'',unlistedConfirmation:item.unlistedConfirmation,manualBatch:item.manualBatch,manualDataKey:item.manualDataKey,manualAssociation:item.manualAssociation,city:item.city||'',unit:item.unit||'',district:item.district||''}}
   document.addEventListener('click',function(event){
     var button=event.target&&event.target.closest&&event.target.closest('#adm-ok');
     if(!button||!Q.state)return;
@@ -20,6 +20,7 @@
           unit:source.unit||item.unit||'',
           district:source.district||item.district||'',
           from:item.from||'',
+          unlistedConfirmation:source.unlistedConfirmation||item.unlistedConfirmation,
           manualBatch:source.manualBatch||item.manualBatch,
           manualDataKey:source.manualDataKey||item.manualDataKey,
           manualAssociation:source.manualAssociation||item.manualAssociation
