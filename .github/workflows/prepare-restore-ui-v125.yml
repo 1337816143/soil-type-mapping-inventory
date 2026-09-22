@@ -1,0 +1,43 @@
+name: Prepare restore-auto preview correction
+on:
+  push:
+    branches: [fix/result-specific-company-v1.2.5]
+    paths: [.github/workflows/prepare-restore-ui-v125.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Synchronize restored dropdowns and assert their actual values
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          from pathlib import Path
+          assert Path('VERSION').read_text().strip()=='v1.2.5'
+          p=Path('admin-auto-classifier.js');s=p.read_text()
+          old='delete item.manualAssociation;delete item.manualDataKey;});} refresh(); };'
+          new='delete item.manualAssociation;delete item.manualDataKey;});} refresh(); var current=Q();if(current&&typeof current.renderPreview===\'function\')current.renderPreview(); };'
+          assert s.count(old)==1;s=s.replace(old,new);p.write_text(s)
+          p=Path('scripts/check-assignment-ui.py');s=p.read_text()
+          old="    expect(statuses.nth(0)).to_contain_text('平山县')\n    expect(statuses.nth(0)).to_contain_text('按该类成果清单匹配')"
+          new=old+"\n    expect(first.locator('.rc')).to_have_value('石家庄市')\n    expect(first.locator('.ru')).to_have_value('中地科勘察设计有限公司')\n    expect(first.locator('.rd')).to_have_value('平山县')"
+          assert s.count(old)==1;p.write_text(s.replace(old,new))
+          PY
+          node --check admin-auto-classifier.js
+          node scripts/validate-auto-import-classifier.js
+          python3 -m py_compile scripts/check-assignment-ui.py
+          git diff --quiet -- task-unit-mappings.js index.html data replies assets upload-config.js .github/workflows
+      - name: Commit only ordinary-source corrections
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'fix/result-specific-company-v1.2.5'
+          git add admin-auto-classifier.js scripts/check-assignment-ui.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: rebuild manual selects after restoring per-type automatic assignment'
+          git push origin HEAD:fix/result-specific-company-v1.2.5
