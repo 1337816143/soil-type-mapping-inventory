@@ -43,6 +43,10 @@ jobs:
           for p,result in prepared.items():
               p.parent.mkdir(parents=True,exist_ok=True)
               p.write_text(result)
+          p=Path('scripts/validate-assignment-matching.js')
+          source=p.read_text(); marker="fs.writeFileSync('test-artifacts/outside-manifest.json'"
+          assert marker in source
+          p.write_text(source.replace(marker,"fs.mkdirSync('test-artifacts',{recursive:true});\n"+marker,1))
           subprocess.run(['node','scripts/bump-version.js','patch'],check=True)
           assert token == re.search(r'var tokenCodes = \[[^\]]+\]', Path('upload-config.js').read_text()).group(), 'Credential changed'
           allowed=set(str(p) for p in prepared)|{'VERSION','upload-config.js','app-release-ui.js','app-version-guard.js','page-enhancements.js','index.html'}
