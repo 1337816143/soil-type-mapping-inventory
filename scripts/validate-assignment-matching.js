@@ -81,7 +81,52 @@ for(const {i,m} of [multi,shared,namedShared]){
 }
 assert.strictEqual(JSON.stringify(w.SoilTaskUnitLists),registryBefore);assert.strictEqual(JSON.stringify(w.masterList),masterBefore);
 assert.strictEqual(fs.readFileSync('task-unit-mappings.js','utf8'),originalMapping);
-const samples=[multi,shared,namedShared].map(({i},index)=>w.__testManifest([i],'base','test-'+index));
+
+// v1.2.6: exact reported filename against the unchanged task directories.
+const yongnian='邯郸市_永年区_土特产品土壤适宜性评价_河北省农林科学院农业资源环境研究所_质控意见_2026年第二次第1批.docx';
+let external=classify(yongnian);
+assert.strictEqual(external.i.city,'邯郸市');assert.strictEqual(external.i.district,'永年区');
+assert.strictEqual(external.i.unit,'河北省农林科学院农业资源环境研究所');
+assert.strictEqual(external.i.batch,'2026年第二次第1批');
+assert.strictEqual(external.m.assignment.complete,false);assert.strictEqual(external.m.assignment.requiresConfirmation,true);
+assert.throws(()=>w.__testManifest([external.i],'base','pending'),/确认/);
+assert(C.confirmUnlisted(external.i));assert(external.i.autoMeta.assignment.complete);
+let extrow=external.i.autoMeta.assignment.byKey.specialty[0];
+assert(extrow.directoryMismatch);assert.strictEqual(extrow.directoryStatus,'unlisted-task');assert(extrow.outsideDirectoryConfirmed);
+const externalManifest=w.__testManifest([external.i],'base','confirmed');assert.strictEqual(externalManifest.files.length,1);
+assert(externalManifest.files[0].quality.associationsByDataKey.specialty[0].outsideDirectoryConfirmed);
+external.i.manualBatch='2026年第二次第2批';assert(!C.applyItemMetadata(external.i).assignment.complete);
+assert(C.confirmUnlisted(external.i));assert(C.applyItemMetadata(external.i).assignment.complete);
+external.i.file={...external.i.file};assert(!C.applyItemMetadata(external.i).assignment.complete);
+assert(C.confirmUnlisted(external.i));
+external.i.manualAssociation={city:'邯郸市',district:'永年区',unit:'河北另一单位有限公司'};
+assert(!C.applyItemMetadata(external.i).assignment.complete);assert(C.confirmUnlisted(external.i));
+delete external.i.directoryConfirmation;assert(!C.applyItemMetadata(external.i).assignment.complete);
+assert(C.confirmUnlisted(external.i));checks+=9;
+for(const name of [
+ yongnian.replace('_河北省农林科学院农业资源环境研究所',''),
+ yongnian.replace('_河北省农林科学院农业资源环境研究所','_甲有限公司_乙有限公司'),
+ yongnian.replace('邯郸市_',''),
+ yongnian.replace('_永年区_','_永年区_武平县_'),
+ '保定市_平山县_土壤类型图_河北示例公司_质控意见.docx'
+]){
+ let x=classify(name);assert(!x.m.assignment.complete);assert(!C.confirmUnlisted(x.i),name);
+}
+let noCompany=classify(yongnian.replace('_河北省农林科学院农业资源环境研究所',''),{sourcePath:'河北省农林科学院农业资源环境研究所/旧目录'});
+assert.strictEqual(noCompany.i.city,'邯郸市');assert.strictEqual(noCompany.i.district,'永年区');assert.strictEqual(noCompany.i.unit,'');
+assert(noCompany.m.assignment.issues.some(p=>p.code==='unlisted-company-required'));
+let externalMulti=classify(yongnian.replace('土特产品土壤适宜性评价','土壤属性图_土特产品土壤适宜性评价'));
+assert(!externalMulti.m.assignment.complete);assert(C.confirmUnlisted(externalMulti.i));
+assert.strictEqual(Object.keys(externalMulti.i.autoMeta.assignment.byKey).length,2);
+const mismatch=classify('石家庄市_平山县_土壤类型图_河北湛泸软件开发有限公司_质控意见_2026年第二次第1批.docx');
+assert(mismatch.m.assignment.complete);assert.strictEqual(mismatch.m.assignment.byKey.soilType[0].directoryStatus,'unit-mismatch');
+assert.strictEqual(C.directoryStatus('soilAttr','石家庄市','平山县','河北湛泸软件开发有限公司').status,'matched');
+assert.strictEqual(C.directoryStatus('soilType','石家庄市','平山县','中地科勘察设计有限公司').status,'matched');
+assert.strictEqual(C.directoryStatus('specialty','邯郸市','永年区','河北省农林科学院农业资源环境研究所').status,'unlisted-task');
+assert.strictEqual(JSON.stringify(w.SoilTaskUnitLists),registryBefore);assert.strictEqual(JSON.stringify(w.masterList),masterBefore);
+checks+=8;
+
+const samples=[multi,shared,namedShared,external,externalMulti,mismatch].map(({i},index)=>w.__testManifest([i],'base','test-'+index));
 fs.mkdirSync('test-artifacts',{recursive:true});fs.writeFileSync('test-artifacts/assignment-manifests.json',JSON.stringify(samples,null,2));
 fs.writeFileSync('test-artifacts/assignment-report.json',JSON.stringify({status:'passed',checks,realListTasks:audited,registryUnchanged:true,indexMasterListSHA256:crypto.createHash('sha256').update(originalList).digest('hex'),mappingSHA256:crypto.createHash('sha256').update(originalMapping).digest('hex')},null,2));
 console.log('Assignment matching passed:',checks,'cases;',audited,'actual result-type task rows; both embedded lists unchanged.');

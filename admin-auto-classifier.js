@@ -271,6 +271,48 @@
   function issue(key, code, message, rows) {
     return {dataKey:key,code:code,message:message,candidates:(rows || []).map(function(r){return {city:r.city,unit:r.unit,district:r.district};})};
   }
+
+  // Read-only, result-specific comparison; never rewrite the directory.
+  function directoryStatus(key, city, district, unit) {
+    if (!key || !city || !district || !unit) return {status:'incomplete',mismatch:false,listedUnits:[]};
+    var listed=flattenTasks([key]).filter(function(r){
+      if (compact(r.city)!==compact(city)) return false;
+      if (regionForms(r.district).includes(compact(district))) return true;
+      if ((r.district===r.city || /市级|本级|汇总/.test(r.district)) && /^(?:市级|市本级|市级汇总|全市)$/.test(district)) return true;
+      var subs=window.mergeSubDistricts && window.mergeSubDistricts[city] || [];
+      return r.district==='合并区' && subs.some(function(d){return compact(d)===compact(district);});
+    });
+    var units=unique(listed.map(function(r){return r.unit;}));
+    var status=!listed.length?'unlisted-task':units.some(function(u){return unitMatches(u,unit);})?'matched':'unit-mismatch';
+    return {status:status,mismatch:status!=='matched',listedUnits:units};
+  }
+  // Only explicit delimiter-separated city/task fields can become a candidate.
+  function unlistedCandidate(text,key,company,city) {
+    var parts=normalize(basename(text)).replace(/\.[^.]+$/,'').split(/[_;；|]+/).map(function(p){return p.trim();});
+    if (!city || !parts.some(function(p){return compact(p)===compact(city);})) return null;
+    var districts=unique(parts.filter(function(p){
+      return p!==city && !company.names.includes(p) && /^[\u4e00-\u9fff]{2,18}(?:县|区|市)$/.test(p) &&
+        !/成果|质控|报告|评价|作业|单位|公司|研究|农业|学院|普查|片区|测试/.test(p);
+    }));
+    if (districts.length!==1) return null;
+    var district=districts[0];
+    if (flattenTasks([key]).some(function(r){return regionForms(r.district).includes(compact(district));})) return null;
+    var row={dataKey:key,city:city,district:district,unit:company.name||'',unitSource:company.name?'filename':'',listedUnits:[],directoryStatus:'unlisted-task',
+      note:'清单外任务：仅按本次文件归档展示，不新增通讯录条目，不计入原清单收缴进度。'};
+    return {row:row,issue:company.name?null:issue(key,'unlisted-company-required','“'+city+' / '+district+'”不在该类成果通讯录中，不能推断作业单位。请在文件名补充“_单位全称_”，或人工明确单位后确认归档。')};
+  }
+  function confirmationSignature(item,byKey) {
+    var selection=Q()&&Q().state&&Q().state.batchSelection;
+    var batch=item.manualBatch || (selection&&window.SoilBatchPolicy&&window.SoilBatchPolicy.format(selection)) || inferBatch(item.file&&item.file.name||item.path) || item.batch || '';
+    return JSON.stringify([item.path||'',batch,Object.keys(byKey).sort().map(function(k){return [k,byKey[k].map(function(r){return [r.city,r.district,r.unit,r.directoryStatus];})];})]);
+  }
+  function confirmUnlisted(item) {
+    var meta=classifyItem(item),a=meta.assignment;
+    if (!a || !a.requiresConfirmation || a.issues.some(function(p){return p.code!=='confirmation-required';})) return false;
+    item.directoryConfirmation={file:item.file,signature:confirmationSignature(item,a.byKey),at:new Date().toISOString()};
+    applyItemMetadata(item);return true;
+  }
+
   function resolveOne(text, key, company) {
     var rows = flattenTasks([key]), geo = geographyText(text,company);
     if (!rows.length) return {issue:issue(key,'missing-list','该类成果没有可用对照清单，请联系管理员核对。')};
@@ -295,6 +337,8 @@
       candidates = rows.filter(function(r){return r.district===district && (!city || r.city===city);});
       if (!candidates.length) return {issue:issue(key,'city-district-conflict','所属市与任务单元不一致，或该类成果清单中没有此组合：'+[city,district].join(' / '),matches)};
     } else if (city) {
+      var external=unlistedCandidate(text,key,company,city);
+      if(external)return external;
       var remaining=geo.split(compact(city)).join('');
       if (/[\u4e00-\u9fff]{1,12}(?:县|区)/.test(remaining.replace(/市级|市本级|市级汇总/g,''))) {
         return {issue:issue(key,'unknown-district','已识别所属市，但区县名称未匹配该类成果清单。请使用平台任务单元名称。')};
@@ -345,11 +389,31 @@
           // Filename geography wins; use folder context only when it is needed.
           var result=resolveOne(filename,key,company);
           if (result.issue && ['missing-district','ambiguous-region'].includes(result.issue.code) && context) result=resolveOne(filename+' / '+context,key,company);
-          if (result.issue) problems.push(result.issue); else byKey[key].push(result.row);
+          if (result.issue) problems.push(result.issue);
+          if (result.row) byKey[key].push(result.row);
         }
       });
     }
-    return {version:2,byKey:byKey,issues:problems,company:company,complete:!problems.length&&keys.length>0};
+    var unlisted=false;
+    Object.keys(byKey).forEach(function(key){byKey[key].forEach(function(r){
+      var check=directoryStatus(key,r.city,r.district,r.unit);
+      r.directoryStatus=r.directoryStatus==='unlisted-task'?'unlisted-task':check.status;
+      r.directoryMismatch=['unlisted-task','unit-mismatch'].includes(r.directoryStatus);
+      if(check.listedUnits.length)r.listedUnits=check.listedUnits;
+      if(r.directoryStatus==='unlisted-task')unlisted=true;
+    });});
+    var recognized=!problems.length&&keys.length>0;
+    var requiresConfirmation=unlisted&&recognized;
+    var confirmation=item.directoryConfirmation;
+    var confirmed=requiresConfirmation&&confirmation&&confirmation.file===item.file&&confirmation.signature===confirmationSignature(item,byKey);
+    if (requiresConfirmation&&!confirmed) problems.push(issue('','confirmation-required','清单外任务已提取完整信息。核对下方市、任务单元、单位后，点击“确认按文件名归档”；不修改通讯录，不计入原清单收缴进度。'));
+    Object.keys(byKey).forEach(function(key){byKey[key].forEach(function(r){
+      if(r.directoryStatus==='unlisted-task'){
+        r.outsideDirectoryConfirmed=!!confirmed;
+        if(confirmed)r.directoryConfirmedAt=confirmation.at;
+      }
+    });});
+    return {version:2,byKey:byKey,issues:problems,company:company,recognized:recognized,requiresConfirmation:requiresConfirmation&&!confirmed,hasUnlisted:unlisted,complete:!problems.length&&keys.length>0};
   }
   function inferSingleAssociation(text, dataKeys) {
     var item={file:{name:basename(text)},sourcePath:text,path:text};
@@ -362,8 +426,7 @@
   function matchingDescription(meta) {
     var a=meta && meta.assignment;
     if(!a)return '';
-    if(a.issues.length)return a.issues.map(function(p){return (TYPE_LABELS[p.dataKey]?TYPE_LABELS[p.dataKey]+'：':'')+p.message;}).join('\n');
-    var lines=[];
+    var lines=a.issues.map(function(p){return (TYPE_LABELS[p.dataKey]?TYPE_LABELS[p.dataKey]+'：':'')+p.message;});
     Object.keys(a.byKey).forEach(function(key){a.byKey[key].forEach(function(r){
       var source=r.unitSource==='manual'?'人工指定':r.unitSource==='filename'?'文件名单位':r.unitSource==='directory'?'目录单位':'按该类成果清单匹配';
       lines.push((TYPE_LABELS[key]||key)+' · '+r.city+' / '+r.district+' → '+r.unit+'（'+source+'）'+(r.note?'；'+r.note:''));
@@ -459,7 +522,7 @@
       var manual=item.manualAssociation;
       item.city=manual?String(manual.city||''):'';item.unit=manual?String(manual.unit||''):'';item.district=manual?String(manual.district||''):'';
       var assigned=[];Object.keys(meta.assignment.byKey).forEach(function(k){assigned=assigned.concat(meta.assignment.byKey[k]);});
-      if(meta.assignment.complete && assigned.length){
+      if(assigned.length){
         ['city','unit','district'].forEach(function(k){if(assigned.every(function(r){return r[k]===assigned[0][k];}))item[k]=assigned[0][k];});
       }
     }
@@ -617,6 +680,22 @@
       }
       status.textContent = text;
       status.className = className;
+      var a=meta.assignment;
+      var mismatch=!!(a&&Object.keys(a.byKey).some(function(k){return a.byKey[k].some(function(r){return r.directoryMismatch;});}));
+      row.classList.toggle('directory-mismatch-preview',mismatch);
+      if(mismatch)status.title='与作业单位通讯录不一致';else status.removeAttribute('title');
+      var old=row.querySelector('.directory-confirm');if(old)old.remove();
+      if(a&&a.requiresConfirmation){
+        var control=document.createElement('button');control.type='button';control.className='directory-confirm';
+        control.textContent=item.manualAssociation?'确认按所填信息归档':'确认按文件名归档';
+        control.onclick=function(){if(confirmUnlisted(item)&&typeof q.renderPreview==='function')q.renderPreview();};
+        status.insertAdjacentElement('afterend',control);
+      } else if(a&&a.hasUnlisted&&a.complete){
+        var control=document.createElement('button');control.type='button';control.className='directory-confirm';
+        control.textContent='已确认清单外归档 · 撤销确认';
+        control.onclick=function(){delete item.directoryConfirmation;if(typeof q.renderPreview==='function')q.renderPreview();};
+        status.insertAdjacentElement('afterend',control);
+      }
     });
   }
 
@@ -722,6 +801,7 @@
     inferDataKeys:inferDataKeys,
     inferKind:inferKind,
     inferSingleAssociation:inferSingleAssociation,
+    directoryStatus:directoryStatus,confirmUnlisted:confirmUnlisted,
     listForKey:listForKey,resolveAssignments:resolveAssignments,detectCompany:detectCompany,matchingDescription:matchingDescription,isResolved:isResolved,
     classifyItem:classifyItem,
     applyItemMetadata:applyItemMetadata,

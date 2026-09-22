@@ -31,6 +31,7 @@ with sync_playwright() as p:
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')
         import runpy
         report['glassUI']=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,'live')
+        report['directoryUI']=runpy.run_path(str(ROOT/'scripts/check-directory-ui.py'))['check_directory_ui'](page,OUT,'live')
         page.locator('[data-tab="soilType"]').click()
         expect(page.locator('.batch-tag').first).to_contain_text('2026年第一次')
         assert not page.locator('.city-section tbody td:nth-child(3) .batch-tag').evaluate_all('''nodes=>nodes.filter(n=>{if(!n.getClientRects().length)return false;const r=n.getBoundingClientRect(),c=n.closest('td').getBoundingClientRect();return r.right>c.right-2||r.left<c.left;}).map(n=>n.textContent)'''),'Batch label overlaps another column'

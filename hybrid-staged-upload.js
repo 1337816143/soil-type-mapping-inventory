@@ -212,6 +212,7 @@
         }
 
         var meta = itemMetadata(item);
+        if(kind==='quality'&&meta&&meta.assignment&&meta.assignment.hasUnlisted&&!meta.assignment.complete)throw new Error(C().matchingDescription(meta));
         var dataKeys = kind === 'quality' ? itemDataKeys(item, dataKey) : [];
         var shared = kind === 'quality' ? sharedInspection(item, dataKeys) : null;
         var targetPath = shared && router ?
@@ -396,6 +397,8 @@
     }
     var kind = selection && (selection.kind === 'quality' || selection.kind === 'reference') ? selection.kind : document.getElementById('adm-kind').value;
     if (kind === 'quality') {
+      var pending=files.find(function(item){var m=itemMetadata(item);return m&&m.assignment&&m.assignment.hasUnlisted&&!m.assignment.complete;});
+      if(pending){progress(classifier.matchingDescription(itemMetadata(pending)),0);return;}
       var fallbackDataKey = document.getElementById('adm-data-key').value;
       var incomplete = files.filter(function (item) {
         var meta=itemMetadata(item);
