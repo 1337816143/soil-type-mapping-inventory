@@ -149,3 +149,7 @@ assert(mobile.includes('ensureAuthorityReady'), '手机ZIP未等待权威索引'
 assert(mobile.includes('prepared.forEach(function (item) { classifier.applyItemMetadata(item); })'), '手机ZIP解压后未逐项强制重新匹配');
 
 console.log('automatic import classifier validation passed: comprehensive defaults to 3 active types; explicitly named historical types remain compatible');
+
+// End-to-end mapping checks use the real embedded lists and actual Actions writer.
+require('child_process').execFileSync(process.execPath,['scripts/validate-assignment-matching.js'],{stdio:'inherit'});
+require('child_process').execFileSync('python3',['scripts/test-assignment-index.py'],{stdio:'inherit'});

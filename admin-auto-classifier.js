@@ -35,6 +35,7 @@
   var catalogLoaded = false;
   var manualMode = false;
   var refreshQueued = false;
+  var applyingDefaults = false;
 
   function Q() { return window.SoilAdminImport; }
   function R() { return window.SoilQualityFileRouting; }
@@ -183,30 +184,28 @@
     };
   }
 
-  function taskListsFor(dataKeys) {
+  // Company discovery may read all lists, but task resolution MUST stay in the
+  // requested result type. Never mutate SoilTaskUnitLists or window.masterList.
+  function listForKey(key) {
     var registry = window.SoilTaskUnitLists || {};
-    var lists = [];
-    (dataKeys && dataKeys.length ? dataKeys : ['soilType']).forEach(function (key) {
-      var list = typeof registry.listFor === 'function' ? registry.listFor(key) : (key === 'soilType' ? registry.soilType : registry.other);
-      if (Array.isArray(list)) lists.push(list);
-    });
-    if (!lists.length && Array.isArray(window.masterList)) lists.push(window.masterList);
-    if (Array.isArray(registry.soilType)) lists.push(registry.soilType);
-    if (Array.isArray(registry.other)) lists.push(registry.other);
-    return lists;
+    if (typeof registry.listFor === 'function') return registry.listFor(key) || [];
+    if (Array.isArray(registry[key])) return registry[key];
+    if (key === 'soilType' && Array.isArray(registry.soilType)) return registry.soilType;
+    if (key !== 'soilType' && Array.isArray(registry.other)) return registry.other;
+    return Array.isArray(window.masterList) ? window.masterList : [];
   }
-
+  function taskListsFor(dataKeys) {
+    return unique(dataKeys || []).map(listForKey);
+  }
   function flattenTasks(dataKeys) {
-    var rows = [];
-    var seen = {};
+    var rows = [], seen = new Set();
     taskListsFor(dataKeys).forEach(function (list) {
-      (list || []).forEach(function (city) {
+      list.forEach(function (city) {
         (city.items || []).forEach(function (unit) {
           (unit.districts || []).forEach(function (district) {
-            var key = [city.city, unit.unit, district].join('\n');
-            if (!seen[key]) {
-              seen[key] = true;
-              rows.push({city:String(city.city || ''), unit:String(unit.unit || ''), district:String(district || '')});
+            var id = [city.city,unit.unit,district].join('\n');
+            if (!seen.has(id)) {
+              seen.add(id); rows.push({city:city.city,unit:unit.unit,district:district});
             }
           });
         });
@@ -214,48 +213,162 @@
     });
     return rows;
   }
-
-  function textHas(text, value) {
-    return compact(text).indexOf(compact(value)) >= 0;
+  function textHas(text, value) { return !!value && compact(text).indexOf(compact(value)) >= 0; }
+  function companyForm(name) {
+    return compact(name).replace(/牵头人|牵头单位|联合体成员/g,'').replace(/[\/＋+]/g,'');
   }
-
-  function inferSingleAssociation(text, dataKeys) {
-    text = normalize(text);
-    Object.keys(NAME_ALIASES).forEach(function (from) { text = text.split(from).join(NAME_ALIASES[from]); });
-    var rows = flattenTasks(dataKeys);
-    if (!rows.length) return null;
-
-    var explicitCities = unique(rows.filter(function (row) { return row.city && textHas(text, row.city); }).map(function (row) { return row.city; }));
-    var explicitUnits = unique(rows.filter(function (row) { return row.unit && textHas(text, row.unit); }).map(function (row) { return row.unit; }));
-    var matchedDistricts = unique(rows.filter(function (row) { return row.district && textHas(text, row.district); }).map(function (row) { return row.district; }));
-
-    var cityHint = explicitCities.length === 1 ? explicitCities[0] : '';
-    var unitHint = explicitUnits.length === 1 ? explicitUnits[0] : '';
-    var district = matchedDistricts.length === 1 ? matchedDistricts[0] : '';
-
-    if (!district && cityHint && /(市级|市本级|全市|市级汇总)/.test(text)) {
-      var cityLevel = rows.filter(function (row) { return row.city === cityHint && (row.district === cityHint || /市级|本级|汇总/.test(row.district)); });
-      if (cityLevel.length === 1) district = cityLevel[0].district;
-    }
-
-    var candidates = rows.filter(function (row) {
-      if (cityHint && row.city !== cityHint) return false;
-      if (unitHint && row.unit !== unitHint) return false;
-      if (district && row.district !== district) return false;
-      return !!(cityHint || unitHint || district);
+  function unitForms(unit) {
+    return unique([unit].concat(String(unit).split(/\s*\/\s*/))).map(companyForm).filter(Boolean);
+  }
+  function unitMatches(unit, named) { return unitForms(unit).indexOf(companyForm(named)) >= 0; }
+  var companyCache = null;
+  function companyNames() {
+    var refs = Object.keys(TYPE_LABELS).map(listForKey);
+    if (companyCache && refs.every(function (v,i) { return v === companyCache.refs[i]; })) return companyCache.names;
+    var names = unique(flattenTasks(Object.keys(TYPE_LABELS)).map(function(r) { return r.unit; }));
+    companyCache = {refs:refs,names:names}; return names;
+  }
+  function detectCompany(text, source) {
+    var normalized = normalize(text).replace(/\.[^.\/]+$/, ''), value = companyForm(normalized);
+    var names = companyNames().filter(function (name) { return value.indexOf(companyForm(name)) >= 0; });
+    // Full, delimiter-separated names also work for a newly appointed company.
+    // Never guess an abbreviation or silently replace an explicit company.
+    normalized.split(/[_;；|\n\r]+/).forEach(function (part) {
+      part = part.trim().replace(/^(?:作业单位|公司名称|承编单位)\s*[:：=]\s*/, '');
+      if (part.length <= 120 && /^[\u4e00-\u9fffA-Za-z0-9（）()·\s\-]{2,}(?:有限公司|有限责任公司|公司|大学|研究所|研究院|勘查院|勘察院|大队|调查中心|监测中心)$/.test(part) &&
+          !/质控|质量控制|审核意见|三普|20\d{2}年|第[一二三四\d]+批/.test(part)) names.push(part);
     });
-
-    if (!candidates.length && district) candidates = rows.filter(function (row) { return row.district === district; });
-    if (!candidates.length && unitHint) candidates = rows.filter(function (row) { return row.unit === unitHint; });
-    if (candidates.length === 1) return candidates[0];
-
-    if (district) {
-      var districts = candidates.filter(function (row) { return row.district === district; });
-      if (cityHint) districts = districts.filter(function (row) { return row.city === cityHint; });
-      if (unitHint) districts = districts.filter(function (row) { return row.unit === unitHint; });
-      if (districts.length === 1) return districts[0];
+    names = unique(names).filter(function (name, i, all) {
+      var form = companyForm(name);
+      return !all.some(function (other,j) { return j !== i && companyForm(other).length > form.length && companyForm(other).includes(form); });
+    });
+    names = names.filter(function(name,i,all){return all.findIndex(function(n){return companyForm(n)===companyForm(name);})===i;});
+    return {names:names,name:names.length===1?names[0]:'',source:source || 'filename',
+      unparsed:!names.length && /有限公司|有限责任公司/.test(normalized)};
+  }
+  function companySignal(item) {
+    // Only the physical filename supplies an explicit company. A stale enclosing
+    // directory must not override the requested type/district's embedded list.
+    return detectCompany(basename(item.file && item.file.name || item.path || ''),'filename');
+  }
+  function geographyText(text, company) {
+    var out = compact(text);
+    var names = companyNames().concat(company && company.names || []);
+    names.sort(function(a,b){return b.length-a.length;}).forEach(function(name){
+      [name].concat(String(name).split(/\s*\/\s*/)).forEach(function(part){
+        out = out.split(compact(part)).join('');
+        out = out.split(companyForm(part)).join('');
+      });
+    });
+    return out;
+  }
+  function regionForms(name) {
+    var aliases = {'井陉县（含矿区）':['井陉县'], '孟村县':['孟村回族自治县'],
+      '青龙县':['青龙满族自治县'], '丰宁县':['丰宁满族自治县'], '宽城县':['宽城满族自治县'],
+      '围场县':['围场满族蒙古族自治县']};
+    return [name].concat(aliases[name] || []).map(compact);
+  }
+  function issue(key, code, message, rows) {
+    return {dataKey:key,code:code,message:message,candidates:(rows || []).map(function(r){return {city:r.city,unit:r.unit,district:r.district};})};
+  }
+  function resolveOne(text, key, company) {
+    var rows = flattenTasks([key]), geo = geographyText(text,company);
+    if (!rows.length) return {issue:issue(key,'missing-list','该类成果没有可用对照清单，请联系管理员核对。')};
+    var cities = unique(rows.filter(function(r){return geo.includes(compact(r.city));}).map(function(r){return r.city;}));
+    if (cities.length > 1) return {issue:issue(key,'multiple-cities','文件名或目录出现多个所属市：'+cities.join('、')+'。请只保留本文件的所属市。')};
+    var city = cities[0] || '';
+    var matches = rows.filter(function(r){
+      return r.district !== r.city && !/市级|本级|汇总/.test(r.district) && regionForms(r.district).some(function(form){return geo.includes(form);});
+    });
+    // A parent-city name is context, not a second city-level task when a county
+    // is present. Keep genuine multi-county or contradictory names unresolved.
+    var labels = unique(matches.map(function(r){return r.district;}));
+    labels = labels.filter(function(d){return !labels.some(function(long){return long!==d && compact(long).includes(compact(d));});});
+    if (labels.length > 1) return {issue:issue(key,'multiple-districts','识别到多个任务单元：'+labels.join('、')+'。请使用多地区共享报告命名或人工明确归属。',matches)};
+    var district = labels[0] || '';
+    // Soil-type maps aggregate these source areas to the Xiongan task only.
+    if (!district && key==='soilType' && /雄县|安新县|容城县|雄安新区/.test(geo)) {
+      city='雄安新区';district='雄安新区';
     }
-    return null;
+    var candidates;
+    if (district) {
+      candidates = rows.filter(function(r){return r.district===district && (!city || r.city===city);});
+      if (!candidates.length) return {issue:issue(key,'city-district-conflict','所属市与任务单元不一致，或该类成果清单中没有此组合：'+[city,district].join(' / '),matches)};
+    } else if (city) {
+      var remaining=geo.split(compact(city)).join('');
+      if (/[\u4e00-\u9fff]{1,12}(?:县|区)/.test(remaining.replace(/市级|市本级|市级汇总/g,''))) {
+        return {issue:issue(key,'unknown-district','已识别所属市，但区县名称未匹配该类成果清单。请使用平台任务单元名称。')};
+      }
+      candidates=rows.filter(function(r){return r.city===city && (r.district===city || /市级|本级|汇总/.test(r.district));});
+      if (!candidates.length) return {issue:issue(key,'missing-city-task','已识别'+city+'，但该类成果清单没有对应市级任务；请核对任务单元。')};
+    } else return {issue:issue(key,'missing-district','尚未识别任务单元。请在文件名中补充区县或市级名称；“合并区”须同时写所属市。')};
+    var geos = unique(candidates.map(function(r){return r.city+'\n'+r.district;}));
+    if (geos.length>1 && company.name) {
+      var narrowed=candidates.filter(function(r){return unitMatches(r.unit,company.name);});
+      if (narrowed.length) {candidates=narrowed;geos=unique(candidates.map(function(r){return r.city+'\n'+r.district;}));}
+    }
+    if (geos.length!==1) return {issue:issue(key,'ambiguous-region','同名任务单元对应多个地区，请补充所属市：'+unique(candidates.map(function(r){return r.city+' / '+r.district;})).join('；'),candidates)};
+    var listed=unique(candidates.map(function(r){return r.unit;})), unit='', note='';
+    if (company.name) {
+      var equivalent=listed.filter(function(u){return unitMatches(u,company.name);});
+      unit=equivalent.length===1?equivalent[0]:company.name;
+      if (!equivalent.length) note='文件名单位优先；该类成果清单单位为“'+listed.join('、')+'”，本次归档使用“'+unit+'”，不改清单。';
+    } else if (listed.length===1) unit=listed[0];
+    else return {issue:issue(key,'ambiguous-unit','该类成果、该地区在清单中仍有多个作业单位，请补充公司全称：'+listed.join('；'),candidates)};
+    return {row:{dataKey:key,city:candidates[0].city,district:candidates[0].district,unit:unit,
+      unitSource:company.name?company.source:'type-district-list',listedUnits:listed,note:note}};
+  }
+  function resolveAssignments(item, keys, targets) {
+    var company=companySignal(item), byKey={}, problems=[], filename=basename(item.file&&item.file.name||item.path||'');
+    var context=[item.sourcePath,item.path].filter(Boolean).join(' / '), manual=item.manualAssociation;
+    keys.forEach(function(key){byKey[key]=[];});
+    if (!keys.length) problems.push(issue('','missing-type','尚未识别成果类型，请使用完整成果名称或人工选择成果类型。'));
+    if (company.names.length>1) problems.push(issue('','multiple-companies','识别到多个不同公司：'+company.names.join('；')+'。请明确本文件作业单位；联合体请使用清单中的完整单位名称。'));
+    if (company.unparsed) problems.push(issue('','unparsed-company','检测到公司名称，但未能完整提取。请以“_公司全称_”单独分隔，避免默认为清单单位。'));
+    if (manual) {
+      problems=[];
+      if (!keys.length || !manual.city || !manual.unit || !manual.district) problems.push(issue('','manual-incomplete','人工调整尚未填写完整，请选择成果类型、市、作业单位和任务单元。'));
+      else keys.forEach(function(key){byKey[key]=[{dataKey:key,city:manual.city,unit:manual.unit,district:manual.district,unitSource:'manual'}];});
+    } else if (!problems.length) {
+      keys.forEach(function(key){
+        if (targets && targets.length) {
+          // Preserve the existing target parser and generic/aggregate geography
+          // rules, then pin each association's company independently per type.
+          var result=R().resolveTargets(targets,key,'');
+          (result.unresolved||[]).forEach(function(u){problems.push(issue(key,'shared-unresolved','共享报告中的“'+(u.target||u)+'”未匹配，请检查所属市和任务名称。'));});
+          (result.associations||[]).forEach(function(r){
+            var listed=r.unit, unit=company.name?(unitMatches(listed,company.name)?listed:company.name):listed;
+            byKey[key].push({dataKey:key,city:r.city,unit:unit,district:r.district,unitSource:company.name?company.source:'type-district-list',listedUnits:[listed],note:unit!==listed?'本次使用文件名单位“'+unit+'”；清单单位“'+listed+'”不改。':''});
+          });
+          if (!byKey[key].length && !(result.unresolved||[]).length) problems.push(issue(key,'unsupported-shared-type','此共享格式不支持该成果类型，请按单地区单成果命名或人工调整。'));
+        } else {
+          // Filename geography wins; use folder context only when it is needed.
+          var result=resolveOne(filename,key,company);
+          if (result.issue && ['missing-district','ambiguous-region'].includes(result.issue.code) && context) result=resolveOne(filename+' / '+context,key,company);
+          if (result.issue) problems.push(result.issue); else byKey[key].push(result.row);
+        }
+      });
+    }
+    return {version:2,byKey:byKey,issues:problems,company:company,complete:!problems.length&&keys.length>0};
+  }
+  function inferSingleAssociation(text, dataKeys) {
+    var item={file:{name:basename(text)},sourcePath:text,path:text};
+    var resolved=resolveAssignments(item,dataKeys||[],[]), rows=[];
+    if(!resolved.complete)return null;
+    Object.keys(resolved.byKey).forEach(function(k){rows=rows.concat(resolved.byKey[k]);});
+    if(!rows.length||rows.some(function(r){return r.city!==rows[0].city||r.unit!==rows[0].unit||r.district!==rows[0].district;}))return null;
+    return {city:rows[0].city,unit:rows[0].unit,district:rows[0].district};
+  }
+  function matchingDescription(meta) {
+    var a=meta && meta.assignment;
+    if(!a)return '';
+    if(a.issues.length)return a.issues.map(function(p){return (TYPE_LABELS[p.dataKey]?TYPE_LABELS[p.dataKey]+'：':'')+p.message;}).join('\n');
+    var lines=[];
+    Object.keys(a.byKey).forEach(function(key){a.byKey[key].forEach(function(r){
+      var source=r.unitSource==='manual'?'人工指定':r.unitSource==='filename'?'文件名单位':r.unitSource==='directory'?'目录单位':'按该类成果清单匹配';
+      lines.push((TYPE_LABELS[key]||key)+' · '+r.city+' / '+r.district+' → '+r.unit+'（'+source+'）'+(r.note?'；'+r.note:''));
+    });});
+    return lines.join('\n');
   }
 
   function sharedReportTargets(fileName) {
@@ -291,11 +404,18 @@
     var file = item.file;
     var text = [item.sourcePath, item.path, file && file.name].filter(Boolean).join(' / ');
     var fileName = basename(file && file.name || item.path || '');
-    var keys = exact ? exact.dataKeys.slice() : inferDataKeys(text);
+    var keys = exact ? exact.dataKeys.slice() : item.manualDataKey ? [item.manualDataKey] : inferDataKeys(text);
     var kind = exact ? exact.kind : inferKind(text, keys);
     var batch = exact ? exact.batch : (inferBatch(text) || String(item.batch && item.batch !== '管理员导入' ? item.batch : ''));
     var targets = exact ? exact.targets.slice() : [];
-    if (!targets.length && kind === 'quality') targets = sharedReportTargets(fileName);
+    if (!targets.length && kind === 'quality') {
+      var company = companySignal(item), targetName = normalize(fileName);
+      company.names.forEach(function(name){
+        [name].concat(String(name).split(/\s*\/\s*/)).forEach(function(part){targetName=targetName.split(normalize(part)).join('');});
+      });
+      targetName=targetName.replace(/^[_+\s]+|[_+\s]+(?=(?:三普|第三次全国土壤普查))/g,'');
+      targets = sharedReportTargets(targetName);
+    }
     if (targets.length && !keys.length) keys = COMPREHENSIVE_KEYS.slice();
     if (kind === 'unknown' && currentMode()) kind = currentMode();
 
@@ -303,6 +423,12 @@
     var shared = {associations:[], unresolved:[]};
     if (kind === 'quality' && targets.length) shared = resolveShared(targets, keys, fileName);
     else if (kind === 'quality') association = inferSingleAssociation(text, keys);
+    var assignment = kind === 'quality' && !exact ? resolveAssignments(item,keys,targets) : null;
+    if(assignment){
+      var assigned=[];Object.keys(assignment.byKey).forEach(function(k){assigned=assigned.concat(assignment.byKey[k]);});
+      association=assignment.complete && assigned.length && assigned.every(function(r){return r.city===assigned[0].city&&r.unit===assigned[0].unit&&r.district===assigned[0].district;}) ? assigned[0] : null;
+      shared.associations=assigned;shared.unresolved=assignment.issues.map(function(p){return p.message;});
+    }
 
     var result = exact || {};
     result.kind = kind || result.kind || 'unknown';
@@ -313,6 +439,7 @@
     result.dataKeys = keys;
     result.targets = targets;
     result.association = association;
+    result.assignment = assignment;
     result.associations = shared.associations || [];
     result.unresolvedTargets = shared.unresolved || [];
     result.expectedSha256 = String(result.expectedSha256 || '');
@@ -326,6 +453,16 @@
     if (window.SoilBatchPolicy) window.SoilBatchPolicy.applyToItem(item, meta, Q() && Q().state && Q().state.batchSelection);
     item.autoMeta = meta;
     if (meta.batch) item.batch = meta.batch;
+    if (meta.assignment) {
+      // Discard stale guesses from the legacy importer; a different result type
+      // must not inherit its company. Human overrides live separately.
+      var manual=item.manualAssociation;
+      item.city=manual?String(manual.city||''):'';item.unit=manual?String(manual.unit||''):'';item.district=manual?String(manual.district||''):'';
+      var assigned=[];Object.keys(meta.assignment.byKey).forEach(function(k){assigned=assigned.concat(meta.assignment.byKey[k]);});
+      if(meta.assignment.complete && assigned.length){
+        ['city','unit','district'].forEach(function(k){if(assigned.every(function(r){return r[k]===assigned[0][k];}))item[k]=assigned[0][k];});
+      }
+    }
     if (meta.association) {
       item.city = meta.association.city || item.city || '';
       item.unit = meta.association.unit || item.unit || '';
@@ -337,6 +474,7 @@
   function isResolved(item, meta) {
     if (!meta || meta.kind === 'unknown') return false;
     if (meta.kind !== 'quality') return true;
+    if (meta.assignment) return meta.assignment.complete;
     if (!meta.dataKeys.length) return false;
     if (meta.targets.length) return meta.unresolvedTargets.length === 0;
     return !!(item && item.city && item.unit && item.district);
@@ -369,7 +507,9 @@
       element.insertBefore(option, insertBefore || null);
     }
     element.value = value;
+    applyingDefaults=true;
     try { element.dispatchEvent(new Event('change', {bubbles:true})); } catch (error) {}
+    finally { applyingDefaults=false; }
   }
 
   function typeSummary(metas) {
@@ -427,7 +567,7 @@
     }
     if (!summary) return;
     if (!state || !state.metas.length) {
-      summary.innerHTML = '<strong>自动识别已启用。</strong>支持当前北部共享质控报告、历史第一/二/三批文件名与目录结构，以及常见旧行政区名称。';
+      summary.innerHTML = '<strong>自动识别已启用。</strong>公司名称可选：文件名公司优先；未写公司时按该类成果＋地区查询对照清单。原清单不修改；北部28份登记报告仍按权威索引关联。';
       setManualFieldsVisible(manualMode);
       return;
     }
@@ -437,7 +577,7 @@
     summary.innerHTML = '<strong>自动识别：</strong>' + kindText + (state.batch ? ' · ' + state.batch : '') + ' · ' + typeSummary(state.metas) + matchText + reviewText +
       '<div class="auto-import-actions"><button type="button" data-auto-import-toggle="1">' + (manualMode ? '恢复自动模式' : '显示人工调整') + '</button></div>';
     var button = summary.querySelector('[data-auto-import-toggle]');
-    if (button) button.onclick = function () { manualMode = !manualMode; refresh(); };
+    if (button) button.onclick = function () { manualMode = !manualMode; if(!manualMode){var q=Q();(q&&q.state&&q.state.files||[]).forEach(function(item){delete item.manualAssociation;delete item.manualDataKey;});} refresh(); var current=Q();if(current&&typeof current.renderPreview==='function')current.renderPreview(); };
     setManualFieldsVisible(manualMode || state.unresolved > 0 || state.kind === 'mixed');
   }
 
@@ -453,7 +593,12 @@
       if (!item || !meta || !status) return;
       var text = '';
       var className = 'ok';
-      if (meta.kind === 'quality' && meta.targets.length && !meta.unresolvedTargets.length) {
+      if(meta.assignment){
+        text=(meta.assignment.complete?'匹配完成：':'需要核对：')+matchingDescription(meta);
+        className=meta.assignment.complete?'ok':'warn';
+        if(preview)preview.textContent=(meta.batch||item.batch||'未识别批次')+' ｜ 原文件仅保存1份；按成果类型分别入库。';
+        status.style.whiteSpace='pre-wrap';
+      } else if (meta.kind === 'quality' && meta.targets.length && !meta.unresolvedTargets.length) {
         text = '自动关联完成：' + meta.targets.length + ' 个任务单元 × ' + meta.dataKeys.length + ' 类成果；原文件只保存1份。';
         if (preview) {
           preview.textContent = '共享质控报告 → ' + meta.targets.join('、') + ' ｜ ' + meta.dataKeys.map(function (key) { return TYPE_LABELS[key] || key; }).join('、');
@@ -462,7 +607,7 @@
       } else if (meta.kind === 'quality' && meta.association && meta.dataKeys.length) {
         text = '自动识别：' + meta.dataKeys.map(function (key) { return TYPE_LABELS[key] || key; }).join('、') + ' · ' + (meta.batch || item.batch || '未分批') + ' · ' + [item.city,item.unit,item.district].filter(Boolean).join(' / ');
       } else if (meta.kind === 'quality' && meta.dataKeys.length) {
-        text = '已识别成果类型与批次，但任务单元仍不唯一，请人工检查。';
+        text = '已识别成果类型，但地区关联尚未完整匹配。请检查所属市、任务单元名称及作业单位。';
         className = 'warn';
       } else if (meta.kind === 'reference') {
         text = '自动识别为参考资料。';
@@ -485,6 +630,15 @@
     }
   }
 
+  // Projection only: local dropdown renders do not pass through Q.renderPreview.
+  // Keep their summaries current without recursively changing form defaults.
+  function renderPreviewSummary(state) {
+    if (!state) return;
+    annotateRows();
+    renderSummary(state);
+    if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;
+  }
+
   function refresh() {
     refreshQueued = false;
     ensureStyles();
@@ -492,9 +646,7 @@
     var files = q && q.state && Array.isArray(q.state.files) ? q.state.files : [];
     var state = selectionMetadata(files);
     applySelectionDefaults(state);
-    annotateRows();
-    renderSummary(state);
-    if (window.SoilAdminAutoClassifier) window.SoilAdminAutoClassifier.lastSelection = state;
+    renderPreviewSummary(state);
     return state;
   }
 
@@ -563,16 +715,19 @@
   }
 
   window.SoilAdminAutoClassifier = {
+    get applyingDefaults(){return applyingDefaults;},
     comprehensiveKeys:COMPREHENSIVE_KEYS.slice(),
     typeLabels:Object.assign({}, TYPE_LABELS),
     inferBatch:inferBatch,
     inferDataKeys:inferDataKeys,
     inferKind:inferKind,
     inferSingleAssociation:inferSingleAssociation,
+    listForKey:listForKey,resolveAssignments:resolveAssignments,detectCompany:detectCompany,matchingDescription:matchingDescription,isResolved:isResolved,
     classifyItem:classifyItem,
     applyItemMetadata:applyItemMetadata,
     selectionMetadata:selectionMetadata,
     loadCatalogData:function (payload) { registerCatalog(payload); return payload; },
+    renderPreviewSummary:renderPreviewSummary,
     refresh:refresh,
     get lastSelection() { return this._lastSelection || null; },
     set lastSelection(value) { this._lastSelection = value; },

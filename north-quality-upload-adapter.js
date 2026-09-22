@@ -47,6 +47,7 @@
       // 手机ZIP可能先生成过一次空元数据；命中权威登记时必须重新识别。
       var meta = authority && classifier && typeof classifier.applyItemMetadata === 'function' ?
         classifier.applyItemMetadata(item) : (item.autoMeta || (classifier && typeof classifier.applyItemMetadata === 'function' ? classifier.applyItemMetadata(item) : null));
+      if(meta && meta.assignment)return;
       var keys = authority && Array.isArray(authority.dataKeys) && authority.dataKeys.length ? authority.dataKeys :
         (meta && Array.isArray(meta.dataKeys) && meta.dataKeys.length ? meta.dataKeys : router.coveredKeys);
       var inspection = router.inspectFile(file.name, keys, file.size);

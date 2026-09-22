@@ -221,7 +221,32 @@ jobs:
                   data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
                   if not data_keys and str(quality.get('dataKey') or ''):
                       data_keys = [str(quality.get('dataKey'))]
-                  if quality.get('shared'):
+                  keyed = quality.get('associationsByDataKey')
+                  if isinstance(keyed, dict):
+                      if quality.get('assignmentVersion') != 2 or not data_keys or set(keyed) != set(data_keys):
+                          raise SystemExit(f'成果独立关联格式不完整：{final_path}')
+                      for data_key in data_keys:
+                          associations = keyed[data_key]
+                          if not isinstance(associations, list) or not associations:
+                              raise SystemExit(f'缺少成果关联：{data_key} / {final_path}')
+                          seen_rows = set()
+                          for association in associations:
+                              if not isinstance(association, dict) or association.get('dataKey') != data_key:
+                                  raise SystemExit(f'关联成果类型不一致：{final_path}')
+                              values = {k: str(association.get(k) or '').strip() for k in ['city','unit','district']}
+                              if not all(values.values()):
+                                  raise SystemExit(f'独立任务关联不完整：{final_path}')
+                              identity = tuple(values[k] for k in ['city','unit','district'])
+                              if identity in seen_rows:
+                                  continue
+                              seen_rows.add(identity)
+                              row = dict(common)
+                              row.update(values)
+                              row.update({'dataKey': data_key, 'complete': True,
+                                          'unitSource': str(association.get('unitSource') or ''),
+                                          'listedUnits': association.get('listedUnits') or []})
+                              quality_records.append(row)
+                  elif quality.get('shared'):
                       targets = [str(x) for x in (quality.get('targets') or []) if str(x)]
                       if not data_keys or not targets:
                           raise SystemExit(f'共享质控报告缺少 dataKeys/targets：{final_path}')
