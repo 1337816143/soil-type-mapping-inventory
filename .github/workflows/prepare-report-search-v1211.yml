@@ -28,7 +28,6 @@ jobs:
                 }
                 return haystack.indexOf(token) >= 0;
               });"""
-          new='\n'.join(line[10:] if i else line for i,line in enumerate(new.split('\n')))
           assert s.count(old)==1;p.write_text(s.replace(old,new))
           p=Path('scripts/validate-report-tab.js');s=p.read_text();old='// Run actual classifier + hybrid manifest builder using the untouched rosters.'
           assert s.count(old)==1;p.write_text(s.replace(old,old+"\nrequire('child_process').execFileSync(process.execPath,['scripts/validate-report-search.js'],{stdio:'inherit'});"))
