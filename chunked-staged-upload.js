@@ -265,7 +265,7 @@
     var kind = document.getElementById('adm-kind').value;
     if (kind === 'quality') {
       var incomplete = files.filter(function (item) { return !item.city || !item.unit || !item.district; });
-      if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，仍会上传但不计入统计。是否继续？')) return;
+      if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，请核对并补充归属信息。是否继续保存？')) return;
     }
 
     var button = document.getElementById('adm-ok');

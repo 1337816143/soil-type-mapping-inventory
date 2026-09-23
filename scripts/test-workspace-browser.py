@@ -148,6 +148,8 @@ with sync_playwright() as p:
             (OUT/(engine+'-assignment-ui-report.json')).write_text(json.dumps(assignment_ui,ensure_ascii=False,indent=2))
             directory_ui=runpy.run_path(str(ROOT/'scripts/check-directory-ui.py'))['check_directory_ui'](page,OUT,engine)
             (OUT/(engine+'-directory-ui-report.json')).write_text(json.dumps(directory_ui,ensure_ascii=False,indent=2))
+            merged_ui=runpy.run_path(str(ROOT/'scripts/check-merged-directory-ui.py'))['check_merged_directory_ui'](page,OUT,engine)
+            (OUT/(engine+'-merged-directory-report.json')).write_text(json.dumps(merged_ui,ensure_ascii=False,indent=2))
             unit_ui=runpy.run_path(str(ROOT/'scripts/check-unit-repair-ui.py'))['check_unit_repair_ui'](page,OUT,engine)
             (OUT/(engine+'-unit-repair-ui-report.json')).write_text(json.dumps(unit_ui,ensure_ascii=False,indent=2))
             page.evaluate("openSoilAdminImport({kind:'quality',dataKey:'soilType'})")

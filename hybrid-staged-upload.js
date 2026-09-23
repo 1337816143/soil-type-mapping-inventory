@@ -403,7 +403,7 @@
         if(meta && meta.assignment)return !meta.assignment.complete;
         return !isSharedItem(item) && (!itemDataKeys(item, fallbackDataKey).length || !item.city || !item.unit || !item.district);
       });
-      if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，仍会上传但不计入统计。是否继续？')) return;
+      if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，请核对并补充归属信息。是否继续保存？')) return;
       try {
         files.forEach(function (item) { if (isSharedItem(item)) sharedInspection(item, itemDataKeys(item, fallbackDataKey)); });
       } catch (error) {
@@ -439,7 +439,7 @@
         if (sharedCount) {
           progress('已识别 ' + sharedCount + ' 份北部共享质控报告：每份文件只上传一次，并自动关联地区、成果类型和批次。', 4);
         } else if (kind === 'quality' && autoTypedCount) {
-          progress('已准备 ' + autoTypedCount + ' 份质控文件，按预览中的成果类型、单位与任务关联归档；未完整匹配项不计入统计。', 4);
+          progress('已准备 ' + autoTypedCount + ' 份质控文件，按预览中的成果类型、单位与任务关联归档；未完整匹配项请核对归属信息。', 4);
         }
         return stageFiles(files, manifest, entries);
       })

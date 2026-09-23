@@ -161,9 +161,10 @@
       var info=c&&c.directoryAttributes?c.directoryAttributes(key,city,unit,district,batch,file):{mismatch:false,title:''};
       var pending=(docs||[]).filter(function(d){return d.unitReviewRequired;});
       if(pending.length){info=Object.assign({},info,{mismatch:true,code:'header-unverified',title:info.title+'\n与作业单位通讯录不一致\n'+pending.map(function(d){return (d.batch?d.batch+'：':'')+(d.unitReviewMessage||'报告单位尚待核对');}).join('\n')});}
+      if(c&&c.cleanDirectoryMessage)info.title=c.cleanDirectoryMessage(info.title);
       return info;
     }
-    function directoryAttrs(info){return info.mismatch?' data-directory-status="'+info.code+'" title="'+escapeAttribute(info.title)+'" aria-label="'+escapeAttribute(info.title)+'"':'';}
+    function directoryAttrs(info){return (info.mismatch||info.relation==='merged-member')?' data-directory-status="'+info.code+'" title="'+escapeAttribute(info.title)+'" aria-label="'+escapeAttribute(info.title)+'"':'';}
     window.renderCities = function(cities, dataKey) {
       var s = window.calculateDashboardStats(dataKey);
       var html = '<div class="summary-bar">';
@@ -189,7 +190,7 @@
             var info=directoryInfo(dataKey,city.name,unit.name,d.label,docs.map(function(doc){return doc.batch;}).join('、'),'',docs);
             if(info.mismatch){link+=' directory-mismatch';group+=' directory-mismatch';}
             if(docs.length===1){html+='<a class="'+link+'"'+directoryAttrs(directoryInfo(dataKey,city.name,unit.name,d.label,docs[0].batch,docs[0].file,[docs[0]]))+' href="'+window.BASE+'/'+docs[0].file+'" target="_blank">'+escapeAttribute(d.label)+' '+window.PDF_ICON+'</a>';}
-            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label"'+directoryAttrs(info)+(info.mismatch?' tabindex="0"':'')+'>'+escapeAttribute(d.label)+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){var docInfo=directoryInfo(dataKey,city.name,unit.name,d.label,doc.batch,doc.file,[doc]);html+='<a class="doc-btn'+(docInfo.mismatch?' directory-mismatch':'')+'"'+directoryAttrs(docInfo)+' href="'+window.BASE+'/'+doc.file+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
+            else if(docs.length>1){html+='<div class="'+group+'"><span class="group-label"'+directoryAttrs(info)+((info.mismatch||info.relation==='merged-member')?' tabindex="0"':'')+'>'+escapeAttribute(d.label)+' ▾</span><div class="doc-btns">';docs.forEach(function(doc){var docInfo=directoryInfo(dataKey,city.name,unit.name,d.label,doc.batch,doc.file,[doc]);html+='<a class="doc-btn'+(docInfo.mismatch?' directory-mismatch':'')+'"'+directoryAttrs(docInfo)+' href="'+window.BASE+'/'+doc.file+'" target="_blank">'+window.PDF_ICON+' '+doc.batch+'</a>';});html+='</div></div>';}
             else html+='<span class="'+link+'"'+directoryAttrs(info)+'>'+escapeAttribute(d.label)+'</span>';
           });
           html+='</div></td><td>';batches.forEach(function(b){html+='<span class="batch-tag '+(window.batchClass[b]||'')+'">'+b+'</span>';});
