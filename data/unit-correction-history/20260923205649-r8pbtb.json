@@ -1,0 +1,701 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 74,
+  "documentsChecked": 74,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/东光县/沧州市土属质控报告/沧州市_东光县_土壤属性图_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/任丘市/沧州市土属质控报告/沧州市_任丘市_土壤属性图_河北利古工程勘察设计有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/吴桥县/沧州市土属质控报告/沧州市_吴桥县_土壤属性图_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧州市/沧州市土属质控报告/沧州市_土壤属性图_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧县/沧州市土属质控报告/沧州市_沧县_土壤属性图_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/河间市/沧州市土属质控报告/沧州市_河间市_土壤属性图_河北利古工程勘察设计有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/沧州市土属质控报告/沧州市_泊头市_土壤属性图_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/海兴县/沧州市土属质控报告/沧州市_海兴县_土壤属性图_河北玛恩农业科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北正态环境检测有限公司/献县/沧州市土属质控报告/沧州市_献县_土壤属性图_河北正态环境检测有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北正态环境检测有限公司/肃宁县/沧州市土属质控报告/沧州市_肃宁县_土壤属性图_河北正态环境检测有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北平普数政科技有限公司/青县/沧州市土属质控报告/沧州市_青县_土壤属性图_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/沧州市土属质控报告/沧州市_黄骅市_土壤属性图_河北玛恩农业科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/井陉县/石家庄市土属质控报告/石家庄市_井陉县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/井陉矿区/石家庄市土属质控报告/石家庄市_井陉矿区_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市土属质控报告/石家庄市_元氏县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/合并区/石家庄市土属质控报告/石家庄市_合并区_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/石家庄市/石家庄市土属质控报告/石家庄市_市级_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市土属质控报告/石家庄市_平山县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/石家庄市土属质控报告/石家庄市_新乐市_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/石家庄市土属质控报告/石家庄市_无极县_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/石家庄市土属质控报告/石家庄市_晋州市_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/栾城区/石家庄市土属质控报告/石家庄市_栾城区_土壤属性图_河北通烯科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/栾城区/石家庄市土属质控报告/石家庄市_栾城区_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/正定县/石家庄市土属质控报告/石家庄市_正定县_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/深泽县/石家庄市土属质控报告/石家庄市_深泽县_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/灵寿县/石家庄市土属质控报告/石家庄市_灵寿县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/石家庄市土属质控报告/石家庄市_藁城区_土壤属性图_北京元图科技发展有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/石家庄市土属质控报告/石家庄市_藁城区_土壤属性图_质控反馈_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/石家庄市土属质控报告/石家庄市_行唐县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市土属质控报告/石家庄市_赞皇县_土壤属性图_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/赵县/石家庄市土属质控报告/石家庄市_赵县_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/高邑县/石家庄市土属质控报告/石家庄市_高邑县_土壤属性图_河北通烯科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/石家庄市/河北通烯科技有限公司/高邑县/石家庄市土属质控报告/石家庄市_高邑县_土壤属性图_质控反馈_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/石家庄市土属质控报告/石家庄市辛集市_土壤属性图成果_河北玛恩农业科技有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/冀州区/衡水市/衡水市_冀州区_土壤属性图_质控反馈_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北平普数政科技有限公司/衡水市/衡水市/衡水市_土壤属性图_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/安平县/衡水市/衡水市_安平县_土壤属性图_质控反馈-河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北玛恩农业科技有限公司/景县/衡水市/衡水市_景县_土壤属性图_质控反馈_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/桃城区/衡水市/衡水市_桃城区_土壤属性图_质控反馈_北京世纪国源科技股份有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北平普数政科技有限公司/武邑县/衡水市/衡水市_武邑县_土壤属性图_质控反馈_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/饶阳县/衡水市/衡水市_饶阳县_土壤属性图_质控反馈_河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/临城县/邢台市土属质控报告/邢台市_临城县_土壤属性图_质控_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北诚秀科技有限公司/临西县/邢台市土属质控报告/邢台市_临西县_土壤属性图_质控_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/任泽区/邢台市土属质控报告/邢台市_任泽区_土壤属性图_质控反馈_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/信都区/邢台市土属质控报告/邢台市_信都区_土壤属性图_质控反馈_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/内丘县/邢台市土属质控报告/邢台市_内丘县_土壤属性图_质控反馈_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/南和区/邢台市土属质控报告/邢台市_南和区_土壤属性图_质控反馈_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/南宫市/邢台市土属质控报告/邢台市_南宫市_土壤属性图_河北精鼎环境监测有限责任公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/邢台市/邢台市土属质控报告/邢台市_土壤属性图_河北科沃生态科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北诚秀科技有限公司/威县/邢台市土属质控报告/邢台市_威县_土壤属性图质控_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/宁晋县/邢台市土属质控报告/邢台市_宁晋县_土壤属性图_质控反馈_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/巨鹿县/邢台市土属质控报告/邢台市_巨鹿县_土壤属性图_质控反馈_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/平乡县/邢台市土属质控报告/邢台市_平乡县_土壤属性图_质控_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/广宗县/邢台市土属质控报告/邢台市_广宗县_土壤属性图_质控反馈_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/新河县/邢台市土属质控报告/邢台市_新河县_土壤属性图_质控反馈_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/沙河市/邢台市土属质控报告/邢台市_沙河市_土壤属性图_中国煤炭地质总局物测队_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北诚秀科技有限公司/清河县/邢台市土属质控报告/邢台市_清河县_土壤属性图_质控反馈_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/襄都区/邢台市土属质控报告/邢台市_襄都区_土壤属性图_质控反馈_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/隆尧县/邢台市土属质控报告/邢台市_隆尧县_土壤属性图_质控_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/临漳县/邯郸市/邯郸市_临漳县_土壤属性图_质控反馈_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯郸市/邯郸市/邯郸市_合并区_土壤属性图质控反馈_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/大名县/邯郸市/邯郸市_大名县_土壤属性图_质控反馈_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/石家庄师兄土地环境技术服务有限公司/成安县/邯郸市/邯郸市_成安县_土壤属性图_质控反馈_石家庄师兄土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "成安县",
+          "oldUnit": "石家庄师兄土地环境技术服务有限公司",
+          "newUnit": "石家庄师兄土地环境技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄师兄弟土地环境技术服务有限公司；当前记录单位：石家庄师兄土地环境技术服务有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北省农林科学院农业资源与环境研究所/永年区/邯郸市/邯郸市_永年区_土壤属性图_质控反馈_河北省农林科学院农业资源与环境研究所_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "永年区",
+          "oldUnit": "河北省农林科学院农业资源与环境研究所",
+          "newUnit": "河北省农林科学院农业资源与环境研究所",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“永年区”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/肥乡区/邯郸市/邯郸市_肥乡区_土壤属性图质控反馈_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/广平县/邯郸市/邯郸市广平县_土壤属性图成果_石家庄师兄弟土地环境技术服务有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/曲周县/邯郸市/邯郸市曲周县_土壤属性图成果_河北精鼎环境监测有限责任公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/武安市/邯郸市/邯郸市武安市_土壤属性图成果_河北精鼎环境监测有限责任公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/邯郸市/邯郸市涉县_土壤属性图成果_河北合众恩规划管理有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/磁县/邯郸市/邯郸市磁县_土壤属性图成果_河北合众恩规划管理有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/邯郸市/邯郸市邱县_土壤属性图成果_石家庄商胜信息技术有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯郸市/邯郸市/邯郸市馆陶_土壤属性图成果_石家庄商胜信息技术有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/魏县/邯郸市/邯郸市魏县_土壤属性图成果_石家庄师兄弟土地环境技术服务有限公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/2026/土壤属性图/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/鸡泽县/邯郸市/邯郸市鸡泽县_土壤属性图成果_河北精鼎环境监测有限责任公司_2026 年第二次第 1 批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
