@@ -593,6 +593,8 @@
     "dataKey": "farmland",
     "city": "",
     "unit": "",
-    "district": ""
+    "district": "",
+    "directoryStatus": "outside-list",
+    "directoryMessage": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。"
   }
 ]

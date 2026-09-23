@@ -19,6 +19,9 @@ jobs:
             VERSION
             scripts/test-live-workspace.py
             scripts/glass-ui-checks.py
+            scripts/check-unit-repair-ui.py
+            scripts/check-live-unit-repair.py
+            docs/unit-repair-v1.2.7.json
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
@@ -28,7 +31,9 @@ jobs:
           python -m pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
       - name: Verify deployed version and interactions without production writes
-        run: python scripts/test-live-workspace.py
+        run: |
+          python scripts/test-live-workspace.py
+          python scripts/check-live-unit-repair.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

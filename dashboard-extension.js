@@ -226,7 +226,9 @@
     }
     var relativeFile = String(entry.path).replace(/^data\//, '');
     if (!district.docs.some(function (doc) { return doc.file === relativeFile && doc.batch === (entry.batch || '管理员导入'); })) {
-      district.docs.push({batch: entry.batch || '管理员导入', file: relativeFile});
+      var documentRecord={batch: entry.batch || '管理员导入', file: relativeFile};
+      ['unitCorrection','unitReviewRequired','unitReviewMessage'].forEach(function(k){if(entry[k])documentRecord[k]=entry[k];});
+      district.docs.push(documentRecord);
     }
     appliedAssociations[key] = true;
   }

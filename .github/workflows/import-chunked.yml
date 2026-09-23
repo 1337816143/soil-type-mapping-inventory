@@ -216,6 +216,7 @@ jobs:
                       'sourcePath': str(item.get('sourcePath') or ''),
                       'order': int(item.get('order') or 0),
                       'complete': bool(quality.get('complete')),
+                      'uploadId': str(manifest.get('uploadId') or ''),
                       'uploadedAt': str(manifest.get('createdAt') or '')
                   }
                   data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
@@ -251,6 +252,7 @@ jobs:
                                           'directoryStatus': directory_status,
                                           'directoryMessage': str(association.get('directoryMessage') or ''),
                                           'unlistedConfirmed': association.get('unlistedConfirmed') is True,
+                                          'unitCorrection': association.get('unitCorrection') if isinstance(association.get('unitCorrection'), dict) else {},
                                           'unitSource': str(association.get('unitSource') or ''),
                                           'listedUnits': association.get('listedUnits') or []})
                               quality_records.append(row)
@@ -291,6 +293,16 @@ jobs:
               merged.extend(quality_records)
               target_index.write_text(json.dumps(merged, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
+
+      - name: Reconcile report submitters with immutable result-specific directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python3 -c "import json,sys; sys.exit(0 if json.load(open('/tmp/soil-hybrid-manifest.json')).get('kind')=='quality' else 1)"; then
+            python3 -m pip install PyMuPDF==1.26.4 lxml==6.0.1 numpy==2.2.6 Pillow==11.3.0
+            UPLOAD_ID=$(python3 -c "import json;print(json.load(open('/tmp/soil-hybrid-manifest.json'))['uploadId'])")
+            PYTHONDONTWRITEBYTECODE=1 python3 scripts/repair-quality-units.py --mode incoming --upload-id "$UPLOAD_ID"
+          fi
 
       - name: Commit imported files once
         id: commit
