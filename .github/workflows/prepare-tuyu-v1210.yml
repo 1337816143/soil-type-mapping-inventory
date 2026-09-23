@@ -1,0 +1,60 @@
+name: Prepare TuYu name v1210
+on:
+  push:
+    branches: [fix/tuyu-name-v1.2.10]
+    paths: [.github/workflows/prepare-tuyu-v1210.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed inspection dependencies
+        run: python -m pip install PyMuPDF==1.26.4 lxml==6.0.1 numpy==2.2.6 Pillow==11.3.0 python-docx==1.2.0
+      - name: Inspect real originals, apply bounded correction and verify
+        run: |
+          set -euo pipefail
+          python .github/apply-tuyu-v1210.py
+          node --check admin-auto-classifier.js
+          python -m py_compile scripts/check-unit-repair-ui.py scripts/test-tuyu-name.py
+          node scripts/validate-project.js
+          node scripts/validate-auto-import-classifier.js
+          node scripts/validate-reply-workflow.js
+          node scripts/validate-workspace.js
+          python scripts/verify-unit-repair.py
+          python scripts/test-unit-correction.py
+          python scripts/test-incoming-unit-repair.py
+          git diff --quiet -- task-unit-mappings.js data docs/unit-repair-v1.2.7.json scripts/repair-quality-units.py replies assets work-records.js work-records-core.js
+          python - <<'PY'
+          import subprocess
+          allowed={'CHANGELOG.md','MAINTENANCE_RULES.md','VERSION','admin-auto-classifier.js','app-release-ui.js','app-version-guard.js','docs/QUALITY_UPLOAD_NAMING.md','index.html','page-enhancements.js','scripts/check-unit-repair-ui.py','scripts/verify-unit-repair.py','upload-config.js'}
+          changed=set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))-{''}
+          assert changed<=allowed,changed-allowed
+          print('No report bytes, roster, prior receipts or unrelated files changed')
+          PY
+      - name: Commit isolated feature source only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'fix/tuyu-name-v1.2.10'
+          git rm .github/apply-tuyu-v1210.py
+          git add -u
+          git add docs/tuyu-name-v1.2.10.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: v1.2.10 correct TuYu platform expansion with document and directory evidence'
+          git push origin HEAD:fix/tuyu-name-v1.2.10
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tuyu-name-evidence
+          path: |
+            test-artifacts/
+            docs/tuyu-name-v1.2.10.json
+          retention-days: 5
