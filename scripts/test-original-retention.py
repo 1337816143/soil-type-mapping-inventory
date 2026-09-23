@@ -16,3 +16,10 @@ workflow=(ROOT/'.github/workflows/import-chunked.yml').read_text()
 assert 'scripts/retain-quality-originals.py' in workflow
 assert workflow.index('scripts/repair-quality-units.py')<workflow.index('Commit imported files once')<workflow.index('scripts/retain-quality-originals.py')
 print('Original-retention checks passed: corrections and uncertain receipts keep originals; unmodified and reference imports keep existing cleanup.')
+
+import yaml,subprocess
+parsed=yaml.safe_load(workflow)
+cleanup=parsed["jobs"]["import"]["steps"][-1]["run"]
+assert "scripts/retain-quality-originals.py" in cleanup
+subprocess.run(["bash","-n"],input=cleanup,text=True,check=True)
+print("Import workflow YAML and cleanup shell syntax validated.")
