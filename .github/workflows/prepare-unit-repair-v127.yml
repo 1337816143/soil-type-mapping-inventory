@@ -31,6 +31,7 @@ jobs:
           node scripts/validate-reply-workflow.js
           node scripts/validate-workspace.js
           python scripts/test-unit-correction.py
+          python scripts/test-incoming-unit-repair.py
       - name: Reconcile mounted originals only with page-level verification
         run: |
           set -euo pipefail
@@ -45,7 +46,7 @@ jobs:
           from pathlib import Path
           report=json.loads(Path('docs/unit-repair-v1.2.7.json').read_text())
           expected={x['path'] for x in report['reports'] if x['documentChanged']}
-          changed=set(subprocess.check_output(['git','diff','--name-only']).decode().splitlines())
+          changed=set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))
           actual={x for x in changed if x.endswith(('.pdf','.docx','.doc'))}
           assert actual==expected,(actual,expected)
           before=subprocess.check_output(['git','show','HEAD:index.html']).decode()
