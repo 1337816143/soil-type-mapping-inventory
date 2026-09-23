@@ -1,0 +1,294 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 31,
+  "documentsChecked": 31,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/东光县/沧州市-2/沧州市_东光县_土壤退化与障碍分析_问题反馈_中友四达（北京）科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/沧州市-2/沧州市_泊头市_土壤退化与障碍分析_问题反馈_中友四达（北京）科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市/石家庄市_元氏县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市/石家庄市_平山县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/石家庄市/石家庄市_新乐市_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/石家庄市/石家庄市_无极县_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/石家庄市/石家庄市_晋州市_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市/石家庄市_赞皇县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北通烯科技有限公司/赵县/石家庄市/石家庄市_赵县_土壤退化与障碍分析_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/井陉县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_井陉县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北通烯科技有限公司/井陉矿区/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_井陉矿区_土壤退化与障碍分析_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北通烯科技有限公司/合并区/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_合并区_土壤退化与障碍分析_无_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北通烯科技有限公司/栾城区/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_栾城区_土壤退化与障碍分析_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/正定县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_正定县_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/深泽县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_深泽县_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/灵寿县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_灵寿县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_藁城区_土壤退化与障碍分析_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_行唐县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/石家庄市/河北通烯科技有限公司/高邑县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/石家庄市_高邑县_土壤退化与障碍分析_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/河北诚秀科技有限公司/临西县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_临西县_土壤退化与障碍分析_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/河北诚秀科技有限公司/威县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_威县_土壤退化与障碍分析_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/巨鹿县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_巨鹿县_土壤退化与障碍分析_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/平乡县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_平乡县_土壤退化与障碍分析_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/广宗县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_广宗县_土壤退化与障碍分析_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邢台市/河北诚秀科技有限公司/清河县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邢台市_清河县_土壤退化与障碍分析_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/大名县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_大名县_土壤退化与障碍分析_无_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/广平县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_广平县_土壤退化与障碍分析_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/成安县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_成安县_土壤退化与障碍分析_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_邱县_土壤退化与障碍分析_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/馆陶县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_馆陶县_土壤退化与障碍分析_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/魏县/邯郸市、石家庄市、邢台市/土壤退化质控-张慧/邯郸市_魏县_土壤退化与障碍分析_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
