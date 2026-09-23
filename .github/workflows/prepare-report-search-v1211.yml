@@ -1,0 +1,46 @@
+name: Prepare report search v1211
+on:
+  push:
+    branches: [feat/report-family-v1.2.11]
+    paths: [.github/workflows/prepare-report-search-v1211.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch report-only search and verify original filters
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,subprocess
+          assert Path('VERSION').read_text().strip()=='v1.2.11'
+          p=Path('file-preview-batch-download.js');s=p.read_text()
+          old=r"    return query.split(/\s+/).filter(Boolean).every(function (token) { return haystack.indexOf(token) >= 0; });"
+          new=r"""    return query.split(/\s+/).filter(Boolean).every(function (token) {
+                // Report-subtype searches must use the file name, not the shared parent
+                // directory/category which contains all three report names.
+                if (assoc.dataKey === 'reports' && /^(总体报告|工作报告|数据报告)$/.test(token)) {
+                  return String(item.name || '').toLowerCase().indexOf(token) >= 0;
+                }
+                return haystack.indexOf(token) >= 0;
+              });"""
+          new='\n'.join(line[10:] if i else line for i,line in enumerate(new.split('\n')))
+          assert s.count(old)==1;p.write_text(s.replace(old,new))
+          p=Path('scripts/validate-report-tab.js');s=p.read_text();old='// Run actual classifier + hybrid manifest builder using the untouched rosters.'
+          assert s.count(old)==1;p.write_text(s.replace(old,old+"\nrequire('child_process').execFileSync(process.execPath,['scripts/validate-report-search.js'],{stdio:'inherit'});"))
+          expected={'file-preview-batch-download.js':'ae3dfe0a07675105071586a7666c6e8eb8a2e360d600cc3fdf0ab3c3b279936e','scripts/validate-report-tab.js':'b0df5fd11443e56d908a79df1be725dfb61fb23a16cbc4bea87bbb433186bca8'}
+          for name,digest in expected.items():assert hashlib.sha256(Path(name).read_bytes()).hexdigest()==digest,name
+          assert set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))-{''}==set(expected)
+          PY
+          node --check file-preview-batch-download.js
+          node scripts/validate-report-tab.js
+          node scripts/validate-file-preview-batch-download.js
+          git add file-preview-batch-download.js scripts/validate-report-tab.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: search actual report subtype instead of common folder title'
+          git push origin HEAD:feat/report-family-v1.2.11
