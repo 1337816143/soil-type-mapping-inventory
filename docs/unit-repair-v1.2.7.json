@@ -1,0 +1,3016 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "migrate",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 469,
+  "documentsChecked": 265,
+  "documentsChanged": 6,
+  "platformCorrections": 10,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/易景科技（天津）股份有限公司_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_沧州市130930孟村回族自治县.pdf",
+      "associations": [],
+      "header": {
+        "value": "易景科技（天津）股份有限公司",
+        "label": "提交单位",
+        "geo": "130930 孟村回族自治县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/易景科技（天津）股份有限公司_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130930孟村回族自治县.pdf",
+      "associations": [],
+      "header": {
+        "value": "易景科技（天津）股份有限公司",
+        "label": "提交单位",
+        "geo": "130930 孟村回族自治县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/易景科技（天津）股份有限公司_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130925盐山县.pdf",
+      "associations": [],
+      "header": {
+        "value": "易景科技（天津）股份有限公司",
+        "label": "提交单位",
+        "geo": "130925 盐山县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/沧州华江工程勘察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_沧州市130902、130903合并区.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130902、130903 合并区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/沧州华江工程勘察设计有限公司_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130902、130903合并区.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130902、130903 合并区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/沧州华江工程勘察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_沧州市130921沧县.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130921 沧县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/沧州华江工程勘察设计有限公司_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130921沧县.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130921 沧县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/沧州华江工程勘察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_沧州市130922青县.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130922 青县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/沧州华江工程勘察设计有限公司_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130922青县.pdf",
+      "associations": [],
+      "header": {
+        "value": "沧州华江工程勘察设计有限公司",
+        "label": "提交单位",
+        "geo": "130922 青县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北司南_土壤类型图成果_差1个/河北省土壤类型图成果质控意见-沧州市130923东光县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "东光县",
+          "oldUnit": "河北司南地理信息工程有限公司",
+          "newUnit": "河北司南测绘服务有限公司",
+          "reason": "报告表头提交单位与该成果、该地区的原通讯录全称一致；平台旧归属录入错误。",
+          "action": "header-and-directory-agree"
+        }
+      ],
+      "header": {
+        "value": "河北司南测绘服务有限公司",
+        "label": "提交单位",
+        "geo": "130923 东光县"
+      },
+      "documentChanged": false,
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北司南_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见-沧州市130923东光县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "东光县",
+          "oldUnit": "河北司南地理信息工程有限公司",
+          "newUnit": "河北司南测绘服务有限公司",
+          "reason": "报告表头提交单位与该成果、该地区的原通讯录全称一致；平台旧归属录入错误。",
+          "action": "header-and-directory-agree"
+        }
+      ],
+      "header": {
+        "value": "河北司南测绘服务有限公司",
+        "label": "提交单位",
+        "geo": "130923 东光县"
+      },
+      "documentChanged": false,
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北司南_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见-沧州市130928吴桥县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "吴桥县",
+          "oldUnit": "河北司南地理信息工程有限公司",
+          "newUnit": "河北司南测绘服务有限公司",
+          "reason": "报告表头提交单位与该成果、该地区的原通讯录全称一致；平台旧归属录入错误。",
+          "action": "header-and-directory-agree"
+        }
+      ],
+      "header": {
+        "value": "河北司南测绘服务有限公司",
+        "label": "提交单位",
+        "geo": "130928 吴桥县"
+      },
+      "documentChanged": false,
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市132982任丘市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "任丘市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇地理信息科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北图宇科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "132982 沧州市任丘市"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北图宇_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_沧州市130984河间市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "河间市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇地理信息科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北图宇科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130984 河间市"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130984河间市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "河间市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇地理信息科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北图宇科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130984 河间市"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北图宇_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "肃宁县",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇地理信息科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北图宇科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130926 肃宁县"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "肃宁县",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇地理信息科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北图宇科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130926 肃宁县"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北百淼环境科技_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_130924海兴县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北百淼环境科技",
+        "label": "提交单位",
+        "geo": "130924 海兴县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北百淼环境科技_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_130924海兴县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北百淼环境科技",
+        "label": "提交单位",
+        "geo": "130924 海兴县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北百淼环境科技_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_130983黄骅市.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北百淼环境科技",
+        "label": "提交单位",
+        "geo": "130983 黄骅市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北诚秀科技_土壤类型图成果/河北省土壤类型图成果质控意见_沧州市130981泊头市.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北诚秀科技有限公司",
+        "label": "提交单位",
+        "geo": "130981 泊头市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北诚秀科技_土壤类型图成果/河北省土壤类型图成果质控意见_沧州市130929献县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北诚秀科技有限公司",
+        "label": "提交单位",
+        "geo": "130929 献县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/中地科动察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130131平山县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "平山县",
+          "oldUnit": "中地科动察设计有限公司",
+          "newUnit": "中地科勘察设计有限公司",
+          "reason": "已核实的单位错字对，且原通讯录按成果及地区唯一对应；不以字符串相似度替换其他真实单位。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "中地科动察设计有限公司",
+        "label": "提交单位",
+        "geo": "130131 平山县"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "ab2e198781ac55f40b70910ef76873854d771e1b4a4dd3eadd0e764d859f8d52",
+      "afterSHA256": "b12fcc72008c5a399c108284d96d8d9456e38ecef360277ea3760977ecca3d9f",
+      "pages": 16,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "10504b061f33",
+      "headerNewUnit": "中地科勘察设计有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/中地科动察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130184新乐市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "新乐市",
+          "oldUnit": "中地科动察设计有限公司",
+          "newUnit": "中地科勘察设计有限公司",
+          "reason": "已核实的单位错字对，且原通讯录按成果及地区唯一对应；不以字符串相似度替换其他真实单位。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "中地科动察设计有限公司",
+        "label": "提交单位",
+        "geo": "130184 新乐市"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "be355ed1d8e3056f2e9a0cb22f4c68ad287a36e23e6ff8bcc5e818f0635f94a6",
+      "afterSHA256": "5025bbca7a6c1d36ce5cf4a43509016cc7f152642fe54ec8346a9cfbd8d6d064",
+      "pages": 18,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "a0439adfba54",
+      "headerNewUnit": "中地科勘察设计有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/中地科动察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市132336灵寿县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "灵寿县",
+          "oldUnit": "中地科动察设计有限公司",
+          "newUnit": "中地科勘察设计有限公司",
+          "reason": "已核实的单位错字对，且原通讯录按成果及地区唯一对应；不以字符串相似度替换其他真实单位。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "中地科动察设计有限公司",
+        "label": "提交单位",
+        "geo": "132336 灵寿县"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "82562dd7ddc9279faec60364870160537f8781a40ad5499eb2620668688793d7",
+      "afterSHA256": "66e80b3e917bd30de93e9b2512d72188d12e6949f9e5f3a429441fb5b7a9028f",
+      "pages": 12,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "39d918a665ab",
+      "headerNewUnit": "中地科勘察设计有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/中地科动察设计有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市132337行唐县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "行唐县",
+          "oldUnit": "中地科动察设计有限公司",
+          "newUnit": "中地科勘察设计有限公司",
+          "reason": "已核实的单位错字对，且原通讯录按成果及地区唯一对应；不以字符串相似度替换其他真实单位。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "中地科动察设计有限公司",
+        "label": "提交单位",
+        "geo": "132337 行唐县"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "e9a390454523bf538b95acf82306f89a38dc3cea8c89ab07c4b81f0716b0d4b4",
+      "afterSHA256": "99fba70b6cc4ce24f750713d76a98c7cb4d79dbc4a66ab3e19ee2f7c580853d6",
+      "pages": 18,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "3d489211d759",
+      "headerNewUnit": "中地科勘察设计有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北图宇科技有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市编号130130无极县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北图宇科技有限公司",
+        "label": "提交单位",
+        "geo": "130130 无极县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北图宇科技有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130183晋州市.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北图宇科技有限公司",
+        "label": "提交单位",
+        "geo": "130183 晋州市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北图宇科技有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130128深泽县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北图宇科技有限公司",
+        "label": "提交单位",
+        "geo": "130128 深泽县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北图宇科技有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家市130109藁城区.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北图宇科技有限公司",
+        "label": "提交单位",
+        "geo": "130109 藁城区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北盛图地理信息有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130121井陉县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北盛图地理信息有限公司",
+        "label": "提交单位",
+        "geo": "130121 井陉县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北盛图地理信息有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130132元氏县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北盛图地理信息有限公司",
+        "label": "提交单位",
+        "geo": "130132 元氏县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北盛图地理信息有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130129赞皇县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北盛图地理信息有限公司",
+        "label": "提交单位",
+        "geo": "130129 赞皇县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北盛图地理信息有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130127高邑县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北盛图地理信息有限公司",
+        "label": "提交单位",
+        "geo": "130127 高邑县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北高翔地理信息技术服务有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130000合并区.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130000 合并区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北高翔地理信息技术服务有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130111栾城区.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130111 栾城区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北高翔地理信息技术服务有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130123正定县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130123 石家庄市正定县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/石家庄市_补充意见/河北高翔地理信息技术服务有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市市级成果.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "石家庄市（市级）",
+          "oldUnit": "河北高翔地理信息技术服务有限公司",
+          "newUnit": "河北高翔地理信息技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "石家庄市"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/石家庄市土壤类型图/河北高翔地理信息技术服务有限公司_土壤类型图成果/河北省土壤类型图成果质控意见_石家庄市130133赵县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130133 赵县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/北京世纪国源科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131123武强县.pdf",
+      "associations": [],
+      "header": {
+        "value": "北京世纪国源科技股份有限公\n司",
+        "label": "提交单位",
+        "geo": "131123 武强县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/北京世纪国源科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131182深州市.pdf",
+      "associations": [],
+      "header": {
+        "value": "北京世纪国源科技股份有限公\n司",
+        "label": "提交单位",
+        "geo": "131182 深州市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北万山信息技术有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131125安平县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北万山信息技术有限公司",
+        "label": "提交单位",
+        "geo": "131125 安平县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北万山信息技术有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131124饶阳县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北万山信息技术有限公司",
+        "label": "提交单位",
+        "geo": "131124 饶阳县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北冠卓检测科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市景县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北冠卓检测科技股份有限公\n司",
+        "label": "提交单位",
+        "geo": "景县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北冠卓检测科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131124阜城县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北冠卓检测科技股份有限公\n司",
+        "label": "提交单位",
+        "geo": "阜城县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北惠之纳农业科技有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市武邑县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北惠之纳农业科技有限公司",
+        "label": "提交单位",
+        "geo": "武邑县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/衡水市_土壤类型图/河北惠之纳农业科技有限公司-土壤类型图成果/土壤类型图成果质控意见_131100衡水市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北鸿源润泽土地规划设计有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131126故城县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北鸿源润泽土地规划设计有\n限公司",
+        "label": "提交单位",
+        "geo": "131126 故城县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/河北鸿源润泽土地规划设计有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市131121枣强县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北鸿源润泽土地规划设计有\n限公司",
+        "label": "提交单位",
+        "geo": "131121 枣强县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/爬山虎科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市冀州区.pdf",
+      "associations": [],
+      "header": {
+        "value": "爬山虎科技股份有限公司",
+        "label": "提交单位",
+        "geo": "冀州区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/衡水市土壤类型图/爬山虎科技股份有限公司-土壤类型图成果/土壤类型图成果质控意见_衡水市桃城区.pdf",
+      "associations": [],
+      "header": {
+        "value": "爬山虎科技股份有限公司",
+        "label": "提交单位",
+        "geo": "桃城区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/天津华勘检验测试有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130502襄都区.pdf",
+      "associations": [],
+      "header": {
+        "value": "天津华勘检验测试有限公司",
+        "label": "提交单位",
+        "geo": "130502 襄都区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/未标明公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130505任泽区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邢台市",
+          "district": "任泽区",
+          "oldUnit": "未标明公司",
+          "newUnit": "天津华勘检验测试有限公司",
+          "reason": "该成果、该市及任务单元在原通讯录中唯一对应；补齐未明单位。",
+          "action": "fill"
+        }
+      ],
+      "header": {
+        "value": "",
+        "label": "提交单位",
+        "geo": "130505 任泽区"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "510eda1aba944ec691d6bba147c08119b224379710a6eaca4bd69b6ceeb0ae17",
+      "afterSHA256": "56dfff3bb0a255b5b17746d89cfbad89429b8b92a3479c0277bb48d14d3e9caf",
+      "pages": 4,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "e2f9d6f45203",
+      "headerNewUnit": "天津华勘检验测试有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/未标明公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130523内丘县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邢台市",
+          "district": "内丘县",
+          "oldUnit": "未标明公司",
+          "newUnit": "天津华勘检验测试有限公司",
+          "reason": "该成果、该市及任务单元在原通讯录中唯一对应；补齐未明单位。",
+          "action": "fill"
+        }
+      ],
+      "header": {
+        "value": "",
+        "label": "提交单位",
+        "geo": "130523 内丘县"
+      },
+      "documentChanged": true,
+      "beforeSHA256": "8c7fdc09a7b382eca508d4a17245ff369fa9b6eb1fea7631a70e0120e466b14c",
+      "afterSHA256": "a5aec8381a409387d3ae97ff69277b79b3c4ca374e6530b95ebe4cbf229882e0",
+      "pages": 4,
+      "rect": [
+        358.20001220703125,
+        79.41000175476074,
+        554.4199829101562,
+        117.67000198364258
+      ],
+      "verification": "all pages pixel-checked; no changes outside submitter cell",
+      "qaPrefix": "860de5a1ced5",
+      "headerNewUnit": "天津华勘检验测试有限公司",
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北云图数字科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130503信都县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北云图数字科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130506南和县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北云图数字科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130582沙河县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北平普数政科技有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130581南宫市.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北平普数政科技有限公司",
+        "label": "提交单位",
+        "geo": "130581 南宫市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北平普数政科技有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130528宁晋县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北平普数政科技有限公司",
+        "label": "提交单位",
+        "geo": "130528 宁晋县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北平普数政科技有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130530新河县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北平普数政科技有限公司",
+        "label": "提交单位",
+        "geo": "130530 新河县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北普华环境技术服务有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130522临城县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北普华环境技术服务有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130524柏乡县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北普华环境技术服务有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130525隆尧县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北蓝拓环保科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130535临西县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北蓝拓环保科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130533威县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邢台市土壤类型图/河北蓝拓环保科技有限公司-土壤类型图成果/土壤类型图成果质控意见_邢台市130534清河县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北雍荣信息技术服务有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130529巨鹿县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北雍荣信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130529 巨鹿县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北雍荣信息技术服务有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130523平乡县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北雍荣信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130523 平乡县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/邢台市_土壤类型图/河北雍荣信息技术服务有限公司_土壤类型图成果质控意见/河北省土壤类型图成果质控意见_邢台市130531广宗县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北雍荣信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130531 广宗县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/中国煤炭地质总局物测队_土壤类型图成果/土壤类型图成果质控意见_邯郸市130435曲周县.pdf",
+      "associations": [],
+      "header": {
+        "value": "中国煤炭地质总局物测队",
+        "label": "提交单位",
+        "geo": "130435 曲周县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/中国煤炭地质总局物测队_土壤类型图成果/土壤类型图成果质控意见_邯郸市130481武安市.pdf",
+      "associations": [],
+      "header": {
+        "value": "中国煤炭地质总局物测队",
+        "label": "提交单位",
+        "geo": "130481 武安市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/中国煤炭地质总局物测队_土壤类型图成果/土壤类型图成果质控意见_邯郸市130431鸡泽县.pdf",
+      "associations": [],
+      "header": {
+        "value": "中国煤炭地质总局物测队",
+        "label": "提交单位",
+        "geo": "130431 鸡泽县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北九华勘查测绘有限责任公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130423临漳县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北九华勘查测绘有限责任公司",
+        "label": "提交单位",
+        "geo": "130423 临漳县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北九华勘查测绘有限责任公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130426涉县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北九华勘查测绘有限责任公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130427磁县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北九华勘查测绘有限责任公司",
+        "label": "提交单位",
+        "geo": "130427 磁县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北冠卓检测科技股份有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130425大名县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北冠卓检测科技股份有限公司",
+        "label": "提交单位",
+        "geo": "130425 大名县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北冠卓检测科技股份有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130430邱县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北冠卓检测科技股份有限公司",
+        "label": "提交单位",
+        "geo": "130430 邱县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北冠卓检测科技股份有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130433馆陶县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130403丛台区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邯郸市",
+          "district": "丛台区",
+          "oldUnit": "河北向力规划设计有限公司",
+          "newUnit": "河北向力规划设计有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130404复兴区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邯郸市",
+          "district": "复兴区",
+          "oldUnit": "河北向力规划设计有限公司",
+          "newUnit": "河北向力规划设计有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130406峰峰矿区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邯郸市",
+          "district": "峰峰矿区",
+          "oldUnit": "河北向力规划设计有限公司",
+          "newUnit": "河北向力规划设计有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北向力规划设计有限公司",
+        "label": "提交单位",
+        "geo": "130406 峰峰矿区"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130407肥乡区.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北向力规划设计有限公司",
+        "label": "提交单位",
+        "geo": "130407 肥乡区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北向力规划设计有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130402邯山区.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北向力规划设计有限公司",
+        "label": "提交单位",
+        "geo": "130402 邯山区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤类型图成果质控意见/邯郸市_土壤类型图/河北省土壤类型图成果质控意见_邯郸市(1).pdf",
+      "associations": [],
+      "header": {
+        "value": "河北向力规划设计有限公司",
+        "label": "提交单位",
+        "geo": "邯郸市"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市1304532广平县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北鑫发地理信息工程有限公司",
+        "label": "提交单位",
+        "geo": "1304532 广平县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市130424成安县.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北鑫发地理信息工程有限公司",
+        "label": "提交单位",
+        "geo": "130424 成安县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/邯郸市土壤类型图/河北鑫发地理信息工程有限公司_土壤类型图成果/土壤类型图成果质控意见_邯郸市1304534魏县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/中友四达（北京）科技有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130923东光县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/中友四达（北京）科技有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130928吴桥县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/中友四达（北京）科技有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130981泊头市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北利古工程勘察设计有限公司_土壤属性制图/土壤类型图成果质控意见_沧州市130982任丘市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北利古工程勘察设计有限公司_土壤属性制图/土壤类型图成果质控意见—沧州市130984河间市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北太维地理信息技术有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130930孟村县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北太维地理信息技术有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130925盐山县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北平普数政科技有限公司-土壤属性图成果/土壤属性图成果质控意见_沧州市130921沧县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北平普数政科技有限公司-土壤属性图成果/土壤属性图成果质控意见_沧州市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北平普数政科技有限公司-土壤属性图成果/土壤属性图成果质控意见_沧州市130922青县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北正态环境检测有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130929献县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北正态环境检测有限公司-土壤属性图/土壤属性图成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北玛恩农业科技有限公司_土壤属性制图/土壤类型图成果质控意见_沧州市130983‌黄骅市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/沧州市_土壤属性图/河北玛恩农业科技有限公司_土壤属性制图/土壤属性图成果质控意见_沧州市130924海兴县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/北京元图科技发展有限公司_土壤属性制图/土壤属性图成果质控意见_石家庄市130184新乐县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/北京元图科技发展有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130130无极县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/北京元图科技发展有限公司_土壤属性制图/土壤属性图成果质控意见_石家庄市130183晋州市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/北京元图科技发展有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130123正定县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/北京元图科技发展有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130128深泽县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130121井陉县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130132元氏县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130131平山县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130126灵寿县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130125行唐县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北湛泸软件开发有限公司-土壤属性图成果/土壤属性图成果质控意见_石家庄市130129赞皇县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北通烯科技有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130107井陉矿区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北通烯科技有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130111栾城区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北通烯科技有限公司_土壤属性制图/土壤属性图成果质控意见_石家庄市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北通烯科技有限公司_土壤属性制图/土壤属性图成果质控意见_石家庄市130133赵县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/河北通烯科技有限公司_土壤属性制图/土壤类型图成果质控意见_石家庄市130127高邑县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第三批/土壤属性图成果质控意见/石家庄市_土壤属性图/藁城区第三次全国土壤普查办_土壤属性制图/土壤类型图成果质控意见_石家庄市130109藁城区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "石家庄市",
+          "district": "藁城区",
+          "oldUnit": "藁城区第三次全国土壤普查办公室",
+          "newUnit": "藁城区第三次全国土壤普查办公室",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：北京元图科技发展有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/中勘大地工程技术有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131123武强县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/中勘大地工程技术有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131182深州市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北中科晟源科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131126故城县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北中科晟源科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131121枣强县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北平普数政科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131122武邑县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北德禹检测技术有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131125安平县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北德禹检测技术有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131124饶阳县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北满山红农业科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131103冀州区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北满山红农业科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131102桃城区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北玛恩农业科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131127景县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北玛恩农业科技有限公司-土壤属性图成果/土壤属性图成果质控意见_衡水市131128阜城县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/中国煤炭地质总局物测队-土壤属性图成果/土壤属性图成果质控意见_邢台市130503信都区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/中国煤炭地质总局物测队-土壤属性图成果/土壤属性图成果质控意见_邢台市130506南和区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/中国煤炭地质总局物测队-土壤属性图成果/土壤属性图成果质控意见_邢台市130582沙河市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/临西县农业农村局-土壤属性图成果/土壤属性图成果质控意见_邢台市130535临西县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邢台市",
+          "district": "临西县",
+          "oldUnit": "临西县农业农村局",
+          "newUnit": "临西县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北诚秀科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/天津市地质研究和海洋地质中心-土壤属性图成果/土壤属性图成果质控意见_邢台市130522临城县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/天津市地质研究和海洋地质中心-土壤属性图成果/土壤属性图成果质控意见_邢台市130524柏乡县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/天津市地质研究和海洋地质中心-土壤属性图成果/土壤属性图成果质控意见_邢台市130525隆尧县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/威县农业农村局-土壤属性图成果/土壤属性图成果质控意见_邢台市130533威县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邢台市",
+          "district": "威县",
+          "oldUnit": "威县农业农村局",
+          "newUnit": "威县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北诚秀科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/巨鹿县农业农村局-土壤属性图成果/土壤属性图成果质控意见_邢台市130529巨鹿县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邢台市",
+          "district": "巨鹿县",
+          "oldUnit": "巨鹿县农业农村局",
+          "newUnit": "巨鹿县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/平乡县农业农村局-土壤属性图成果/土壤属性图成果质控意见_邢台市130532平乡县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邢台市",
+          "district": "平乡县",
+          "oldUnit": "平乡县农业农村局",
+          "newUnit": "平乡县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/广宗县农业农村局-土壤属性图成果/土壤属性图成果质控意见_邢台市130531广宗县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邢台市",
+          "district": "广宗县",
+          "oldUnit": "广宗县农业农村局",
+          "newUnit": "广宗县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130505任泽区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130523内丘县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130502襄都区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130581南宫市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130528宁晋县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130530新河县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北诚秀科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邢台市130534清河县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/大名县农业农村局_土壤属性图成果/土壤属性图成果质控意见_邯郸市130425大名县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "大名县",
+          "oldUnit": "大名县农业农村局",
+          "newUnit": "大名县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北合众恩规划管理有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130423临漳县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北合众恩规划管理有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130426涉县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北合众恩规划管理有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130427磁县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市1304xx合并区.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "1304xx合并区",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市130407肥乡区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北科沃生态科技有限公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市130403邯山区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市130435曲周县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市130481武安市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/河北精鼎环境监测有限责任公司-土壤属性图成果/土壤属性图成果质控意见_邯郸市130431鸡泽县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/石家庄师兄弟土地环境技术服务有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130432广平县.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/石家庄师兄弟土地环境技术服务有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130424成安县.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/石家庄师兄弟土地环境技术服务有限公司_土壤属性图成果/土壤属性图成果质控意见_邯郸市130434魏县.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/邱县农业农村局_土壤属性图成果/土壤属性图成果质控意见_邯郸市130430邱县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "邱县",
+          "oldUnit": "邱县农业农村局",
+          "newUnit": "邱县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤属性图/馆陶县农业农村局_土壤属性图成果/土壤属性图成果质控意见_邯郸市130433馆陶县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilAttr",
+          "city": "邯郸市",
+          "district": "馆陶县",
+          "oldUnit": "馆陶县农业农村局",
+          "newUnit": "馆陶县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/中友四达（北京）科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130923东光县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/中友四达（北京）科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130928吴桥县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/耕地质量评价成果质控意见_沧州市130981泊头市.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "沧州市",
+          "district": "泊头市",
+          "oldUnit": "未标明单位",
+          "newUnit": "中友四达（北京）科技有限公司",
+          "reason": "该成果、该市及任务单元在原通讯录中唯一对应；补齐未明单位。",
+          "action": "fill"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "repaired"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北利古工程勘察设计有限公司-耕地质量评价成果/耕地质量评价成果质控意见_沧州市130982任丘市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北利古工程勘察设计有限公司-耕地质量评价成果/耕地质量评价成果质控意见_沧州市130984河间市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北太维地理信息技术有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130930孟村县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北太维地理信息技术有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130925盐山县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北平普数政科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市合并区docx.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "沧州市",
+          "district": "合并区",
+          "oldUnit": "河北平普数政科技有限公司",
+          "newUnit": "河北平普数政科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：沧州华江工程勘察设计有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北平普数政科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130921沧县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北平普数政科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130922青县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北正态环境检测有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130929献县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北正态环境检测有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/沧州市_耕地质量评价成果/河北玛恩农业科技有限公司-耕地质量评价/耕地质量评价成果质控意见_沧州市130924海兴县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北玛恩农业科技有限公司-耕地质量评价成果/耕地质量评价成果质控意见_沧州市130983黄骅市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130184新乐县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130130无极县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130183晋州市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄市130123正定县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130128深泽县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/北京元图科技发展有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄市130109藁城区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130121井陉县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130132元氏县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130131平山县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130126灵寿县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130125行唐县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北湛泸软件开发有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130129赞皇县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北通烯科技有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄市130107井陉矿区.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北通烯科技有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄市130111栾城区.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/耕地质量评价/石家庄市_耕地质量评价成果/河北通烯科技有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄130133赵县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北通烯科技有限公司-耕地质量评价成果/耕地质量评价成果质控意见_石家庄市130127高邑县.pdf",
+      "associations": [],
+      "header": {
+        "error": "文件路径不存在或不在质控数据目录"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/中勘大地工程技术有限公司-耕地质量等级评价成果/耕地质量等级成果质控意见衡水市131123武强县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/中勘大地工程技术有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131182深州市质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北中科晟源科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131126故城县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北中科晟源科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见衡水市131121枣强县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北平普数政科技有限公式-耕地质量等级评价结果/耕地质量评价成果质控意见衡水市131122武邑县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北德禹检测技术有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131125安平县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北德禹检测技术有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131124饶阳县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北满山红农业科技有限公司-耕地质量等级评价成果/耕地质量评价成果质控意见衡水市131103冀州区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北满山红农业科技有限公司-耕地质量等级评价成果/耕地质量评价成果质控意见衡水市131102桃城区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北玛恩农业科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131127景县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北玛恩农业科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_衡水市131128阜城县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/中国煤炭地质总局物测队-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130502信都区质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/中国煤炭地质总局物测队-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130502南和区质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/中国煤炭地质总局物测队-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130582沙河市质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/临西县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130535临西县质控.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邢台市",
+          "district": "临西县",
+          "oldUnit": "临西县农业农村局",
+          "newUnit": "临西县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北诚秀科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/天津市地质研究和海洋地质中心-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130522临城县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/天津市地质研究和海洋地质中心-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130524柏乡县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/天津市地质研究和海洋地质中心-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130525隆尧县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/威县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130533威县耕评质控.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邢台市",
+          "district": "威县",
+          "oldUnit": "威县农业农村局",
+          "newUnit": "威县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北诚秀科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/巨鹿县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130529巨鹿县质控.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邢台市",
+          "district": "巨鹿县",
+          "oldUnit": "巨鹿县农业农村局",
+          "newUnit": "巨鹿县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/平乡县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130532平乡县质控.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邢台市",
+          "district": "平乡县",
+          "oldUnit": "平乡县农业农村局",
+          "newUnit": "平乡县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/广宗县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130531广宗县质控.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邢台市",
+          "district": "广宗县",
+          "oldUnit": "广宗县农业农村局",
+          "newUnit": "广宗县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130505任泽区质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邢台市_130523内丘县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130502襄都区质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130581南宫市质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130528宁晋县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130530新河县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北诚秀科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见_邢台市130534清河县质控.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/大名县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130425大名县.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邯郸市",
+          "district": "大名县",
+          "oldUnit": "大名县农业农村局",
+          "newUnit": "大名县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北合众恩规划管理有限公司-耕地质量等级评价成果/耕地质量评价成果质控意见邯郸市130423临漳县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北合众恩规划管理有限公司-耕地质量等级评价成果/耕地质量评价成果质控意见邯郸市130426涉县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北合众恩规划管理有限公司-耕地质量等级评价成果/耕地质量评价成果质控意见邯郸市130427磁县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市1304xx合并区（复兴区等）.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邯郸市",
+          "district": "1304xx合并区（复兴区等）",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130407肥乡区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北科沃生态科技有限公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130402邯山区.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130435曲周县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130481武安市.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/河北精鼎环境监测有限责任公司-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130431鸡泽县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/石家庄师兄弟土地环境技术服务有限公司-耕地质量等级评价成果/耕地质量等级评价成果质控意见邯郸市130432广平县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/石家庄师兄弟土地环境技术服务有限公司-耕地质量等级评价成果/耕地质量等级评价成果质控意见邯郸市130424成安县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/石家庄师兄弟土地环境技术服务有限公司-耕地质量等级评价成果/耕地质量等级评价成果质控意见邯郸市130434魏县.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/邱县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130430邱县.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邯郸市",
+          "district": "邱县",
+          "oldUnit": "邱县农业农村局",
+          "newUnit": "邱县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/耕地质量评价/馆陶县农业农村局-耕地质量等级评价图成果/耕地质量评价成果质控意见邯郸市130433馆陶县.pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "邯郸市",
+          "district": "馆陶县",
+          "oldUnit": "馆陶县农业农村局",
+          "newUnit": "馆陶县农业农村局",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/乐亭县、丰南区、丰润区、合并区、玉田县、滦南县、曹妃甸区和市级第三次全国土壤普查成果质控报告--以乐亭县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/固安县、霸州市第三次全国土壤普查成果质控报告--以固安县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/安国市、博野县、蠡县、三河市、大厂县、香河县、雄安新区本级、容城县、阳原县第三次全国土壤普查成果质控报告--以安国市为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/安次区、广阳区第三次全国土壤普查成果质控报告--以安次区为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/定兴县第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/定州市第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/宽城县、平泉市第三次全国土壤普查成果质控报告--以宽城县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/康保县、承德市本级、合并区、丰宁县、全市及赤城县、沽源县第三次全国土壤普查成果质控报告--以康保县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/张北县、尚义县、万全区、崇礼区第三次全国土壤普查成果质控报告--以张北县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/徐水县、满城、合并区、市级汇总第三次全国土壤普查成果质控报告--以徐水县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以宣化区为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/怀安县、宣化区、合并区第三次全国土壤普查成果质控报告--以怀安县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/承德县、兴隆县第三次全国土壤普查成果质控报告--以承德县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/文安县、大城县第三次全国土壤普查成果质控报告--以文安县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/昌黎县、合并区第三次全国土壤普查成果质控报告--以昌黎县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/曲阳县第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/望都县、清苑、高阳第三次全国土壤普查成果质控报告--以望都县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/涞水县第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/涞源县、顺平、易县第三次全国土壤普查成果质控报告--以涞源县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/滦平县第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/蔚县、涿鹿县、怀来县第三次全国土壤普查成果质控报告--以蔚县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/辛集市第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/迁西县、遵化市、迁安市第三次全国土壤普查成果质控报告--以迁西县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/阜平县、唐县第三次全国土壤普查成果质控报告--以阜平县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/隆化县第三次全国土壤普查成果质控报告.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/雄县、安新县第三次全国土壤普查成果质控报告--以雄县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/青龙县、抚宁区、卢龙县第三次全国土壤普查成果质控报告--以青龙县为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/北部片区共享质控/第一轮/高碑店市、涿州市第三次全国土壤普查成果质控报告--以高碑店市为例.docx",
+      "associations": [],
+      "header": {
+        "protected": true
+      },
+      "documentChanged": false,
+      "status": "protected-authoritative-shared"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/管理员导入/未分类市/未分类单位/未分类任务单元/第三次全国土壤普查耕地质量等级评价专题省级成果审核评分手册 - 参考(1).pdf",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "",
+          "district": "",
+          "oldUnit": "",
+          "newUnit": "",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    }
+  ]
+}

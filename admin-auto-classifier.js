@@ -283,6 +283,33 @@
     return {code:code,mismatch:code!=='matched',listedUnits:listed,
       message:code==='matched'?'':code==='outside-list'?'与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。':'与作业单位通讯录不一致；该类成果通讯录单位：'+listed.join('、')+'。'};
   }
+  // A different company is not necessarily an error. Repair only reviewed
+  // typo pairs or unknown names, with a unique result/city/task directory row.
+  function unknownUnit(value) {
+    return /^(?:|[-—–/?？]+|未(?:标明|注明|明确|知|明|分类|识别)(?:公司|单位|作业单位)?|(?:公司|单位)(?:未明|不详)|不详|未知公司|未知单位|暂无)$/.test(normalize(value).replace(/[\s（）()]/g,''));
+  }
+  function oneEdit(a,b) {
+    if(a===b || Math.abs(a.length-b.length)>1)return false;
+    var i=0,j=0,n=0;
+    while(i<a.length&&j<b.length){if(a[i]===b[j]){i++;j++;continue;}if(++n>1)return false;if(a.length>=b.length)i++;if(b.length>=a.length)j++;}
+    return n+(a.length-i)+(b.length-j)===1;
+  }
+  function unitEvidence(key,city,district,value) {
+    var check=directoryStatus(key,city,value,district),listed=check.listedUnits;
+    var result={action:'keep',unit:value||'',originalUnit:value||'',reason:check.message,listedUnits:listed};
+    if(listed.length!==1)return result;
+    var target=listed[0],old=companyForm(value),full=companyForm(target);
+    if(unknownUnit(value)){result.action='fill';result.unit=target;result.reason='该成果、该市及任务单元在原通讯录中唯一对应；补齐未明单位。';return result;}
+    if(unitMatches(target,value)){result.reason='与该类成果通讯录一致。';return result;}
+    var known=unique([].concat.apply([],companyNames().map(unitForms)));
+    if(old.length<10 || full.length<10 || /[\/＋+]/.test(target) || known.includes(old) || !/(?:公司|研究所|研究院|大学|中心|大队)$/.test(target) || !oneEdit(old,full))return result;
+    var reviewedTypoPairs={'中地科动察设计有限公司':'中地科勘察设计有限公司'};
+    if(companyForm(reviewedTypoPairs[normalize(value)]||'')!==full)return result;
+    var near=known.filter(function(n){return oneEdit(old,n);});
+    if(near.length!==1 || near[0]!==full)return result;
+    result.action='typo';result.unit=target;result.reason='已核实的单位错字对，且原通讯录按成果及地区唯一对应；不以字符串相似度替换其他真实单位。';return result;
+  }
+
   function directoryAttributes(key,city,unit,district,batch,file) {
     var status=directoryStatus(key,city,unit,district);
     var title=[TYPE_LABELS[key]||key,city+' / '+district,'作业单位：'+unit,batch||'',file?basename(file):'',status.message].filter(Boolean).join('\n');
@@ -315,6 +342,13 @@
   function reviewAssignments(item,keys,byKey,problems,company) {
     var rows=[];
     keys.forEach(function(key){(byKey[key]||[]).forEach(function(row){
+      if(row.unitSource!=='manual'){
+        var evidence=unitEvidence(key,row.city,row.district,row.unit);
+        if(evidence.action!=='keep'){
+          row.unitCorrection=evidence;row.unit=evidence.unit;row.unitSource='directory-evidence';
+          row.note='依通讯录'+(evidence.action==='typo'?'订正单位错字':'补齐未明单位')+'：“'+evidence.originalUnit+'” → “'+evidence.unit+'”。'+evidence.reason;
+        }
+      }
       var status=directoryStatus(key,row.city,row.unit,row.district);
       row.directoryStatus=status.code;row.directoryMessage=status.message;rows.push(row);
     });});
@@ -440,7 +474,7 @@
     if(a.issues.length)return a.issues.map(function(p){return (TYPE_LABELS[p.dataKey]?TYPE_LABELS[p.dataKey]+'：':'')+p.message;}).join('\n');
     var lines=[];
     Object.keys(a.byKey).forEach(function(key){a.byKey[key].forEach(function(r){
-      var source=r.unitSource==='manual'?'人工指定':r.unitSource==='filename'?'文件名单位':r.unitSource==='directory'?'目录单位':'按该类成果清单匹配';
+      var source=r.unitSource==='manual'?'人工指定':r.unitSource==='directory-evidence'?'通讯录证据订正':r.unitSource==='filename'?'文件名单位':r.unitSource==='directory'?'目录单位':'按该类成果清单匹配';
       lines.push((TYPE_LABELS[key]||key)+' · '+r.city+' / '+r.district+' → '+r.unit+'（'+source+'）'+(r.note?'；'+r.note:''));
     });});
     return lines.join('\n');
@@ -814,6 +848,7 @@
     inferDataKeys:inferDataKeys,
     inferKind:inferKind,
     inferSingleAssociation:inferSingleAssociation,
+    unitEvidence:unitEvidence,unknownUnit:unknownUnit,
     directoryStatus:directoryStatus,directoryAttributes:directoryAttributes,confirmOutside:confirmOutside,
     listForKey:listForKey,resolveAssignments:resolveAssignments,detectCompany:detectCompany,matchingDescription:matchingDescription,isResolved:isResolved,
     classifyItem:classifyItem,

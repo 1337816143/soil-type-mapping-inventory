@@ -282,6 +282,25 @@
     return batch ? base + '_批次-' + normalized(batch) : base;
   }
 
+  // Corrected assignments still find replies saved under an audited old unit.
+  function correctedUnitReply(dataKey,city,unit,district,batch){
+    var candidates=[unit];
+    ((window.tabData&&tabData[dataKey])||[]).forEach(function(c){
+      if(!same(c.name,city))return;
+      (c.units||[]).forEach(function(u){if(!same(u.name,unit))return;
+        (u.districts||[]).forEach(function(d){if(!same(d.label,district))return;
+          (d.docs||[]).forEach(function(doc){
+            var x=doc.unitCorrection;if(!x||!x.originalUnit||!same(x.unit,unit))return;
+            var sameBatch=!batch || (window.SoilBatchPolicy?SoilBatchPolicy.identity(doc.batch)===SoilBatchPolicy.identity(batch):same(doc.batch,batch));
+            if(sameBatch)candidates.push(x.originalUnit);
+          });
+        });
+      });
+    });
+    var matches=unique(candidates).map(function(name){return window.replyIndex&&window.replyIndex[replyKey(city,name,district,batch)];}).filter(Boolean);
+    matches.sort(function(a,b){return String(b.time||'').localeCompare(String(a.time||''));});return matches[0];
+  }
+
   function applyReplyFiles(files) {
     var workflow = core();
     var index = workflow ? workflow.buildIndex(files) : {};
@@ -356,11 +375,11 @@
       var dataKey = renderKey || active;
       var batchList = batches(dataKey, city, unit, district);
       var base = filenameBase(city, unit, district);
-      var legacy = window.replyIndex && replyIndex[replyKey(city, unit, district, '')];
+      var legacy = correctedUnitReply(dataKey, city, unit, district, '');
       var html = '';
 
       batchList.forEach(function (batch) {
-        var reply = window.replyIndex && replyIndex[replyKey(city, unit, district, batch)];
+        var reply = correctedUnitReply(dataKey, city, unit, district, batch);
         html += '<div class="reply-batch-line"><span class="reply-batch-tag">' + esc(batch) + '</span>';
         if (reply) {
           html += '<a class="reply-view-btn" href="' + esc(replyHref(reply.file)) + '" target="_blank" rel="noopener noreferrer">查看</a>' +
