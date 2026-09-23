@@ -1,5 +1,6 @@
 'use strict';
 // Run actual classifier + hybrid manifest builder using the untouched rosters.
+require('child_process').execFileSync(process.execPath,['scripts/validate-report-search.js'],{stdio:'inherit'});
 const assert=require('assert'),fs=require('fs'),vm=require('vm');
 const {C,w,ctx,records,hashes}=require('./unit-evidence-context')();
 const before=JSON.stringify(w.SoilTaskUnitLists),titles=['总体报告','工作报告','数据报告'];
