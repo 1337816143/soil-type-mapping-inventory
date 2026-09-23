@@ -6,6 +6,9 @@ def check_unit_repair_ui(page,out,engine):
     page.locator('[data-tab="soilType"]').click()
     evidence=page.evaluate('''()=>{
       const rows=[];for(const c of tabData.soilType||[])for(const u of c.units||[])for(const d of u.districts||[]){
+        // Other regression fixtures can leave an empty task placeholder. Only
+        // mounted document groups belong to the six audited corrections.
+        if(!(d.docs||[]).length)continue;
         if((c.name==='石家庄市'&&['平山县','新乐市','灵寿县','行唐县'].includes(d.label))||(c.name==='邢台市'&&['内丘县','任泽区'].includes(d.label)))rows.push({city:c.name,unit:u.name,district:d.label,docs:d.docs});
       }return rows;
     }''')
