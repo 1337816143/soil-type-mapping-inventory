@@ -363,6 +363,14 @@
     var target=listed[0],old=companyForm(value),full=companyForm(target);
     if(unknownUnit(value)){result.action='fill';result.unit=target;result.reason='该成果、该市及任务单元在原通讯录中唯一对应；补齐未明单位。';return result;}
     if(unitMatches(target,value)){result.reason='与该类成果通讯录一致。';return result;}
+    // Verified project name, not a fuzzy alias. The unchanged typed roster
+    // must uniquely assign this exact target; other companies remain red.
+    // Source and scope: docs/TUYU_NAME_EVIDENCE.md.
+    if(normalize(value)==='河北图宇地理信息科技有限公司' && full===companyForm('河北图宇科技有限公司')) {
+      result.action='typo';result.unit=target;
+      result.reason='外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。';
+      return result;
+    }
     var known=unique([].concat.apply([],companyNames().map(unitForms)));
     if(old.length<10 || full.length<10 || /[\/＋+]/.test(target) || known.includes(old) || !/(?:公司|研究所|研究院|大学|中心|大队)$/.test(target) || !oneEdit(old,full))return result;
     var reviewedTypoPairs={'中地科动察设计有限公司':'中地科勘察设计有限公司'};
