@@ -75,6 +75,9 @@ def check_page_gutters(page, out, prefix):
             page.locator('[data-tab="'+key+'"]').click()
             page.wait_for_timeout(240)
             geometry = page.evaluate("""()=>{
+              // Synthetic resizing/focus can retain document scrollX. Reset the
+              // measurement origin, without relaxing any actual edge assertion.
+              window.scrollTo({left:0,top:window.scrollY,behavior:'instant'});
               const rect=n=>{const r=n.getBoundingClientRect();return {left:r.left,right:r.right};};
               const header=rect(document.querySelector('body>header'));
               const main=document.querySelector('body>.container'), m=rect(main), s=getComputedStyle(main);
