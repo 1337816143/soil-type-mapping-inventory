@@ -144,6 +144,8 @@ with sync_playwright() as p:
                 assert not page.locator('.city-section tbody td:nth-child(3) .batch-tag').evaluate_all('''nodes=>nodes.filter(n=>{if(!n.getClientRects().length)return false;const r=n.getBoundingClientRect(),c=n.closest('td').getBoundingClientRect();return r.right>c.right-2||r.left<c.left;}).map(n=>n.textContent)'''),'Batch label overlaps another column'
             page.set_viewport_size({'width':1440,'height':1000})
             import runpy
+            report_ui=runpy.run_path(str(ROOT/'scripts/check-report-tab-ui.py'))['check_report_tab_ui'](page,OUT,engine)
+            (OUT/(engine+'-report-tab-ui.json')).write_text(json.dumps(report_ui,ensure_ascii=False,indent=2))
             assignment_ui=runpy.run_path(str(ROOT/'scripts/check-assignment-ui.py'))['check_assignment_ui'](page,OUT,engine)
             (OUT/(engine+'-assignment-ui-report.json')).write_text(json.dumps(assignment_ui,ensure_ascii=False,indent=2))
             directory_ui=runpy.run_path(str(ROOT/'scripts/check-directory-ui.py'))['check_directory_ui'](page,OUT,engine)

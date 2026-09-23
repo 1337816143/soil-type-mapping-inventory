@@ -15,7 +15,8 @@
     degradation:'土壤退化与障碍分析',
     specialty:'土特产品土壤适宜性评价',
     agriSuitability:'土壤农业利用适宜性评价',
-    landUse:'土地资源评价与利用报告'
+    landUse:'土地资源评价与利用报告',
+    reports:'总体、工作、数据报告'
   };
   var NAME_ALIASES = {
     '信都县':'信都区',
@@ -116,6 +117,13 @@
     return unique(keys);
   }
 
+  function isReportFamily(text) {
+    return /总体报告|工作报告|数据报告/.test(normalize(text));
+  }
+  function isReportReference(text) {
+    return /模板|范本|指南|导引|规范|规程|编制要求|培训|参考资料|参考文件/.test(text) &&
+      !/质控意见|审核意见|审查意见|复核意见/.test(text);
+  }
   function inferDataKeys(text) {
     text = normalize(text);
     var segments = text.split('/').filter(Boolean);
@@ -125,6 +133,7 @@
     }
     var keys = keysForSegment(text);
     if (keys.length) return keys;
+    if (isReportFamily(text) && !isReportReference(text)) return ['reports'];
     if (/三普.*成果.*(?:质控|质量控制).*报告|第三次全国土壤普查.*成果.*(?:质控|质量控制).*报告|综合质控报告|成果综合质控/.test(text)) {
       return COMPREHENSIVE_KEYS.slice();
     }
@@ -133,6 +142,7 @@
 
   function inferKind(text, dataKeys) {
     text = normalize(text);
+    if (!(dataKeys && dataKeys.length) && isReportFamily(text) && isReportReference(text)) return 'reference';
     if (/质控|质量控制|审核意见|审查意见|复核意见|成果检查/.test(text) || (dataKeys && dataKeys.length)) return 'quality';
     if (/参考资料|技术规程|技术规范|规范|标准|指南|培训|模板|手册|参考文件/.test(text)) return 'reference';
     return 'unknown';
@@ -587,7 +597,7 @@
     var kind = exact ? exact.kind : inferKind(text, keys);
     var batch = exact ? exact.batch : (inferBatch(text) || String(item.batch && item.batch !== '管理员导入' ? item.batch : ''));
     var targets = exact ? exact.targets.slice() : [];
-    if (!targets.length && kind === 'quality') {
+    if (!targets.length && kind === 'quality' && keys.indexOf('reports') < 0) {
       var company = companySignal(item), targetName = normalize(fileName);
       company.names.forEach(function(name){
         [name].concat(String(name).split(/\s*\/\s*/)).forEach(function(part){targetName=targetName.split(normalize(part)).join('');});

@@ -7,7 +7,9 @@ def check_glass_ui(page, out, prefix):
     expect(page.locator('.glass-header-top .glass-controls')).to_have_count(1)
     tabs = page.locator('header .tabs .tab')
     keys = tabs.evaluate_all('(ns)=>ns.map(n=>n.dataset.tab)')
-    assert len(keys) == 9 and len(set(keys)) == 9, keys
+    assert len(keys) == 10 and len(set(keys)) == 10, keys
+    assert keys.index('reports') + 1 == keys.index('references'), keys
+    expect(page.locator('[data-tab="reports"]')).to_have_text('总体、工作、数据报告')
     for key in keys:
         tab = page.locator('[data-tab="'+key+'"]')
         tab.click()
@@ -57,8 +59,9 @@ def check_glass_ui(page, out, prefix):
     assert tabs.first.evaluate('(n)=>getComputedStyle(n).transitionDuration')=='0s'
     page.emulate_media(reduced_motion='no-preference')
     first.click();page.evaluate('window.scrollTo(0,0)')
+    report_tab = check_report_tab_readonly(page, out, prefix)
     gutters = check_page_gutters(page, out, prefix)
-    return {'status':'passed','pageGutters':gutters,'tabs':keys,'widths':[320,390,430,760,1024,1440],
+    return {'status':'passed','reportTab':report_tab,'pageGutters':gutters,'tabs':keys,'widths':[320,390,430,760,1024,1440],
             'checks':['original tab/panel integration','keyboard navigation','active tab visibility',
                       'header overflow bounds','transparent source logo alpha','lightweight mode','reduced motion'],
             'logo':alpha}
@@ -96,10 +99,41 @@ def check_page_gutters(page, out, prefix):
             for r in geometry['surfaces']:
                 assert abs(r['left']-h['left'])<1 and abs(r['right']-h['right'])<1, ('surface alignment',width,key,r,h)
             results.append({'width':width,'tab':key,'left':h['left'],'rightGutter':geometry['viewport']-h['right']})
-            if (width==1440 and key in ['soilType','references','workRecords']) or (width==390 and key=='soilType'):
+            if (width==1440 and key in ['soilType','reports','references','workRecords']) or (width==390 and key=='soilType'):
                 page.evaluate('window.scrollTo(0,0)')
                 page.screenshot(path=str(out/(prefix+'-gutters-'+key+'-'+str(width)+'.png')))
     page.set_viewport_size({'width':1440,'height':1000})
     page.locator('[data-tab="soilType"]').click()
     page.evaluate('window.scrollTo(0,0)')
     return {'status':'passed','widths':widths,'tabCount':len(keys),'measurements':results}
+
+
+def check_report_tab_readonly(page, out, prefix):
+    tab=page.locator('[data-tab="reports"]');tab.click()
+    expect(page.locator('#tab-reports')).to_have_class('tab-content active')
+    expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('沿用其他成果')
+    expect(page.locator('#missingBanner h3')).to_contain_text('总体、工作、数据报告')
+    expect(page.locator('#missingBanner .quality-admin-global').first).to_contain_text('管理员导入报告')
+    expect(page.locator('#missingBanner .admin-delete-trigger')).to_be_visible()
+    expect(page.locator('#missingBanner .soil-batch-download-trigger')).to_be_visible()
+    result=page.evaluate("""()=>{
+      const C=SoilAdminAutoClassifier,before=JSON.stringify(SoilTaskUnitLists);
+      if(C.listForKey('reports')!==SoilTaskUnitLists.other)throw Error('Report list not shared by identity');
+      const matches=['总体报告','工作报告','数据报告'].map(kind=>{
+        const name='石家庄市_平山县_'+kind+'_质控意见_2026年第二次第1批.docx',i={file:{name,size:1},path:name};
+        const m=C.applyItemMetadata(i);
+        if(!m.assignment.complete||m.dataKeys.join()!=='reports'||i.unit!=='河北湛泸软件开发有限公司')throw Error('Wrong report assignment');
+        return {kind,unit:i.unit};
+      });
+      const reports=calculateDashboardStats('reports'),other=calculateDashboardStats('soilAttr');
+      for(const k of ['expDistricts','expMunicipal','expUnits'])if(reports[k]!==other[k])throw Error('Report expectations differ from other list');
+      if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Roster mutation');
+      return {status:'passed',matches,expected:{districts:reports.expDistricts,municipal:reports.expMunicipal,units:reports.expUnits}};
+    }""")
+    page.evaluate('window.scrollTo(0,0)')
+    page.screenshot(path=str(out/(prefix+'-report-tab-desktop.png')))
+    page.set_viewport_size({'width':390,'height':844})
+    tab.click();page.screenshot(path=str(out/(prefix+'-report-tab-mobile.png')))
+    page.set_viewport_size({'width':1440,'height':1000})
+    page.locator('[data-tab="soilType"]').click()
+    return result

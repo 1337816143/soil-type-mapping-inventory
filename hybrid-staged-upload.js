@@ -165,6 +165,7 @@
     var router = R();
     if (!router || !item || !item.file || !router.isSharedReport(item.file.name)) return null;
     var meta = itemMetadata(item);
+    if (meta && meta.dataKeys && meta.dataKeys.indexOf('reports') >= 0 && !meta.targets.length) return null;
     if(meta && meta.assignment){
       if(!meta.assignment.complete)throw new Error(C().matchingDescription(meta));
       return {targets:meta.targets.slice(),dataKeys:meta.dataKeys.slice(),byKey:meta.assignment.byKey};

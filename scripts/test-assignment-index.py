@@ -6,6 +6,8 @@ block=workflow.split('      - name: Restore repository paths and index',1)[1]
 code=block.split("          python3 <<'PY'\n",1)[1].split('\n          PY',1)[0]
 code='\n'.join(line[10:] if line.startswith('          ') else line for line in code.splitlines())
 fixtures=json.loads((ROOT/'test-artifacts/assignment-manifests.json').read_text())
+extra=ROOT/'test-artifacts/report-tab-manifests.json'
+if extra.exists():fixtures+=json.loads(extra.read_text())
 checks=0
 for fixture in fixtures:
     with tempfile.TemporaryDirectory() as directory:
