@@ -19,3 +19,4 @@ assert changed==report['documentsChanged']
 assert changed==6,('Expected four typo and two blank submitter PDFs',changed)
 assert report['platformCorrections']==10,report['platformCorrections']
 print('Verified correction receipts:',changed,'PDF reports;',report['platformCorrections'],'platform associations; original directory unchanged.')
+subprocess.run(['python',str(ROOT/'scripts/test-tuyu-name.py')],check=True,cwd=ROOT)

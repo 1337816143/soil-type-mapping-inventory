@@ -32,4 +32,22 @@ def check_unit_repair_ui(page,out,engine):
     page.evaluate('tabData.soilType=window.__unitRepairOriginal;delete window.__unitRepairOriginal;refreshAllTabs()')
     page.set_viewport_size({'width':1440,'height':1000});page.evaluate('window.scrollTo(0,0)')
     page.screenshot(path=str(out/(engine+'-unit-repair.png')))
-    return {'status':'passed','checks':['six real corrected records','future filename evidence','historic reply alias','unverified header stays red'],'records':evidence}
+    tuyu=page.evaluate(r"""()=>{
+      const C=SoilAdminAutoClassifier,old='河北图宇地理信息科技有限公司',name='河北图宇科技有限公司',rows=[];
+      for(const c of tabData.soilType||[])for(const u of c.units||[])for(const d of u.districts||[]){
+        if(c.name==='沧州市'&&['河间市','任丘市','肃宁县'].includes(d.label))for(const doc of d.docs||[])rows.push({unit:u.name,district:d.label,doc});
+      }
+      if(rows.length!==5||rows.some(r=>r.unit!==name||r.doc.unitCorrection?.originalUnit!==old))throw Error('TuYu mounted name correction missing');
+      for(const r of rows)if(C.directoryStatus('soilType','沧州市',r.unit,r.district).mismatch)throw Error('Corrected TuYu record still red');
+      const item={file:{name:'沧州市_河间市_土壤类型图_'+old+'_质控意见_2026年第二次第1批.pdf',size:1}};
+      if(!C.applyItemMetadata(item).assignment.complete||item.unit!==name)throw Error('Future exact name rule missing');
+      if(C.unitEvidence('soilAttr','沧州市','河间市',old).action!=='keep')throw Error('Company borrowed across result types');
+      const prior=window.replyIndex;window.replyIndex={};let reply;
+      try{
+        window.replyIndex[getReplyKey('沧州市',old,'河间市','2026年第一次第1批')]={file:'tuyu-old-name-reply.docx',time:'20260923000000'};
+        reply=renderReplyCell('沧州市',name,'河间市');
+      }finally{window.replyIndex=prior;}
+      if(!reply.includes('tuyu-old-name-reply.docx'))throw Error('Old-name reply is no longer reachable');
+      return {status:'passed',associations:rows.length,districts:[...new Set(rows.map(r=>r.district))],company:name,oldReplyAccessible:true};
+    }""")
+    return {'status':'passed','checks':['six real corrected records','future filename evidence','historic reply alias','unverified header stays red'],'records':evidence,'tuyu':tuyu}

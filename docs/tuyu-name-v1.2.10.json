@@ -1,0 +1,146 @@
+{
+  "version": "v1.2.10",
+  "checkedOn": "2026-09-23",
+  "recordsChecked": 469,
+  "platformCorrections": 5,
+  "documentsChecked": 5,
+  "documentsChanged": 0,
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "evidence": "docs/TUYU_NAME_EVIDENCE.md",
+  "scope": "Exact platform expansion only; original report shorthand retained; no global corporate-identity assertion.",
+  "reports": [
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市132982任丘市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "任丘市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇科技有限公司",
+          "reason": "外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "132982 沧州市任丘市"
+      },
+      "documentChanged": false,
+      "status": "repaired",
+      "beforeSHA256": "baf46101ac09facbc139ac92ee41c62644da257ac588a38df0d41622ecacc03a",
+      "afterSHA256": "baf46101ac09facbc139ac92ee41c62644da257ac588a38df0d41622ecacc03a",
+      "pages": 16,
+      "headerValue": "河北图宇",
+      "qaImage": "38a20280e967.png"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北图宇_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_沧州市130984河间市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "河间市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇科技有限公司",
+          "reason": "外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130984 河间市"
+      },
+      "documentChanged": false,
+      "status": "repaired",
+      "beforeSHA256": "e8129e0bcd7524334f059139fadd15ed4495f594053a251e0d768ccbffeb8e0d",
+      "afterSHA256": "e8129e0bcd7524334f059139fadd15ed4495f594053a251e0d768ccbffeb8e0d",
+      "pages": 24,
+      "headerValue": "河北图宇",
+      "qaImage": "0f58f349ccc6.png"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130984河间市.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "河间市",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇科技有限公司",
+          "reason": "外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130984 河间市"
+      },
+      "documentChanged": false,
+      "status": "repaired",
+      "beforeSHA256": "d4ab4ceae781eb90de4578299c940e5350e8e022c130c0d54655955092ebde41",
+      "afterSHA256": "d4ab4ceae781eb90de4578299c940e5350e8e022c130c0d54655955092ebde41",
+      "pages": 24,
+      "headerValue": "河北图宇",
+      "qaImage": "b0aab723cc42.png"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第一批/土壤类型图/沧州市土壤类型图/河北图宇_土壤类型图成果_差1个/河北省土壤类型图成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "肃宁县",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇科技有限公司",
+          "reason": "外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130926 肃宁县"
+      },
+      "documentChanged": false,
+      "status": "repaired",
+      "beforeSHA256": "e2f6d4baf83f4656988a3292ccd67a0977fe86a0731b21ebc1a1e1596123b7a1",
+      "afterSHA256": "e2f6d4baf83f4656988a3292ccd67a0977fe86a0731b21ebc1a1e1596123b7a1",
+      "pages": 19,
+      "headerValue": "河北图宇",
+      "qaImage": "b5aec3b0e44a.png"
+    },
+    {
+      "path": "data/质控意见反馈_2026年第二批/土壤类型图/沧州市_补充意见/河北图宇_土壤类型图成果_补充意见/河北省土壤类型图成果质控意见_沧州市130926肃宁县.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "肃宁县",
+          "oldUnit": "河北图宇地理信息科技有限公司",
+          "newUnit": "河北图宇科技有限公司",
+          "reason": "外部正式名称资料与该成果、该市及任务单元的原通讯录一致；订正本项目中不规范扩写的单位名称。核对依据：docs/TUYU_NAME_EVIDENCE.md。",
+          "action": "typo"
+        }
+      ],
+      "header": {
+        "value": "河北图宇",
+        "label": "提交单位",
+        "geo": "130926 肃宁县"
+      },
+      "documentChanged": false,
+      "status": "repaired",
+      "beforeSHA256": "1ed8aa7552900d6ca8ff1517db320e8accf931ba54cb036da5db0f2ddeecbccf",
+      "afterSHA256": "1ed8aa7552900d6ca8ff1517db320e8accf931ba54cb036da5db0f2ddeecbccf",
+      "pages": 19,
+      "headerValue": "河北图宇",
+      "qaImage": "f8b361b14e6c.png"
+    }
+  ]
+}
