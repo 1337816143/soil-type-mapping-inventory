@@ -8,9 +8,10 @@
     degradation: '土壤退化与障碍分析',
     specialty: '土特产品土壤适宜性评价',
     agriSuitability: '土壤农业利用适宜性评价',
-    landUse: '土地资源评价与利用报告'
+    landUse: '土地资源评价与利用报告',
+    reports: '总体、工作、数据报告'
   };
-  var NEW_KEYS = ['degradation', 'specialty', 'agriSuitability', 'landUse'];
+  var NEW_KEYS = ['degradation', 'specialty', 'agriSuitability', 'landUse', 'reports'];
   var appliedAssociations = {};
   var IMPORTED_QUALITY_PREFIX = './data/质控意见反馈_管理员导入/';
 
@@ -49,8 +50,20 @@
   function wrapImportedQualityLinks() {
     if (typeof window.renderCities !== 'function' || window.renderCities.__adminImportedRawLinks) return;
     var original = window.renderCities;
-    var wrapped = function () {
-      return rewriteImportedQualityLinks(original.apply(this, arguments));
+    var wrapped = function (cities, dataKey) {
+      var html = rewriteImportedQualityLinks(original.apply(this, arguments));
+      if (dataKey === 'reports') {
+        var empty = !(cities || []).some(function (city) {
+          return (city.units || []).some(function (unit) {
+            return (unit.districts || []).some(function (district) { return (district.docs || []).length; });
+          });
+        });
+        html = '<section class="report-family-guide" aria-label="报告归档说明"><h2>总体、工作、数据报告</h2>' +
+          '<p>总体报告、工作报告、数据报告及对应质控意见统一存放于此。沿用其他成果的作业单位通讯录，按市、作业单位、任务单元和批次归档。</p>' +
+          '<p class="report-family-note">同一地区的三类报告分别保留文件，收缴进度按任务单元汇总。</p>' +
+          (empty ? '<p class="report-family-empty">暂未上传报告。请使用上方“管理员导入”添加文件；普通访问者可预览和批量下载已归档文件。</p>' : '') + '</section>' + html;
+      }
+      return html;
     };
     wrapped.__adminImportedRawLinks = true;
     window.renderCities = wrapped;
@@ -63,6 +76,7 @@
     var style = document.createElement('style');
     style.id = 'dashboard-extension-style';
     style.textContent =
+      '.report-family-guide{margin:0 0 16px;padding:18px 20px;border:1px solid #dbe6ef;border-radius:18px;background:linear-gradient(130deg,#ffffffeb,#f1f7fce6);color:#334d67;overflow-wrap:anywhere}.report-family-guide h2{margin:0 0 8px;font-size:1.1rem}.report-family-guide p{margin:6px 0;font-size:.85rem;line-height:1.65}.report-family-guide .report-family-note{color:#62768a;font-size:.78rem}.report-family-empty{padding-top:8px;border-top:1px solid #dbe6ef}' +
       '.missing-banner h3{flex-wrap:wrap}' +
       '.quality-admin-global{margin-left:10px;display:inline-flex;align-items:center;padding:4px 10px;border:1px dashed #7c3aed;border-radius:6px;background:#fff;color:#6d28d9;font-size:.75rem;font-weight:650;cursor:pointer;white-space:nowrap}' +
       '.quality-admin-global:hover{background:#f5f3ff;border-color:#6d28d9}' +
@@ -86,7 +100,7 @@
         tab.className = 'tab';
         tab.dataset.tab = key;
         tab.textContent = TYPES[key];
-        tabs.appendChild(tab);
+        tabs.insertBefore(tab, tabs.querySelector('[data-tab="references"]'));
       } else {
         tab.textContent = TYPES[key];
       }
@@ -149,7 +163,7 @@
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'quality-admin-global';
-    button.textContent = '管理员导入质控意见';
+    button.textContent = key === 'reports' ? '管理员导入报告 / 质控意见' : '管理员导入质控意见';
     button.dataset.key = key;
     button.addEventListener('click', function (event) {
       event.preventDefault();

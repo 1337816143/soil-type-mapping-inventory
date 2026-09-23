@@ -371,7 +371,14 @@
     if (filters.district.size && !filters.district.has(assoc.district)) return false;
     if (!query) return true;
     var haystack = [item.name, item.repoPath, assoc.city, assoc.unit, assoc.district, assoc.resultType, assoc.batch].join(' ').toLowerCase();
-    return query.split(/\s+/).filter(Boolean).every(function (token) { return haystack.indexOf(token) >= 0; });
+    return query.split(/\s+/).filter(Boolean).every(function (token) {
+      // Report-subtype searches must use the file name, not the shared parent
+      // directory/category which contains all three report names.
+      if (assoc.dataKey === 'reports' && /^(总体报告|工作报告|数据报告)$/.test(token)) {
+        return String(item.name || '').toLowerCase().indexOf(token) >= 0;
+      }
+      return haystack.indexOf(token) >= 0;
+    });
   }
 
   function matchingCatalog(modal) {

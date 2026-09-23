@@ -152,6 +152,8 @@ console.log('automatic import classifier validation passed: comprehensive defaul
 
 require('child_process').execFileSync(process.execPath,['scripts/validate-merged-directory.js'],{stdio:'inherit'});
 
+require('child_process').execFileSync(process.execPath,['scripts/validate-report-tab.js'],{stdio:'inherit'});
+
 // End-to-end mapping checks use the real embedded lists and actual Actions writer.
 require('child_process').execFileSync(process.execPath,['scripts/validate-assignment-matching.js'],{stdio:'inherit'});
 require('child_process').execFileSync('python3',['scripts/test-assignment-index.py'],{stdio:'inherit'});
