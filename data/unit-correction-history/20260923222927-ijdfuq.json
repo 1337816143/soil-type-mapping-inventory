@@ -1,0 +1,116 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 9,
+  "documentsChecked": 9,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/东光县/土特产适宜性评价/沧州市_东光县_土特产品土壤适宜性评价_问题反馈_中友四达（北京）科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/土特产适宜性评价/河北省_辛集市_土特产品土壤适宜性评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/土特产适宜性评价/石家庄行唐县_土特产品土壤适宜性评价_河北湛泸软件开发有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/冀州区/土特产适宜性评价/衡水市_冀州区_土特产品土壤适宜性评价_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/成安县/土特产适宜性评价/邯郸市_成安县_土特产品土壤适宜性评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "specialty",
+          "city": "邯郸市",
+          "district": "成安县",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄师兄弟土地环境技术服务有限公司；当前记录单位：河北科沃生态科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/邯郸市/河北省农林科学院农业资源环境研究所/永年区/土特产适宜性评价/邯郸市_永年区_土特产品土壤适宜性评价_河北省农林科学院农业资源环境研究所_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "specialty",
+          "city": "邯郸市",
+          "district": "永年区",
+          "oldUnit": "河北省农林科学院农业资源环境研究所",
+          "newUnit": "河北省农林科学院农业资源环境研究所",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“永年区”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/土特产适宜性评价/邯郸市_涉县_土特产品土壤适宜性评价_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/土特产适宜性评价/邯郸市_邱县_土特产品土壤适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/馆陶县/土特产适宜性评价/邯郸市_馆陶县_土特产品土壤适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
