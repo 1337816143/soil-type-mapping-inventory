@@ -40,7 +40,7 @@ with sync_playwright() as p:
           return {status:'passed',mode:'memory-only; no file upload',checks:['exact Yongnian name','explicit acknowledgement','red warning markup','normal matched type','roster immutable']};
         }""")
 
-        report['mergedDirectory']=page.evaluate("""()=>{
+        report['mergedDirectory']=page.evaluate(r"""()=>{
           const C=SoilAdminAutoClassifier,before=JSON.stringify(SoilTaskUnitLists);
           const covered=C.directoryStatus('soilType','邯郸市','河北向力规划设计有限公司','峰峰矿区');
           const absent=C.directoryStatus('specialty','邯郸市','河北省农林科学院农业资源环境研究所','永年区');
