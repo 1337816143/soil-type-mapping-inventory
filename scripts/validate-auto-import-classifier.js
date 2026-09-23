@@ -150,6 +150,8 @@ assert(mobile.includes('prepared.forEach(function (item) { classifier.applyItemM
 
 console.log('automatic import classifier validation passed: comprehensive defaults to 3 active types; explicitly named historical types remain compatible');
 
+require('child_process').execFileSync(process.execPath,['scripts/validate-merged-directory.js'],{stdio:'inherit'});
+
 // End-to-end mapping checks use the real embedded lists and actual Actions writer.
 require('child_process').execFileSync(process.execPath,['scripts/validate-assignment-matching.js'],{stdio:'inherit'});
 require('child_process').execFileSync('python3',['scripts/test-assignment-index.py'],{stdio:'inherit'});

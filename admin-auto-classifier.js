@@ -263,25 +263,87 @@
     return out;
   }
   function regionForms(name) {
-    var aliases = {'井陉县（含矿区）':['井陉县'], '孟村县':['孟村回族自治县'],
+    var aliases = {'井陉县（含矿区）':['井陉县','井陉矿区'], '孟村县':['孟村回族自治县'],
       '青龙县':['青龙满族自治县'], '丰宁县':['丰宁满族自治县'], '宽城县':['宽城满族自治县'],
       '围场县':['围场满族蒙古族自治县']};
     return [name].concat(aliases[name] || []).map(compact);
   }
 
-  // Read-only comparison against the selected result type. Historical task
-  // aliases/merged districts retain their existing matching semantics.
+  // Read-only source remarks supplied by the owner on 2026-07-27, repeated
+  // for soilType on 2026-09-22. The roster had compressed these to 邯郸市.
+  // Keep the literal evidence separate; never add tasks to or rewrite lists.
+  // Evidence and scope limitations: docs/MERGED_DIRECTORY_EVIDENCE.md.
+  var MERGED_DIRECTORY_NOTES = [
+    {list:'soilType',city:'邯郸市',unit:'河北向力规划设计有限公司',parent:'邯郸市',
+      members:['丛台区','复兴区','峰峰矿区'],
+      quote:'市本级（丛台区、复兴区、峰峰）、邯山区、肥乡区、市级'},
+    {list:'other',city:'邯郸市',unit:'河北科沃生态科技有限公司',parent:'邯郸市',
+      members:['丛台区','复兴区','峰峰矿区'],
+      quote:'邯山区、肥乡区、市级（含丛台区、复兴区、峰峰矿区）'}
+  ];
+  function cleanDirectoryMessage(value) {
+    // Old stored receipts stay untouched, but prohibited wording cannot leak
+    // back through a stale per-document tooltip or header-review message.
+    return String(value || '').replace(/[，,；;]?\s*(?:暂)?不计入(?:应交清单|应交|清单)?统计[。.]?/g,'').trim();
+  }
+  var mergedRowsCache = {};
+  function mergedDirectoryRows(key) {
+    var ref=listForKey(key), scopeKey=JSON.stringify(window.mergeSubDistricts || {}), cached=mergedRowsCache[key];
+    if(cached && cached.ref===ref && cached.scopeKey===scopeKey)return cached.rows;
+    var rows=flattenTasks([key]), derived=[], seen={};
+    function add(parent,member,source) {
+      if(!member || compact(member)===compact(parent.district))return;
+      // Explicit standalone tasks (including a named contained mining area)
+      // override any broad legacy city-level merge scope.
+      if(rows.some(function(r){return r.city===parent.city && !/合并/.test(r.district) && regionForms(r.district).includes(compact(member));}))return;
+      var id=[parent.city,parent.unit,parent.district,member].join('\n');
+      if(seen[id])return;seen[id]=true;
+      derived.push({city:parent.city,unit:parent.unit,district:member,
+        parentDistrict:parent.district,relation:'merged-member',evidence:source});
+    }
+    MERGED_DIRECTORY_NOTES.forEach(function(note){
+      if(note.list!==(key==='soilType'?'soilType':'other'))return;
+      rows.filter(function(r){return r.city===note.city && r.district===note.parent && unitMatches(r.unit,note.unit);}).forEach(function(parent){
+        note.members.forEach(function(member){add(parent,member,'原通讯录备注：'+note.quote);});
+      });
+    });
+    var scopes=window.mergeSubDistricts || {};
+    Object.keys(scopes).forEach(function(city){
+      if(!Array.isArray(scopes[city]))return;
+      var parents=rows.filter(function(r){return r.city===city && /合并区/.test(r.district);});
+      // The original global member scope can only bind when this result type
+      // has one unambiguous merged task. Never borrow another type's company.
+      if(parents.length!==1)return;
+      scopes[city].forEach(function(member){add(parents[0],member,'原内嵌合并区范围：'+scopes[city].join('、'));});
+    });
+    mergedRowsCache[key]={ref:ref,scopeKey:scopeKey,rows:derived};
+    return derived;
+  }
   function directoryStatus(key, city, unit, district) {
     var rows=flattenTasks([key]).filter(function(r){return compact(r.city)===compact(city);});
     var matches=rows.filter(function(r){return regionForms(r.district).includes(compact(district));});
     if(!matches.length && typeof window.isDistrictMatched==='function'){
       var submitted={};submitted[city+'_'+district]=true;
-      matches=rows.filter(function(r){return window.isDistrictMatched(r.district,city,submitted);});
+      // Split-district membership needs explicit scope evidence, not a generic
+      // "市本级"/"合并区" name or a coincidentally identical company.
+      matches=rows.filter(function(r){return (!/合并/.test(r.district)||/合并/.test(district)) && window.isDistrictMatched(r.district,city,submitted);});
+    }
+    var relation='direct',scope='';
+    if(!matches.length){
+      matches=mergedDirectoryRows(key).filter(function(r){return compact(r.city)===compact(city) && regionForms(r.district).includes(compact(district));});
+      if(matches.length){
+        relation='merged-member';
+        scope='通讯录按合并区统一分配作业单位，实际成果分开编制，因此按“'+district+'”单独质控。';
+        scope+='核对依据：'+unique(matches.map(function(r){return r.evidence;})).join('；')+'。';
+      }
     }
     var listed=unique(matches.map(function(r){return r.unit;}));
     var code=!listed.length?'outside-list':listed.some(function(u){return unitMatches(u,unit);})?'matched':'unit-mismatch';
-    return {code:code,mismatch:code!=='matched',listedUnits:listed,
-      message:code==='matched'?'':code==='outside-list'?'与作业单位通讯录不一致；该类成果通讯录没有此市 / 任务单元，按清单外记录展示，不计入应交清单统计。':'与作业单位通讯录不一致；该类成果通讯录单位：'+listed.join('、')+'。'};
+    var message=scope;
+    if(code==='outside-list')message='与作业单位通讯录不一致；该类成果通讯录未单列“'+district+'”，现有合并区范围及备注也未明确包含该地区。';
+    else if(code==='unit-mismatch')message=(scope?scope+'\n':'')+'与作业单位通讯录不一致；'+(relation==='merged-member'?'该合并区':'该类成果')+'通讯录单位：'+listed.join('、')+'；当前记录单位：'+(unit||'未明')+'。';
+    return {code:code,mismatch:code!=='matched',listedUnits:listed,relation:relation,
+      parentDistricts:unique(matches.map(function(r){return r.parentDistrict||r.district;})),message:message};
   }
   // A different company is not necessarily an error. Repair only reviewed
   // typo pairs or unknown names, with a unique result/city/task directory row.
@@ -313,7 +375,7 @@
   function directoryAttributes(key,city,unit,district,batch,file) {
     var status=directoryStatus(key,city,unit,district);
     var title=[TYPE_LABELS[key]||key,city+' / '+district,'作业单位：'+unit,batch||'',file?basename(file):'',status.message].filter(Boolean).join('\n');
-    return {mismatch:status.mismatch,code:status.code,title:title};
+    return {mismatch:status.mismatch,code:status.code,relation:status.relation,title:cleanDirectoryMessage(title)};
   }
   // Out-of-directory geography is a literal, separated name, NOT a fuzzy
   // correction or a new roster entry. The user must confirm it before upload.
@@ -337,7 +399,7 @@
     if(elsewhere)return null;
     if(directoryStatus(key,city,company.name,district).code!=='outside-list')return null;
     return {dataKey:key,city:city,unit:company.name||'',district:district,
-      unitSource:company.name?'filename':'',listedUnits:[],note:'清单外任务；只归档，不修改通讯录及应交统计。'};
+      unitSource:company.name?'filename':'',listedUnits:[],note:'清单外任务；核对归属后归档，原通讯录保持不变。'};
   }
   function reviewAssignments(item,keys,byKey,problems,company) {
     var rows=[];
@@ -350,13 +412,13 @@
         }
       }
       var status=directoryStatus(key,row.city,row.unit,row.district);
-      row.directoryStatus=status.code;row.directoryMessage=status.message;rows.push(row);
+      row.directoryStatus=status.code;row.directoryMessage=status.message;row.directoryRelation=status.relation;rows.push(row);
     });});
     var outside=rows.filter(function(row){return row.directoryStatus==='outside-list';});
     var signature=outside.length?JSON.stringify([basename(item.file&&item.file.name||item.path||''),Number(item.file&&item.file.size||0),Number(item.file&&item.file.lastModified||0),
       keys,rows.map(function(r){return [r.dataKey,r.city,r.district,r.unit];})]):'';
     var pending=outside.length>0 && !problems.length && item.unlistedConfirmation!==signature;
-    if(pending)problems.push(issue('','unlisted-confirmation','清单外任务：请核对市、任务单元、成果及单位，点击“确认按文件名归档”。不会修改通讯录或应交统计。',outside));
+    if(pending)problems.push(issue('','unlisted-confirmation','清单外任务：请核对市、任务单元、成果及单位，点击“确认按文件名归档”。原通讯录保持不变。',outside));
     outside.forEach(function(row){row.unlistedConfirmed=!!signature&&item.unlistedConfirmation===signature;});
     return {version:2,byKey:byKey,issues:problems,company:company,confirmationKey:signature,
       canConfirmOutside:pending,hasOutside:outside.length>0,
@@ -373,7 +435,7 @@
     return {dataKey:key,code:code,message:message,candidates:(rows || []).map(function(r){return {city:r.city,unit:r.unit,district:r.district};})};
   }
   function resolveOne(text, key, company) {
-    var rows = flattenTasks([key]), geo = geographyText(text,company);
+    var rows = flattenTasks([key]).concat(mergedDirectoryRows(key)), geo = geographyText(text,company);
     if (!rows.length) return {issue:issue(key,'missing-list','该类成果没有可用对照清单，请联系管理员核对。')};
     var cities = unique(rows.filter(function(r){return geo.includes(compact(r.city));}).map(function(r){return r.city;}));
     if (cities.length > 1) return {issue:issue(key,'multiple-cities','文件名或目录出现多个所属市：'+cities.join('、')+'。请只保留本文件的所属市。')};
@@ -475,7 +537,7 @@
     var lines=[];
     Object.keys(a.byKey).forEach(function(key){a.byKey[key].forEach(function(r){
       var source=r.unitSource==='manual'?'人工指定':r.unitSource==='directory-evidence'?'通讯录证据订正':r.unitSource==='filename'?'文件名单位':r.unitSource==='directory'?'目录单位':'按该类成果清单匹配';
-      lines.push((TYPE_LABELS[key]||key)+' · '+r.city+' / '+r.district+' → '+r.unit+'（'+source+'）'+(r.note?'；'+r.note:''));
+      lines.push((TYPE_LABELS[key]||key)+' · '+r.city+' / '+r.district+' → '+r.unit+'（'+source+'）'+(r.note?'；'+r.note:'')+(r.directoryRelation==='merged-member'?'；'+r.directoryMessage:''));
     });});
     return lines.join('\n');
   }
@@ -736,7 +798,7 @@
         button.onclick=function(){
           if(assignments.canConfirmOutside){
             var description=[];Object.keys(assignments.byKey).forEach(function(k){assignments.byKey[k].forEach(function(r){description.push((TYPE_LABELS[k]||k)+' · '+r.city+' / '+r.district+' → '+r.unit);});});
-            if(!window.confirm('以下归属未列入对应成果的作业单位通讯录：\n\n'+description.join('\n')+'\n\n仅按以上信息归档，红色展示；不修改通讯录，不改变应交统计。确认继续？'))return;
+            if(!window.confirm('以下归属未列入对应成果的作业单位通讯录：\n\n'+description.join('\n')+'\n\n仅按以上信息归档，红色展示；不修改通讯录。确认继续？'))return;
             confirmOutside(item);
           }else{delete item.unlistedConfirmation;applyItemMetadata(item);}
           if(Q()&&Q().renderPreview)Q().renderPreview();
@@ -850,6 +912,7 @@
     inferSingleAssociation:inferSingleAssociation,
     unitEvidence:unitEvidence,unknownUnit:unknownUnit,
     directoryStatus:directoryStatus,directoryAttributes:directoryAttributes,confirmOutside:confirmOutside,
+    cleanDirectoryMessage:cleanDirectoryMessage,mergedDirectoryRows:mergedDirectoryRows,
     listForKey:listForKey,resolveAssignments:resolveAssignments,detectCompany:detectCompany,matchingDescription:matchingDescription,isResolved:isResolved,
     classifyItem:classifyItem,
     applyItemMetadata:applyItemMetadata,

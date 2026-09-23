@@ -40,6 +40,19 @@ with sync_playwright() as p:
           return {status:'passed',mode:'memory-only; no file upload',checks:['exact Yongnian name','explicit acknowledgement','red warning markup','normal matched type','roster immutable']};
         }""")
 
+        report['mergedDirectory']=page.evaluate("""()=>{
+          const C=SoilAdminAutoClassifier,before=JSON.stringify(SoilTaskUnitLists);
+          const covered=C.directoryStatus('soilType','邯郸市','河北向力规划设计有限公司','峰峰矿区');
+          const absent=C.directoryStatus('specialty','邯郸市','河北省农林科学院农业资源环境研究所','永年区');
+          if(covered.mismatch||covered.relation!=='merged-member'||!covered.message.includes('单独质控'))throw Error('Merged source scope missing');
+          if(!absent.mismatch||!absent.message.includes('备注也未明确包含'))throw Error('Uncovered task warning missing');
+          const links=Array.from(document.querySelectorAll('#tab-soilType .district-link')).filter(n=>n.textContent.includes('峰峰矿区'));
+          if(links.length!==1||links[0].classList.contains('directory-mismatch')||!links[0].title.includes('单独质控'))throw Error('Actual Fengfeng display wrong');
+          const texts=[document.body.innerText,...Array.from(document.querySelectorAll('[title],[aria-label]')).map(n=>(n.title||'')+(n.getAttribute('aria-label')||''))].join('\n');
+          if(/不计入(?:应交清单|应交|清单)?统计/.test(texts))throw Error('Removed wording leaked to UI');
+          if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Directory mutated');
+          return {status:'passed',fengfeng:covered.message,uncovered:absent.message,actualLinkTitle:links[0].title};
+        }""")
         tabs=page.locator('header .tabs .tab').all_text_contents()
         assert '工作记录' in tabs and len(tabs)>=9,tabs
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')
