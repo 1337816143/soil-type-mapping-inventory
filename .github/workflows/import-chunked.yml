@@ -349,4 +349,8 @@ jobs:
           SOURCE_BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          git push origin --delete "$SOURCE_BRANCH" || true
+          if [ "$(python3 scripts/retain-quality-originals.py)" = "keep" ]; then
+  echo "已保留原始上传暂存分支用于单位订正追溯：$SOURCE_BRANCH"
+else
+  git push origin --delete "$SOURCE_BRANCH" || true
+fi

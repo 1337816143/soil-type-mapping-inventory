@@ -23,6 +23,7 @@ jobs:
       - name: Verify report corrections and source boundaries
         run: |
           set -euo pipefail
+          python scripts/test-original-retention.py
           python scripts/test-unit-correction.py
           python scripts/test-incoming-unit-repair.py
           python scripts/verify-unit-repair.py
