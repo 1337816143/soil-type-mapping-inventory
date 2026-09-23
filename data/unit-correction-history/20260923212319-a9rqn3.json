@@ -1,0 +1,618 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 67,
+  "documentsChecked": 67,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/井陉县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_井陉县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北通烯科技有限公司/井陉矿区/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_井陉矿区_耕地质量等级评价_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_元氏县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_平山县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_新乐市_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_无极县_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_晋州市_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北通烯科技有限公司/栾城区/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_栾城区_耕地质量等级评价_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/正定县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_正定县_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/深泽县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_深泽县_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/灵寿县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_灵寿县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_藁城区_耕地质量等级评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_行唐县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_赞皇县_耕地质量等级评价_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北通烯科技有限公司/赵县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_赵县_耕地质量等级评价_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/石家庄市/河北通烯科技有限公司/高邑县/耕地质量评价质控_63_pdf/130100石家庄/石家庄市_高邑县_耕地质量等级评价_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/耕地质量评价质控_63_pdf/130181辛集市/石家庄市_辛集市_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/临漳县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_临漳县_耕地质量等级评价_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯郸市/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_合并区（复兴区等）_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/大名县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_大名县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/广平县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_广平县_耕地质量等级评价_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/成安县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_成安县_耕地质量等级评价_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/曲周县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_曲周县_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/武安市/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_武安市_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_涉县_耕地质量等级评价_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/磁县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_磁县_耕地质量等级评价_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/肥乡区/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_肥乡区_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯山区/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_邯山区_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_邱县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/馆陶县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_馆陶县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/魏县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_魏县_耕地质量等级评价_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/鸡泽县/耕地质量评价质控_63_pdf/130400邯郸市/邯郸市_鸡泽县_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/临城县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_临城县_耕地质量等级评价_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/临西县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_临西县_耕地质量等级评价_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/任泽区/耕地质量评价质控_63_pdf/130500邢台市/邢台市_任泽区_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/信都区/耕地质量评价质控_63_pdf/130500邢台市/邢台市_信都区_耕地质量等级评价_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/内丘县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_内丘县_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/南和区/耕地质量评价质控_63_pdf/130500邢台市/邢台市_南和区_耕地质量等级评价_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/南宫市/耕地质量评价质控_63_pdf/130500邢台市/邢台市_南宫市_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/威县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_威县_耕地质量等级评价_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/宁晋县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_宁晋县_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/巨鹿县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_巨鹿县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/平乡县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_平乡县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/广宗县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_广宗县_耕地质量等级评价_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/新河县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_新河县_耕地质量等级评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/柏乡县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_柏乡县_耕地质量等级评价_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/沙河市/耕地质量评价质控_63_pdf/130500邢台市/邢台市_沙河市_耕地质量等级评价_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/清河县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_清河县_耕地质量等级评价_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/襄都区/耕地质量评价质控_63_pdf/130500邢台市/邢台市_襄都区_耕地质量等级评价_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/隆尧县/耕地质量评价质控_63_pdf/130500邢台市/邢台市_隆尧县_耕地质量等级评价_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/东光县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_东光县_耕地质量等级评价_中友四达(北京)科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/任丘市/耕地质量评价质控_63_pdf/130900沧州市/沧州市_任丘市_耕地质量等级评价_河北利古工程勘察设计有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/吴桥县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_吴桥县_耕地质量等级评价_中友四达(北京)科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_沧县_耕地质量等级评价_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/河间市/耕地质量评价质控_63_pdf/130900沧州市/沧州市_河间市_耕地质量等级评价_河北利古工程勘察设计有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/耕地质量评价质控_63_pdf/130900沧州市/沧州市_泊头市_耕地质量等级评价_中友四达(北京)科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/海兴县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_海兴县_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北正态环境检测有限公司/献县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_献县_耕地质量等级评价_河北正态环境检测有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北正态环境检测有限公司/肃宁县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_肃宁县_耕地质量等级评价_河北正态环境检测有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/青县/耕地质量评价质控_63_pdf/130900沧州市/沧州市_青县_耕地质量等级评价_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/耕地质量评价质控_63_pdf/130900沧州市/沧州市_黄骅市_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/冀州区/耕地质量评价质控_63_pdf/131100衡水市/衡水市_冀州区_耕地质量等级评价_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/安平县/耕地质量评价质控_63_pdf/131100衡水市/衡水市_安平县_耕地质量等级评价_河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北玛恩农业科技有限公司/景县/耕地质量评价质控_63_pdf/131100衡水市/衡水市_景县_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/桃城区/耕地质量评价质控_63_pdf/131100衡水市/衡水市_桃城区_耕地质量等级评价_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北平普数政科技有限公司/武邑县/耕地质量评价质控_63_pdf/131100衡水市/衡水市_武邑县_耕地质量等级评价_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/饶阳县/耕地质量评价质控_63_pdf/131100衡水市/衡水市_饶阳县_耕地质量等级评价_河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
