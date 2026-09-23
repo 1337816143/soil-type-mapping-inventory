@@ -57,6 +57,7 @@ def check_report_tab_ui(page,out,prefix):
         expect(link).to_have_attribute('title',re.compile(kind))
     expect(page.locator('#tab-reports .upload-btn[data-data-key="reports"]')).to_have_count(1)
     for idx in [1,0]:
+        group.locator('.group-label').click()  # Reopen after the previous modal closed the menu.
         page.locator('#tab-reports a[href*="report-family-fixture-'+str(idx)+'"]').click()
         modal=page.locator('#soil-file-preview-modal');expect(modal).to_be_visible()
         expect(modal.locator('canvas') if idx==1 else modal.locator('.docx').first).to_be_visible(timeout=45000)
