@@ -1,0 +1,769 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 66,
+  "documentsChecked": 66,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧县/沧州市_沧县_土壤农业利用适宜性评价_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/青县/沧州市_青县_土壤农业利用适宜性评价_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/辛集市_土壤农业利用适宜性评价_成果质控_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/北京元图科技发展有限公司/东光县/适宜性评价-沧州市13个县区/沧州市_东光县_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "沧州市",
+          "district": "东光县",
+          "oldUnit": "北京元图科技发展有限公司",
+          "newUnit": "北京元图科技发展有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：中友四达（北京）科技有限公司；当前记录单位：北京元图科技发展有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北利古工程勘查设计有限公司/任丘市/适宜性评价-沧州市13个县区/沧州市_任丘市_土壤农业利用适宜性评价_河北利古工程勘查设计有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "沧州市",
+          "district": "任丘市",
+          "oldUnit": "河北利古工程勘查设计有限公司",
+          "newUnit": "河北利古工程勘查设计有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北利古工程勘察设计有限公司；当前记录单位：河北利古工程勘查设计有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/吴桥县/适宜性评价-沧州市13个县区/沧州市_吴桥县_土壤农业利用适宜性评价_中友四达（北京）科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北太维地理信息技术有限公司/孟村县/适宜性评价-沧州市13个县区/沧州市_孟村回族自治县_土壤农业利用适宜性评价_河北太维地理信息技术有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧县/适宜性评价-沧州市13个县区/沧州市_沧县_土壤农业利用适宜性评价_河北平普数政科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/沧州华江工程勘察设计有限公司/合并区/适宜性评价-沧州市13个县区/沧州市_沧州市合并区_土壤农业利用适宜性评价_沧州华江工程勘察设计有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/河间市/适宜性评价-沧州市13个县区/沧州市_河间市_土壤农业利用适宜性评价_河北利古工程勘察设计有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/适宜性评价-沧州市13个县区/沧州市_泊头市_土壤农业利用适宜性评价_中友四达（北京）科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/海兴县/适宜性评价-沧州市13个县区/沧州市_海兴县_土壤农业利用适宜性评价_河北玛恩农业科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北正态环境监测有限公司/献县/适宜性评价-沧州市13个县区/沧州市_献县_土壤农业利用适宜性评价_河北正态环境监测有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "沧州市",
+          "district": "献县",
+          "oldUnit": "河北正态环境监测有限公司",
+          "newUnit": "河北正态环境监测有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北正态环境检测有限公司；当前记录单位：河北正态环境监测有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北太维信息技术有限公司/盐山县/适宜性评价-沧州市13个县区/沧州市_盐山县_土壤农业利用适宜性评价_河北太维信息技术有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "沧州市",
+          "district": "盐山县",
+          "oldUnit": "河北太维信息技术有限公司",
+          "newUnit": "河北太维信息技术有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北太维地理信息技术有限公司；当前记录单位：河北太维信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北正太环境监测有限公司/萧宁县/适宜性评价-沧州市13个县区/沧州市_萧宁县_土壤农业利用适宜性评价_河北正太环境监测有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "沧州市",
+          "district": "萧宁县",
+          "oldUnit": "河北正太环境监测有限公司",
+          "newUnit": "河北正太环境监测有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“萧宁县”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/沧州市/河北平普数政科技有限公司/青县/适宜性评价-沧州市13个县区/沧州市_青县_土壤农业利用适宜性评价_河北平普数政科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/井陉县/适宜性评价-石家庄4个县区/石家庄市_井陉县_土壤农业利用适宜性评价_河北湛泸软件开发有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/正定县/适宜性评价-石家庄4个县区/石家庄市_正定县_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/适宜性评价-石家庄4个县区/石家庄市_藁城区_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/适宜性评价-石家庄4个县区/石家庄市_行唐县_土壤农业利用适宜性评价_河北湛泸软件开发有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京湛泸软件开发有限公司/元氏县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_元氏县_土壤农业利用适宜性评价_北京湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "石家庄市",
+          "district": "元氏县",
+          "oldUnit": "北京湛泸软件开发有限公司",
+          "newUnit": "北京湛泸软件开发有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北湛泸软件开发有限公司；当前记录单位：北京湛泸软件开发有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京湛泸软件开发有限公司/平山县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_平山县_土壤农业利用适宜性评价_北京湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "石家庄市",
+          "district": "平山县",
+          "oldUnit": "北京湛泸软件开发有限公司",
+          "newUnit": "北京湛泸软件开发有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北湛泸软件开发有限公司；当前记录单位：北京湛泸软件开发有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_新乐市_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_无极县_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_晋州市_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/深泽县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_深泽县_土壤农业利用适宜性评价_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京湛泸软件开发有限公司/灵寿县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_灵寿县_土壤农业利用适宜性评价_北京湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "石家庄市",
+          "district": "灵寿县",
+          "oldUnit": "北京湛泸软件开发有限公司",
+          "newUnit": "北京湛泸软件开发有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北湛泸软件开发有限公司；当前记录单位：北京湛泸软件开发有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/石家庄市/北京湛泸软件开发有限公司/赞皇县/适宜性评价-石家庄市/土壤适宜性质控-张慧/石家庄市_赞皇县_土壤农业利用适宜性评价_北京湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "石家庄市",
+          "district": "赞皇县",
+          "oldUnit": "北京湛泸软件开发有限公司",
+          "newUnit": "北京湛泸软件开发有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北湛泸软件开发有限公司；当前记录单位：北京湛泸软件开发有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/冀州区/适宜性评价-衡水市/衡水市_冀州区_土壤农业利用适宜性评价_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/安平县/适宜性评价-衡水市/衡水市_安平县_土壤农业利用适宜性评价_河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北玛恩农业科技有限公司/景县/适宜性评价-衡水市/衡水市_景县_土壤农业利用适宜性评价_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/桃城区/适宜性评价-衡水市/衡水市_桃城区_土壤农业利用适宜性评价_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北平普数政科技有限公司/武邑县/适宜性评价-衡水市/衡水市_武邑县_土壤农业利用适宜性评价_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/衡水市/河北德禹检测技术有限公司/饶阳县/适宜性评价-衡水市/衡水市_饶阳县_土壤农业利用适宜性评价_河北德禹检测技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/临城县/适宜性评价-邢台市18个县区/邢台市_临城县_土壤农业利用适宜性评价_天津市地质研究和海洋地质中心_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/临西县/适宜性评价-邢台市18个县区/邢台市_临西县_土壤农业利用适宜性评价_河北诚秀科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/仁泽区/适宜性评价-邢台市18个县区/邢台市_仁泽区_土壤农业利用适宜性评价_河北科沃生态科技有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邢台市",
+          "district": "仁泽区",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“仁泽区”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/信都区/适宜性评价-邢台市18个县区/邢台市_信都区_土壤农业利用适宜性评价_中国煤炭地质总局物测队_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北科沃科技生态有限公司/内丘县/适宜性评价-邢台市18个县区/邢台市_内丘县_土壤农业利用适宜性评价_河北科沃科技生态有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邢台市",
+          "district": "内丘县",
+          "oldUnit": "河北科沃科技生态有限公司",
+          "newUnit": "河北科沃科技生态有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北科沃生态科技有限公司；当前记录单位：河北科沃科技生态有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/南和区/适宜性评价-邢台市18个县区/邢台市_南和区_土壤农业利用适宜性评价_中国煤炭地质总局物测队_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限公司/南宫市/适宜性评价-邢台市18个县区/邢台市_南宫市_土壤农业利用适宜性评价_河北精鼎环境监测有限公司_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邢台市",
+          "district": "南宫市",
+          "oldUnit": "河北精鼎环境监测有限公司",
+          "newUnit": "河北精鼎环境监测有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北精鼎环境监测有限责任公司；当前记录单位：河北精鼎环境监测有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/威县/适宜性评价-邢台市18个县区/邢台市_威县_土壤农业利用适宜性评价_河北诚秀科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/宁晋县/适宜性评价-邢台市18个县区/邢台市_宁晋县_土壤农业利用适宜性评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/巨鹿县/适宜性评价-邢台市18个县区/邢台市_巨鹿县_土壤农业利用适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/平乡县/适宜性评价-邢台市18个县区/邢台市_平乡县_土壤农业利用适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/广宗县/适宜性评价-邢台市18个县区/邢台市_广宗县_土壤农业利用适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/新河县/适宜性评价-邢台市18个县区/邢台市_新河县_土壤农业利用适宜性评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/柏乡县/适宜性评价-邢台市18个县区/邢台市_柏乡县_土壤农业利用适宜性评价_天津市地质研究和海洋地质中心_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/沙河市/适宜性评价-邢台市18个县区/邢台市_沙河市_土壤农业利用适宜性评价_中国煤炭地质总局物测队_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北诚秀科技有限公司/清河县/适宜性评价-邢台市18个县区/邢台市_清河县_土壤农业利用适宜性评价_河北诚秀科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/襄都区/适宜性评价-邢台市18个县区/邢台市_襄都区_土壤农业利用适宜性评价_河北科沃生态科技有限公司_2026年第二次第1批.doc",
+      "associations": [],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/隆尧县/适宜性评价-邢台市18个县区/邢台市_隆尧县_土壤农业利用适宜性评价_中国煤炭地质总局物测队_2026年第二次第1批.doc",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邢台市",
+          "district": "隆尧县",
+          "oldUnit": "中国煤炭地质总局物测队",
+          "newUnit": "中国煤炭地质总局物测队",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：天津市地质研究和海洋地质中心；当前记录单位：中国煤炭地质总局物测队。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "error": "非可安全编辑的 PDF/DOCX 原格式"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/临漳县/适宜性评价-邯郸市/邯郸市_临漳县_土壤农业利用适宜性评价_成果质控_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯郸市/适宜性评价-邯郸市/邯郸市_合并区_土壤农业利用适宜性评价_河北科沃生态科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/大名县/适宜性评价-邯郸市/邯郸市_大名县_土壤农业利用适宜性评价_成果质控_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄兄弟土地环境技术服务有限公司/广平县/适宜性评价-邯郸市/邯郸市_广平县_土壤农业利用适宜性评价_石家庄兄弟土地环境技术服务有限公司_2026年第二次第1批.docx",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邯郸市",
+          "district": "广平县",
+          "oldUnit": "石家庄兄弟土地环境技术服务有限公司",
+          "newUnit": "石家庄兄弟土地环境技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄师兄弟土地环境技术服务有限公司；当前记录单位：石家庄兄弟土地环境技术服务有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/成安县/适宜性评价-邯郸市/邯郸市_成安县_土壤农业利用适宜性评价_成果质控_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/曲周县/适宜性评价-邯郸市/邯郸市_曲周县_土壤农业利用适宜性评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/武安市/适宜性评价-邯郸市/邯郸市_武安市_土壤农业利用适宜性评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北省农林科学院农业资源与环境研究所/永年区/适宜性评价-邯郸市/邯郸市_永年区_土壤农业利用适宜性评价_成果质控_河北省农林科学院农业资源与环境研究所_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邯郸市",
+          "district": "永年区",
+          "oldUnit": "河北省农林科学院农业资源与环境研究所",
+          "newUnit": "河北省农林科学院农业资源与环境研究所",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“永年区”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/适宜性评价-邯郸市/邯郸市_涉县_土壤农业利用适宜性评价成果质控表_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/磁县/适宜性评价-邯郸市/邯郸市_磁县_土壤农业利用适宜性评价_河北合众恩规划管理有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/适宜性评价-邯郸市/邯郸市_邱县_土壤农业利用适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/馆陶县/适宜性评价-邯郸市/邯郸市_馆陶县_土壤农业利用适宜性评价_石家庄商胜信息技术有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/石家庄兄弟土地环境技术服务有限公司/魏县/适宜性评价-邯郸市/邯郸市_魏县_土壤农业利用适宜性评价_石家庄兄弟土地环境技术服务有限公司_2026年第二次第1批.docx",
+      "associations": [
+        {
+          "dataKey": "agriSuitability",
+          "city": "邯郸市",
+          "district": "魏县",
+          "oldUnit": "石家庄兄弟土地环境技术服务有限公司",
+          "newUnit": "石家庄兄弟土地环境技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄师兄弟土地环境技术服务有限公司；当前记录单位：石家庄兄弟土地环境技术服务有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/鸡泽县/适宜性评价-邯郸市/邯郸市_鸡泽县_土壤农业利用适宜性评价_河北精鼎环境监测有限责任公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
