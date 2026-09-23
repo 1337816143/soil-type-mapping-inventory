@@ -1,0 +1,45 @@
+name: Review unit correction evidence v127
+on:
+  push:
+    branches: [fix/evidence-unit-repair-v1.2.7]
+    paths: [.github/workflows/review-unit-repair-v127.yml]
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Export source without credential and quality documents only
+        run: |
+          python - <<'PY'
+          import subprocess, zipfile, re, json
+          from pathlib import Path
+          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          listing=[]
+          with zipfile.ZipFile('/tmp/unit-review.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in names:
+                  p=Path(name)
+                  if not p.is_file(): continue
+                  listing.append({'path':name,'size':p.stat().st_size})
+                  if p.suffix.lower() in {'.js','.css','.html','.json','.py','.yml','.md'} or name=='VERSION':
+                      text=p.read_text(encoding='utf-8')
+                      if name=='upload-config.js':
+                          fake=','.join(str(ord(c)) for c in 'github_pat_'+'x'*82)
+                          text=re.sub(r'var tokenCodes = \[[^\]]+\]', 'var tokenCodes = ['+fake+']', text)
+                      z.writestr(name,text)
+                  elif p.suffix.lower() in {'.pdf','.docx','.doc'} and not name.startswith(('reference-files/','replies/','work-record-attachments/')):
+                      z.write(p,name)
+                  elif name.startswith('assets/') and p.suffix.lower() in {'.png','.jpg','.svg'}:
+                      z.write(p,name)
+              z.writestr('_review-tree.json',json.dumps(listing,ensure_ascii=False,indent=2))
+          print('Review files:',len(listing),'archive bytes:',Path('/tmp/unit-review.zip').stat().st_size)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unit-review-source-and-originals
+          path: /tmp/unit-review.zip
+          retention-days: 2
