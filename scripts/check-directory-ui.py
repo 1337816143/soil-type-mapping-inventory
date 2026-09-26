@@ -56,6 +56,10 @@ def check_directory_ui(page,out,prefix):
     expect(outside).to_have_attribute('data-directory-status','outside-list')
     expect(outside).to_have_attribute('title',__import__('re').compile('与作业单位通讯录不一致'))
     expect(outside).to_have_attribute('title',__import__('re').compile('2026年第二次第1批'))
+    # Real uploads may already exist here; use the normal expand control.
+    if not outside.is_visible():
+        outside.locator('xpath=ancestor::div[contains(concat(" ",normalize-space(@class)," ")," district-group ")][1]').locator('.group-label').click()
+    expect(outside).to_be_visible()
     outside.hover()
     assert outside.evaluate('(n)=>getComputedStyle(n).color')=='rgb(185, 28, 28)'
     # Dataset/type-specific: same company and county are red only for the wrong type.
