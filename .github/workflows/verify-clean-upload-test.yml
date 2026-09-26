@@ -1,0 +1,82 @@
+name: Verify and clean temporary upload test
+on:
+  push:
+    branches: [fix/upload-auth-v1.2.12]
+    paths: [.github/workflows/verify-clean-upload-test.yml]
+permissions:
+  contents: write
+  actions: write
+jobs:
+  verify-clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 3
+      - name: Verify actual reports and clean only the marked batch
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib,subprocess,urllib.request,urllib.parse,os
+          marker='UPLOAD_QA_20260926_0358'
+          index_path=Path('data/admin-import-index.json')
+          rows=json.loads(index_path.read_text())
+          selected=[r for r in rows if r.get('uploadId')==marker]
+          assert len(selected)==10, f'Expected 10 marked test rows; found {len(selected)}'
+          assert {r['dataKey'] for r in selected}=={'soilType','soilAttr','farmland','degradation','specialty','agriSuitability','landUse','reports'}
+          pdf='eaf3a426a0493eae9e3519941b5e484f5d0d24378af2a76c7e75ef5cbc1639b6'
+          docx='4d2296aa19d8962686e2ac539dbf863140c810b5b2404fc182b25ebd1a0b7d3c'
+          files=[r['path'] for r in selected]+['reference-files/third-soil-survey/'+marker+'_REF_临时上传测试.pdf']
+          assert len(set(files))==11
+          evidence={'mode':'real repository import and public file retrieval; frontend tested separately offline','files':[],'associations':selected}
+          for r in selected:
+              assert r['city']==r['district']=='沧州市'
+              assert r['unit']==('沧州华江工程勘察设计有限公司' if r['dataKey']=='soilType' else '河北平普数政科技有限公司')
+              assert r['directoryStatus']=='matched'
+          for name in files:
+              p=Path(name);expected=docx if p.suffix=='.docx' else pdf
+              entry={'path':name,'storedHashMatches':hashlib.sha256(p.read_bytes()).hexdigest()==expected}
+              assert entry['storedHashMatches'],name
+              try:
+                  url='https://raw.githubusercontent.com/'+os.environ['GITHUB_REPOSITORY']+'/main/'+urllib.parse.quote(name,safe='/')
+                  with urllib.request.urlopen(url,timeout=15) as r:body=r.read()
+                  entry['publicReadMatches']=hashlib.sha256(body).hexdigest()==expected
+              except Exception as e:entry['publicReadError']=str(e)[:200]
+              evidence['files'].append(entry)
+          other=[r for r in rows if r.get('uploadId')!=marker]
+          index_path.write_text(json.dumps(other,ensure_ascii=False,indent=2)+'\n')
+          assert json.loads(index_path.read_text())==other
+          for name in files:Path(name).unlink()
+          audit=Path('data/unit-correction-history')/(marker+'.json')
+          assert audit.is_file();audit.unlink()
+          allowed=set(files)|{str(audit),str(index_path)}
+          changed=set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))-{''}
+          assert changed==allowed,changed^allowed
+          assert not any(marker in str(r.get('path','')) for r in other)
+          evidence.update({'status':'verified-and-cleaned-locally','removedFiles':11,'removedAssociations':10,'remainingIndexRows':len(other),'otherRowsUnchanged':True,'changedPaths':sorted(changed)})
+          out=Path(os.environ['RUNNER_TEMP'])/'upload-qa-results';out.mkdir(exist_ok=True)
+          (out/'production-upload-verification.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2))
+          print(json.dumps({k:v for k,v in evidence.items() if k not in ('files','associations','changedPaths')},ensure_ascii=False))
+          PY
+      - name: Commit cleanup without rewriting concurrent changes
+        run: |
+          set -euo pipefail
+          git add -u
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test: remove verified temporary upload batch UPLOAD_QA_20260926_0358'
+          git push origin HEAD:main
+          git rev-parse HEAD > "$RUNNER_TEMP/upload-qa-results/cleanup-commit.txt"
+      - name: Refresh Pages after cleanup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/deploy.yml/dispatches" -f ref=main
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-upload-verification
+          path: ${{ runner.temp }}/upload-qa-results/
+          retention-days: 5
