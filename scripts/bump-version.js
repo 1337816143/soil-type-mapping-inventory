@@ -54,6 +54,7 @@ replace('app-version-guard.js', /\|\| 'v\d+\.\d+\.\d+'/, `|| '${next}'`);
 replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION = '${bare}';`);
 
 [
+  'assets/admin-input-guard.js',
   'glass-navigation.js',
   'batch-policy.js',
   'batch-management.js',

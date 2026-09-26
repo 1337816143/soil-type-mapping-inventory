@@ -534,9 +534,12 @@
 
   function intercept(event) {
     var button = event.target && event.target.closest && event.target.closest('#adm-ok');
-    if (!button || button.dataset.splitV2 !== '1' || busy) return;
+    if (!button) return;
+    if (busy || (Q() && Q().state && Q().state.busy)) { event.preventDefault(); event.stopImmediatePropagation(); return; }
+    if (button.dataset.splitV2 !== '1') return;
     event.preventDefault();
     event.stopImmediatePropagation();
+    delete button.dataset.splitV2;
     startHybridUpload();
   }
 

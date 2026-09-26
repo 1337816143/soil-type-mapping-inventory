@@ -253,3 +253,5 @@ const chipCount = (banner.innerHTML.match(/regional-progress-chip/g) || []).leng
 if (chipCount !== 8 || !banner.innerHTML.includes('区县')) fail('南北片区摘要渲染测试失败');
 
 console.log(`project validation passed (${version})`);
+
+require("./validate-upload-entry.js");
