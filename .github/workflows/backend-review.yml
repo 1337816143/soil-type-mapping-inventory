@@ -1,0 +1,32 @@
+name: Managed backend isolated review
+on:
+  pull_request:
+    branches: [main]
+    paths: ['backend-v2/**', '.github/workflows/backend-review.yml']
+permissions:
+  contents: read
+jobs:
+  backend-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build read-only contact-free task evidence
+        run: node backend-v2/scripts/build-directory.cjs .
+      - name: Test server access, upload, deletion and failure handling without production writes
+        run: node --test backend-v2/test/service.test.mjs
+      - name: Test original restore workflow code in disposable directories
+        run: python3 backend-v2/test/legacy-restore.py .
+      - name: Verify original business data are unchanged
+        run: git diff --exit-code -- index.html task-unit-mappings.js data replies upload-config.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: managed-backend-isolated-results
+          path: backend-v2/test-results/
+          retention-days: 7
