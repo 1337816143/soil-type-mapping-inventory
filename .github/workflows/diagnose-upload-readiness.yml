@@ -23,3 +23,14 @@ jobs:
           flags = {name: bool(os.environ.get(name, '').strip()) for name in names}
           print(json.dumps({'configured': flags, 'mode': 'presence-only; no values disclosed; no deployment or writes'}, ensure_ascii=False))
           PY
+      - uses: actions/checkout@v4
+        with:
+          ref: 029487ff594c06283c2e4328cc4773b534bfdcad
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/validate-embedded-token-live.js
+            upload-config.js
+          sparse-checkout-cone-mode: false
+      - name: Run existing upload service credential health check
+        timeout-minutes: 2
+        run: node scripts/validate-embedded-token-live.js
