@@ -45,6 +45,10 @@ def check_merged_directory_ui(page,out,prefix):
     expect(outside).to_have_attribute('title',re.compile('备注也未明确包含'))
     expect(outside).to_have_class(re.compile('directory-mismatch'))
     page.locator('[data-tab="specialty"]').click()
+    # New real reports can place this fixture inside a collapsed group.
+    if not outside.is_visible():
+        outside.locator('xpath=ancestor::div[contains(concat(" ",normalize-space(@class)," ")," district-group ")][1]').locator('.group-label').click()
+    expect(outside).to_be_visible()
     outside.hover()
     assert outside.evaluate('(n)=>getComputedStyle(n).color')=='rgb(185, 28, 28)'
     page.locator('#tab-specialty .city-section').filter(has_text='农业资源环境研究所').screenshot(path=str(out/(prefix+'-uncovered-red.png')))

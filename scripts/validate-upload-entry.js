@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const read=p=>fs.readFileSync(p,'utf8');
+const hooks={},context={window:{},document:{addEventListener:(n,f,c)=>{(hooks[n]||(hooks[n]=[])).push({f,c});}}};
+vm.runInNewContext(read('assets/admin-input-guard.js'),context);
+const normalize=context.window.SoilAdminInput.normalize;
+assert.strictEqual(normalize(' １２３４５６\n'),'123456');
+assert.strictEqual(normalize('123\u200b456'),'123456');
+assert.strictEqual(normalize('12 3456'),'12 3456');
+assert.strictEqual(normalize('incorrect'),'incorrect');
+assert(hooks.click[0].c===true);
+const prep=read('pptx-auto-split.js'),hybrid=read('hybrid-staged-upload.js'),ui=read('admin-import-v2.js'),loader=read('page-enhancements.js');
+assert(!prep.includes('b.click();delete b.dataset.splitV2'),'Do not clear preparation before asynchronous click handlers finish');
+assert(hybrid.includes('delete button.dataset.splitV2;\n    startHybridUpload();'),'Actual upload handler must consume the prepared marker');
+assert(prep.includes('needsZip?await load():null'),'Ordinary files must not require a ZIP CDN');
+assert(ui.includes('if(!Q.__v2UiInstalled||!document.getElementById'),'Delayed install cannot recreate an open editor');
+assert(loader.indexOf('assets/admin-input-guard.js')<loader.indexOf('reference-upload.js'));
+console.log('Upload entry state and formatting regression passed; authentication code unchanged.');
