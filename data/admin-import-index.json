@@ -9296,5 +9296,120 @@
     "listedUnits": [
       "石家庄商胜信息技术有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第三次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/黄骅市_土壤农业适宜性评价_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "name": "黄骅市_土壤农业适宜性评价_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "sourcePath": "黄骅市_土壤农业适宜性评价_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20260927165537-j5hoen",
+    "uploadedAt": "2026-09-27T08:55:40.180Z",
+    "city": "沧州市",
+    "unit": "河北玛恩农业科技有限公司",
+    "district": "黄骅市",
+    "dataKey": "agriSuitability",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北玛恩农业科技有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第三次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/黄骅市_土壤普工作报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "name": "黄骅市_土壤普工作报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "sourcePath": "黄骅市_土壤普工作报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20260927165537-j5hoen",
+    "uploadedAt": "2026-09-27T08:55:40.180Z",
+    "city": "沧州市",
+    "unit": "河北玛恩农业科技有限公司",
+    "district": "黄骅市",
+    "dataKey": "reports",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北玛恩农业科技有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第三次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/黄骅市_土壤普查总体报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "name": "黄骅市_土壤普查总体报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "sourcePath": "黄骅市_土壤普查总体报告_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "order": 3,
+    "complete": true,
+    "uploadId": "20260927165537-j5hoen",
+    "uploadedAt": "2026-09-27T08:55:40.180Z",
+    "city": "沧州市",
+    "unit": "河北玛恩农业科技有限公司",
+    "district": "黄骅市",
+    "dataKey": "reports",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北玛恩农业科技有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第三次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/黄骅市_土壤普查数据报告_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "name": "黄骅市_土壤普查数据报告_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "sourcePath": "黄骅市_土壤普查数据报告_河北玛恩农业科技有限公司_2026年第三次第1批.doc",
+    "order": 4,
+    "complete": true,
+    "uploadId": "20260927165537-j5hoen",
+    "uploadedAt": "2026-09-27T08:55:40.180Z",
+    "city": "沧州市",
+    "unit": "河北玛恩农业科技有限公司",
+    "district": "黄骅市",
+    "dataKey": "reports",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北玛恩农业科技有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/黄骅市_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "name": "黄骅市_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "sourcePath": "黄骅市_耕地质量等级评价_河北玛恩农业科技有限公司_2026年第三次第1批.docx",
+    "order": 5,
+    "complete": true,
+    "uploadId": "20260927165537-j5hoen",
+    "uploadedAt": "2026-09-27T08:55:40.180Z",
+    "city": "沧州市",
+    "unit": "河北玛恩农业科技有限公司",
+    "district": "黄骅市",
+    "dataKey": "farmland",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北玛恩农业科技有限公司"
+    ]
   }
 ]
