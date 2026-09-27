@@ -60,6 +60,12 @@
       '.regional-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:0}' +
       '.regional-progress-section{min-width:0;border:1px solid #ead8a5;border-radius:9px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(120,53,15,.04)}' +
       '.regional-progress-section>summary{display:grid;grid-template-columns:minmax(118px,.5fr) minmax(360px,1.5fr) auto;align-items:center;gap:9px;padding:9px 12px;cursor:pointer;list-style:none;background:#fffaf0;color:#78350f}' +
+      '.regional-progress-section.is-complete{border-color:#b8dfc4;background:#f0fdf4;box-shadow:0 1px 2px rgba(21,128,61,.06)}' +
+      '.regional-progress-section.is-complete>summary{background:#f0fdf4;color:#166534}' +
+      '.regional-progress-section.is-complete>summary:after{color:#15803d}' +
+      '.regional-progress-section.is-complete .regional-progress-chip{border-color:#ccebd5;background:rgba(255,255,255,.88)}' +
+      '.regional-progress-section.is-complete .regional-progress-chip span,.regional-progress-section.is-complete .regional-progress-chip strong{color:#166534}' +
+      '.regional-progress-section.is-complete .regional-progress-body{border-top-color:#ccebd5}' +
       '.regional-progress-section>summary::-webkit-details-marker{display:none}' +
       '.regional-progress-section>summary:after{content:"展开 ▾";font-size:.7rem;font-weight:700;white-space:nowrap;color:#a16207}' +
       '.regional-progress-section[open]>summary:after{content:"收起 ▴"}' +
@@ -318,8 +324,9 @@
   function renderRegion(regionKey, progress) {
     var cities = progress.cities.filter(function (city) { return city.region === regionKey; });
     var totals = progress.regions[regionKey];
-    var missingClass = totals.missingTasks ? 'missing' : 'complete';
-    return '<details class="regional-progress-section" data-region="' + regionKey + '">' +
+    var isComplete = totals.expTasks > 0 && totals.missingTasks === 0;
+    var missingClass = isComplete ? 'complete' : 'missing';
+    return '<details class="regional-progress-section' + (isComplete ? ' is-complete' : '') + '" data-region="' + regionKey + '">' +
       '<summary><span class="regional-progress-name">' + REGION_NAMES[regionKey] + '</span>' +
       '<span class="regional-progress-brief">' +
       progressChip('任务单元', totals.totalTasks + ' / ' + totals.expTasks, '') +
