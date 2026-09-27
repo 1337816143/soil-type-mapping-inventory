@@ -9411,5 +9411,51 @@
     "listedUnits": [
       "河北玛恩农业科技有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "管理员导入",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/管理员导入/邢台市/天津华勘检验测试有限公司/邢台市/市级土壤类型图/01_邢台市_土壤类型图市级成果质控报告.docx",
+    "name": "01_邢台市_土壤类型图市级成果质控报告.docx",
+    "sourcePath": "市级土壤类型图/01_邢台市_土壤类型图市级成果质控报告.docx",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20260927213701-trdxz0",
+    "uploadedAt": "2026-09-27T13:37:02.787Z",
+    "city": "邢台市",
+    "unit": "天津华勘检验测试有限公司",
+    "district": "邢台市",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "type-district-list",
+    "listedUnits": [
+      "天津华勘检验测试有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "管理员导入",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/管理员导入/沧州市/沧州华江工程勘察设计有限公司/沧州市/市级土壤类型图/02_沧州市_土壤类型图市级成果质控报告.docx",
+    "name": "02_沧州市_土壤类型图市级成果质控报告.docx",
+    "sourcePath": "市级土壤类型图/02_沧州市_土壤类型图市级成果质控报告.docx",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20260927213701-trdxz0",
+    "uploadedAt": "2026-09-27T13:37:02.787Z",
+    "city": "沧州市",
+    "unit": "沧州华江工程勘察设计有限公司",
+    "district": "沧州市",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "type-district-list",
+    "listedUnits": [
+      "沧州华江工程勘察设计有限公司"
+    ]
   }
 ]
