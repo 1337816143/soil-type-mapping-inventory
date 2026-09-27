@@ -1,0 +1,16 @@
+name = "soil-managed-upload"
+main = "worker.mjs"
+compatibility_date = "2026-09-01"
+workers_dev = true
+preview_urls = false
+
+[[durable_objects.bindings]]
+name = "SOIL_STATE"
+class_name = "SoilManagedState"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["SoilManagedState"]
+
+# GITHUB_UPLOAD_TOKEN and SOIL_ADMIN_PASSWORD must be entered as Worker secrets.
+# No secret, default password, account ID or frontend credential belongs here.
