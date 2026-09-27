@@ -1,0 +1,587 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 58,
+  "documentsChecked": 58,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/东光县/沧州市/沧州市_东光县_土地资源评价与利用报告_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/任丘市/沧州市/沧州市_任丘市_土地资源评价与利用报告_河北利古工程勘察设计有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/吴桥县/沧州市/沧州市_吴桥县_土地资源评价与利用报告_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北平普政科技有限公司/沧县/沧州市/沧州市_沧县_土地资源评价与利用报告_质控反馈_河北平普政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "landUse",
+          "city": "沧州市",
+          "district": "沧县",
+          "oldUnit": "河北平普政科技有限公司",
+          "newUnit": "河北平普政科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北平普数政科技有限公司；当前记录单位：河北平普政科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北利古工程勘察设计有限公司/河间市/沧州市/沧州市_河间市_土地资源评价与利用报告_河北利古工程勘察设计有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/沧州市/沧州市_泊头市_土地资源评价与利用报告_中友四达（北京）科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/海兴县/沧州市/沧州市_海兴县_土地资源评价与利用报告_河北玛恩农业科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北正态环境检测有限公司/献县/沧州市/沧州市_献县_土地资源评价与利用报告_河北正态环境检测有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北正态环境检测有限公司/肃宁县/沧州市/沧州市_肃宁县_土地资源评价与利用报告_河北正态环境检测有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北平普数政科技有限公司/青县/沧州市/沧州市_青县_土地资源评价与利用报告_河北平普数政科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/沧州市/河北玛恩农业科技有限公司/黄骅市/沧州市/沧州市_黄骅市_土地资源评价与利用报告_河北玛恩农业科技有限公司_2026年第二次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/井陉县/石家庄市/石家庄市_井陉县_土地资源评价与利用报告_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市/石家庄市_元氏县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市/石家庄市_平山县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/石家庄市/石家庄市_新乐市_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/石家庄市/石家庄市_无极县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/石家庄市/石家庄市_晋州市_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/正定县/石家庄市/石家庄市_正定县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/深泽县/石家庄市/石家庄市_深泽县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/灵寿县/石家庄市/石家庄市_灵寿县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/藁城区/石家庄市/石家庄市_藁城区_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/行唐县/石家庄市/石家庄市_行唐县_土地资源评价与利用报告_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市/石家庄市_赞皇县_土地资源评价与利用报告_作业单位未明_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/临城县/邯郸市、邢台市/邢台市_临城区_土地资源评价与利用报告_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北诚秀科技有限公司/临西县/邯郸市、邢台市/邢台市_临西县_土地资源评价与利用报告_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北云图数字科技有限公司/任泽区/邯郸市、邢台市/邢台市_任泽区_土地资源评价与利用报告_河北云图数字科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "landUse",
+          "city": "邢台市",
+          "district": "任泽区",
+          "oldUnit": "河北云图数字科技有限公司",
+          "newUnit": "河北云图数字科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北科沃生态科技有限公司；当前记录单位：河北云图数字科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/信都区/邯郸市、邢台市/邢台市_信都区_土地资源评价与利用报告_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/内丘县/邯郸市、邢台市/邢台市_内丘县_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/南和区/邯郸市、邢台市/邢台市_南和区_土地资源评价与利用报告_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/南宫市/邯郸市、邢台市/邢台市_南宫县_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/邢台市/邯郸市、邢台市/邢台市_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北诚秀科技有限公司/威县/邯郸市、邢台市/邢台市_威县_土地资源评价与利用报告_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/宁晋县/邯郸市、邢台市/邢台市_宁晋县_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/巨鹿县/邯郸市、邢台市/邢台市_巨鹿县_土地资源评价与利用报告_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/平乡县/邯郸市、邢台市/邢台市_平乡县_土地资源评价与利用报告_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/石家庄商胜信息技术有限公司/广宗县/邯郸市、邢台市/邢台市_广宗县_土地资源评价与利用报告_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北精鼎环境监测有限责任公司/新河县/邯郸市、邢台市/邢台市_新河县_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/柏乡县/邯郸市、邢台市/邢台市_柏乡县_土地资源评价与利用报告_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/中国煤炭地质总局物测队/沙河市/邯郸市、邢台市/邢台市_沙河县_土地资源评价与利用报告_中国煤炭地质总局物测队_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北诚秀科技有限公司/清河县/邯郸市、邢台市/邢台市_清河县_土地资源评价与利用报告_河北诚秀科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/襄都区/邯郸市、邢台市/邢台市_襄都区_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邢台市/天津市地质研究和海洋地质中心/隆尧县/邯郸市、邢台市/邢台市_隆尧县_土地资源评价与利用报告_天津市地质研究和海洋地质中心_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/临漳县/邯郸市、邢台市/邯郸市_临漳县_土地资源评价与利用报告_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄市商胜信息技术有限公司/大名县/邯郸市、邢台市/邯郸市_大名县_土地资源评价与利用报告_石家庄市商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "landUse",
+          "city": "邯郸市",
+          "district": "大名县",
+          "oldUnit": "石家庄市商胜信息技术有限公司",
+          "newUnit": "石家庄市商胜信息技术有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司；当前记录单位：石家庄市商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/广平县/邯郸市、邢台市/邯郸市_广平县_土地资源评价与利用报告_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/成安县/邯郸市、邢台市/邯郸市_成安县_土地资源评价与利用报告_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/曲周县/邯郸市、邢台市/邯郸市_曲周县_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/武安市/邯郸市、邢台市/邯郸市_武安市_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/邯郸市、邢台市/邯郸市_涉县_土地资源评价与利用报告_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/磁县/邯郸市、邢台市/邯郸市_磁县_土地资源评价与利用报告_河北合众恩规划管理有限公司_2026年第二次第1批-0f6d63fff50d.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/磁县/邯郸市、邢台市/邯郸市_磁县_土地资源评价与利用报告_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/肥乡区/邯郸市、邢台市/邯郸市_肥乡区_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯山区/邯郸市、邢台市/邯郸市_邯山区_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/邯郸市/邯郸市、邢台市/邯郸市_邯郸市合并区_土地资源评价与利用报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄市商胜信息技术有限公司/邱县/邯郸市、邢台市/邯郸市_邱县_土地资源评价与利用报告_石家庄市商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "landUse",
+          "city": "邯郸市",
+          "district": "邱县",
+          "oldUnit": "石家庄市商胜信息技术有限公司",
+          "newUnit": "石家庄市商胜信息技术有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司；当前记录单位：石家庄市商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄市商胜信息技术有限公司/馆陶县/邯郸市、邢台市/邯郸市_馆陶县_土地资源评价与利用报告_石家庄市商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "landUse",
+          "city": "邯郸市",
+          "district": "馆陶县",
+          "oldUnit": "石家庄市商胜信息技术有限公司",
+          "newUnit": "石家庄市商胜信息技术有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄商胜信息技术有限公司；当前记录单位：石家庄市商胜信息技术有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/魏县/邯郸市、邢台市/邯郸市_魏县_土地资源评价与利用报告_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土地资源评价与利用报告/2026年第二次第1批/邯郸市/河北精鼎环境监测有限责任公司/鸡泽县/邯郸市、邢台市/邯郸市_鸡泽县_土地资源评价与利用报告_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
