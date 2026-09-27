@@ -24,6 +24,7 @@ def check_report_tab_ui(page,out,prefix):
     before=page.evaluate('JSON.stringify(SoilTaskUnitLists)')
     original=page.evaluate("JSON.stringify(Object.fromEntries(Object.entries(tabData).filter(([k])=>k!=='reports')))")
     page.locator('[data-tab="reports"]').click()
+    baseline_empty=page.locator('#tab-reports .report-family-empty').count()
     expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('不上传任何报告原件')
     expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('合并出具为一份文件')
     expect(page.locator('#missingBanner .quality-admin-global').first).to_have_text('管理员导入质控意见')
@@ -72,9 +73,10 @@ def check_report_tab_ui(page,out,prefix):
         page.set_viewport_size({'width':1440,'height':1000});modal.locator('.soil-modal-close').click()
     page.locator('#missingBanner .soil-batch-download-trigger').click();modal=page.locator('#soil-batch-download-modal')
     expect(modal.locator('input[data-filter="resultType"][value="总体、工作、数据报告"]')).to_be_checked()
+    modal.locator('#soil-batch-search').fill('report-family-fixture-')
     expect(modal.locator('[data-batch-path]')).to_have_count(3)
-    modal.locator('#soil-batch-search').fill('数据报告');expect(modal.locator('[data-batch-path]')).to_have_count(1)
-    modal.locator('#soil-batch-search').fill('');expect(modal.locator('[data-batch-path]')).to_have_count(3)
+    modal.locator('#soil-batch-search').fill('report-family-fixture-2');expect(modal.locator('[data-batch-path]')).to_have_count(1)
+    modal.locator('#soil-batch-search').fill('report-family-fixture-');expect(modal.locator('[data-batch-path]')).to_have_count(3)
     modal.locator('#soil-batch-select-all').click()
     with page.expect_download(timeout=45000) as downloaded:modal.locator('#soil-batch-download').click()
     with zipfile.ZipFile(downloaded.value.path()) as z:
@@ -91,5 +93,7 @@ def check_report_tab_ui(page,out,prefix):
     page.evaluate('(paths)=>removeAdminQualityPaths(paths)',[x['path'] for x in entries]);page.unroute('**/*report-family-fixture-*',content)
     assert page.evaluate('JSON.stringify(SoilTaskUnitLists)')==before
     assert page.evaluate("JSON.stringify(Object.fromEntries(Object.entries(tabData).filter(([k])=>k!=='reports')))")==original
-    expect(page.locator('#tab-reports .report-family-empty')).to_be_visible();page.locator('[data-tab="soilType"]').click()
+    expect(page.locator('#tab-reports a[href*="report-family-fixture-"]')).to_have_count(0)
+    expect(page.locator('#tab-reports .report-family-empty')).to_have_count(baseline_empty)
+    page.locator('[data-tab="soilType"]').click()
     return {'status':'passed','checks':['three report names and other-list upload defaults','wrong admin password rejected','per-file labels within same batch','PDF.js and Word previews with zoom and mobile controls','public filtered ZIP download with three separate opinion files','persisted index replay and removal','report-scoped reply and delete entry','original tabs and rosters unchanged']}
