@@ -399,6 +399,7 @@
     var kind = selection && (selection.kind === 'quality' || selection.kind === 'reference') ? selection.kind : document.getElementById('adm-kind').value;
     if (kind === 'quality') {
       var fallbackDataKey = document.getElementById('adm-data-key').value;
+      if (typeof q.confirmQualityOnly === 'function' && !q.confirmQualityOnly(files, kind, fallbackDataKey)) return;
       var incomplete = files.filter(function (item) {
         var meta=itemMetadata(item);
         if(meta && meta.assignment)return !meta.assignment.complete;
