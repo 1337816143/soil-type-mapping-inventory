@@ -58,10 +58,10 @@
             return (unit.districts || []).some(function (district) { return (district.docs || []).length; });
           });
         });
-        html = '<section class="report-family-guide" aria-label="报告归档说明"><h2>总体、工作、数据报告</h2>' +
-          '<p>总体报告、工作报告、数据报告及对应质控意见统一存放于此。沿用其他成果的作业单位通讯录，按市、作业单位、任务单元和批次归档。</p>' +
-          '<p class="report-family-note">同一地区的三类报告分别保留文件，收缴进度按任务单元汇总。</p>' +
-          (empty ? '<p class="report-family-empty">暂未上传报告。请使用上方“管理员导入”添加文件；普通访问者可预览和批量下载已归档文件。</p>' : '') + '</section>' + html;
+        html = '<section class="report-family-guide" aria-label="报告质控意见归档说明"><h2>总体、工作、数据报告的质控意见</h2>' +
+          '<p>这里只存放总体报告、工作报告、数据报告对应的质控意见；不上传任何报告原件。沿用其他成果的作业单位通讯录，按市、作业单位、任务单元和批次归档。</p>' +
+          '<p class="report-family-note">三类报告的质控意见可以合并出具为一份文件，也可以分别出具。按实际收到的意见文件归档，不要求凑齐三份；收缴进度按任务单元汇总。</p>' +
+          (empty ? '<p class="report-family-empty">暂未上传该类质控意见。请使用上方“管理员导入质控意见”添加文件；普通访问者可预览和批量下载已归档的意见文件。</p>' : '') + '</section>' + html;
       }
       return html;
     };
@@ -163,7 +163,7 @@
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'quality-admin-global';
-    button.textContent = key === 'reports' ? '管理员导入报告 / 质控意见' : '管理员导入质控意见';
+    button.textContent = '管理员导入质控意见';
     button.dataset.key = key;
     button.addEventListener('click', function (event) {
       event.preventDefault();
