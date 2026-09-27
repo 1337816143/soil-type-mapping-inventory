@@ -60,7 +60,7 @@
   }
 
   function badCredentialMessage() {
-    return 'GitHub上传凭证已失效或被撤销，请更新有效的Fine-grained PAT。';
+    return '平台上传凭证未通过 GitHub 校验（HTTP 401），请联系平台维护人员处理。';
   }
 
   function checkToken(token) {
@@ -73,8 +73,16 @@
       }
     }).then(function (response) {
       if (response.status === 401) throw new Error(badCredentialMessage());
-      if (!response.ok) throw new Error('GitHub凭证校验失败：HTTP ' + response.status);
+      if (response.status === 403) throw new Error('GitHub上传校验被拒绝（HTTP 403），请联系平台维护人员检查权限或限流。');
+      if (response.status === 429) throw new Error('GitHub上传校验遇到限流（HTTP 429），请稍后重试。');
+      if (response.status >= 500) throw new Error('GitHub上传接口暂时不可用（HTTP ' + response.status + '），请稍后重试。');
+      if (!response.ok) throw new Error('GitHub上传校验失败：HTTP ' + response.status);
       return token;
+    }).catch(function (error) {
+      if (error && (error.name === 'TypeError' || error.name === 'AbortError')) {
+        throw new Error('无法连接 GitHub 上传接口，请检查网络后重试。' + (error.message ? '（' + error.message + '）' : ''));
+      }
+      throw error;
     });
   }
 
@@ -168,10 +176,7 @@
       validated = token;
       validatedAt = Date.now();
       return token;
-    }).catch(function () {
-      resetToDefaultToken();
-      return credentialModal(badCredentialMessage());
-    }) : credentialModal('尚未配置有效的GitHub上传凭证。')).finally(function () {
+    }) : Promise.reject(new Error('平台未配置上传凭证，请联系平台维护人员处理。'))).finally(function () {
       validating = null;
     });
     return validating;
@@ -470,7 +475,7 @@
 
       var token = getReplyUploadToken();
       if (!token) {
-        showToast('未配置GitHub上传凭证。', true);
+        showToast('平台未配置上传凭证，请联系平台维护人员处理。', true);
         return;
       }
 
@@ -530,7 +535,6 @@
   }
 
   function patchAvailableFunctions() {
-    addCredentialButton();
     wrapRepositoryRequests();
     installBatchRender();
     patchUploadModal();
