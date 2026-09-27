@@ -1,0 +1,8 @@
+{
+  "name":"soil-managed-upload-candidate",
+  "version":"0.1.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"test":"node --test test/*.test.mjs","check":"node --check worker.mjs && node --check policy.mjs && node --check client.mjs"},
+  "engines":{"node":">=22"}
+}
