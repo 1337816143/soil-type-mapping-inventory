@@ -58,7 +58,8 @@ def check_report_tab_ui(page,out,prefix):
         link=page.locator('#tab-reports a[href*="report-family-fixture-'+str(i)+'"]')
         expect(link).to_contain_text(kind);expect(link).not_to_have_class(re.compile('directory-mismatch'))
         expect(link).to_have_attribute('title',re.compile(kind))
-    expect(page.locator('#tab-reports .upload-btn[data-data-key="reports"]')).to_have_count(1)
+    reply_buttons=page.locator('#tab-reports .upload-btn[data-data-key="reports"][data-city="石家庄市"][data-unit="河北湛泸软件开发有限公司"][data-district="平山县"]')
+    assert reply_buttons.count()>=1,'Missing report-family reply upload for the selected task unit'
     for idx in [1,0]:
         group.locator('.group-label').click()  # Reopen after the previous modal closed the menu.
         page.locator('#tab-reports a[href*="report-family-fixture-'+str(idx)+'"]').click()
