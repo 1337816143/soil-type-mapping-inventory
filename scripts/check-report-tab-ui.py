@@ -85,7 +85,7 @@ def check_report_tab_ui(page,out,prefix):
         assert sorted(len(z.read(n)) for n in saved)==sorted(len(x) for x in buffers)
     modal.locator('.soil-modal-close').click();page.evaluate('refreshAllTabs()')
     expect(page.locator('#tab-reports a[href*="report-family-fixture-"]')).to_have_count(3)
-    page.locator('#tab-reports .district-group .group-label').click()
+    group.locator('.group-label').click()
     page.locator('#tab-reports').screenshot(path=str(out/(prefix+'-report-fixtures-display.png')))
     page.locator('#missingBanner .admin-delete-trigger').click()
     expect(page.locator('#soilAdminDelete')).to_have_class(re.compile('show'));expect(page.locator('#delete-pass')).to_be_visible()
