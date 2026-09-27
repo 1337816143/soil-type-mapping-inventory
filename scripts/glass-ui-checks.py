@@ -113,7 +113,7 @@ def check_report_tab_readonly(page, out, prefix):
     expect(page.locator('#tab-reports')).to_have_class('tab-content active')
     expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('沿用其他成果')
     expect(page.locator('#missingBanner h3')).to_contain_text('总体、工作、数据报告')
-    expect(page.locator('#missingBanner .quality-admin-global').first).to_contain_text('管理员导入报告')
+    expect(page.locator('#missingBanner .quality-admin-global').first).to_contain_text('管理员导入质控意见')
     expect(page.locator('#missingBanner .admin-delete-trigger')).to_be_visible()
     expect(page.locator('#missingBanner .soil-batch-download-trigger')).to_be_visible()
     result=page.evaluate("""()=>{

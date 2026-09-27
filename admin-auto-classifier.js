@@ -124,6 +124,9 @@
     return /模板|范本|指南|导引|规范|规程|编制要求|培训|参考资料|参考文件/.test(text) &&
       !/质控意见|审核意见|审查意见|复核意见/.test(text);
   }
+  function isReportOpinion(text) {
+    return /质控|质量控制|审核意见|审查意见|复核意见|反馈意见|检查意见/.test(normalize(text));
+  }
   function inferDataKeys(text) {
     text = normalize(text);
     var segments = text.split('/').filter(Boolean);
@@ -133,7 +136,7 @@
     }
     var keys = keysForSegment(text);
     if (keys.length) return keys;
-    if (isReportFamily(text) && !isReportReference(text)) return ['reports'];
+    if (isReportFamily(text) && isReportOpinion(text) && !isReportReference(text)) return ['reports'];
     if (/三普.*成果.*(?:质控|质量控制).*报告|第三次全国土壤普查.*成果.*(?:质控|质量控制).*报告|综合质控报告|成果综合质控/.test(text)) {
       return COMPREHENSIVE_KEYS.slice();
     }

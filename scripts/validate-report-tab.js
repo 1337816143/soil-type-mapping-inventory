@@ -13,8 +13,10 @@ for(const kind of titles)for(const city of C.listForKey('reports'))for(const uni
  verify(m.dataKeys.join()==='reports'&&m.assignment.complete&&i.unit===unit.unit&&i.city===city.city&&i.district===district,'Typed report assignment '+[city.city,district,kind]);
 }
 for(const text of ['总体、工作、数据报告','总体报告','工作报告','数据报告']){
- const {m}=item('石家庄市_平山县_'+text+'.docx');verify(m.assignment.complete,'Report without QC suffix');
+ verify(!C.inferDataKeys('石家庄市_平山县_'+text+'.docx').includes('reports'),'Report original must not be treated as quality opinion');
 }
+const combined=item('石家庄市_平山县_总体、工作、数据报告_质控意见_2026年第二次第1批.docx');
+verify(combined.m.dataKeys.join()==='reports'&&combined.m.assignment.complete,'One combined opinion file stays one report-family record');
 for(const text of ['总体报告模板.docx','工作报告编制指南.pdf','数据报告编制要求.pdf']){
  const {m}=item(text);verify(m.kind==='reference'&&!m.dataKeys.includes('reports'),'Do not move report references');
 }
@@ -41,6 +43,9 @@ const samples=titles.map((title,index)=>{
  verify(f.targetPath.includes('/总体、工作、数据报告/')&&!f.quality.shared,'New category path, not north shared path');
  return manifest;
 });
+const combinedManifest=w.__reportTestManifest([combined.i],'base','report-combined');
+verify(combinedManifest.files.length===1&&combinedManifest.files[0].quality.dataKeys.join()==='reports','Combined opinion creates one file and one report-family association');
+samples.push(combinedManifest);
 // An explicit overall report with the words 三普成果/质控报告 must not fall into north routing.
 let explicit=item('平山县三普成果总体报告质控报告.docx');
 verify(explicit.m.assignment.complete&&explicit.m.dataKeys.join()==='reports'&&!explicit.m.targets.length,'Report family not shared north');
