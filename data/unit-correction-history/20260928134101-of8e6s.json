@@ -1,0 +1,81 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 4,
+  "documentsChecked": 4,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧州市/沧州市_土壤类型图_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "沧州市",
+          "district": "沧州市",
+          "oldUnit": "河北平普数政科技有限公司",
+          "newUnit": "河北平普数政科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：沧州华江工程勘察设计有限公司；当前记录单位：河北平普数政科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第二次第1批/辛集市/石家庄师兄弟土地环境技术服务有限公司/辛集市/辛集市_土壤类型图_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/邢台市/邢台市_土壤类型图_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邢台市",
+          "district": "邢台市",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：天津华勘检验测试有限公司；当前记录单位：河北科沃生态科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第二次第1批/邯郸市/石家庄师兄弟土地环境技术服务有限公司/成安县/邯郸市_成安县_土壤类型图_石家庄师兄弟土地环境技术服务有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "邯郸市",
+          "district": "成安县",
+          "oldUnit": "石家庄师兄弟土地环境技术服务有限公司",
+          "newUnit": "石家庄师兄弟土地环境技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北鑫发地理信息工程有限公司；当前记录单位：石家庄师兄弟土地环境技术服务有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    }
+  ]
+}
