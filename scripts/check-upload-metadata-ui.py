@@ -9,7 +9,9 @@ def check_upload_metadata_ui(page,out,prefix):
     errors=[]
     def on_error(e): errors.append(str(e))
     page.on('pageerror',on_error)
-    manifests=[];writes=[];file_sizes=[];committed=[]
+    manifests=[];writes=[];file_sizes=[];committed=[];dialogs=[]
+    def on_dialog(d): dialogs.append(d.message);d.dismiss()
+    page.on('dialog',on_dialog)
     def api(route):
         request=route.request;url=urllib.parse.urlsplit(request.url);path=url.path
         data=request.post_data_json if request.method not in ('GET','HEAD') else {}
@@ -40,10 +42,9 @@ def check_upload_metadata_ui(page,out,prefix):
         page.locator('#adm-files').set_input_files([{'name':n,'mimeType':'application/pdf','buffer':b'%PDF-1.4 fixture\n'+b'0'*(size-len(b'%PDF-1.4 fixture\n'))} for n in names])
         page.wait_for_timeout(200)
     def states():
-        return page.evaluate('SoilAdminImport.state.files.map(i=>({name:i.file.name,key:i.manualDataKey,keys:i.autoMeta.dataKeys,complete:i.autoMeta.assignment&&i.autoMeta.assignment.complete,report:i.autoMeta.reportOpinion,city:i.city,unit:i.unit,district:i.district,batch:i.batch}))')
+        return page.evaluate('SoilAdminImport.state.files.map(i=>({name:i.file.name,key:i.manualDataKey,keys:i.autoMeta.dataKeys,complete:i.autoMeta.assignment&&i.autoMeta.assignment.complete,city:i.city,unit:i.unit,district:i.district,batch:i.batch}))')
     def click_upload():
         page.locator('#adm-pass').fill(page.evaluate('SoilAdminImport.PASS'))
-        page.once('dialog',lambda d:d.accept())
         page.locator('#adm-ok').click()
         expect(page.locator('#soilAdminImport')).not_to_have_class(re.compile(r'\bshow\b'),timeout=40000)
     try:
@@ -75,26 +76,19 @@ def check_upload_metadata_ui(page,out,prefix):
         names=[d+'_总体、工作、数据报告_2026年第二次第1批.pdf' for d in districts]
         names[0]='元氏县_总体、工作、数据报告-河北湛泸软件开发有限公司_2026年第二次第1批.pdf'
         open_tab('reports');pick(names)
-        assert len(states())==16 and all(s['keys']==['reports'] and not s['complete'] for s in states())
-        expect(page.locator('.confirm-report-opinions')).to_contain_text('16')
-        page.once('dialog',lambda d:d.dismiss());page.locator('.confirm-report-opinions').click()
-        assert all(not s['complete'] for s in states()),'Cancel must not confirm any report'
-        page.once('dialog',lambda d:d.accept());page.locator('.confirm-report-opinions').click()
-        assert all(s['complete'] and s['report']['confirmed'] for s in states())
-        page.locator('#soilAdminImport .adm-card').screenshot(path=str(out/(prefix+'-report-upload-confirmed.png')))
-        # Revocation is effective; a revised selection must not reuse approval.
-        page.locator('.confirm-report-opinion').first.click()
-        assert not states()[0]['complete']
-        page.once('dialog',lambda d:d.accept());page.locator('.confirm-report-opinion').first.click()
+        assert len(states())==16 and all(s['keys']==['reports'] and s['complete'] for s in states())
+        expect(page.locator('.confirm-report-opinion,.confirm-report-opinions')).to_have_count(0)
+        assert '成果原件' not in page.locator('#soilAdminImport').inner_text()
+        page.locator('#soilAdminImport .adm-card').screenshot(path=str(out/(prefix+'-report-upload-ready.png')))
         click_upload()
         assert len(committed)==1 and len(manifests[-1]['files'])==16
-        assert all(f['quality']['dataKeys']==['reports'] and f['quality']['opinionConfirmation']['kind']=='quality-opinion' for f in manifests[-1]['files'])
+        assert all(f['quality']['dataKeys']==['reports'] and 'opinionConfirmation' not in f['quality'] for f in manifests[-1]['files'])
         assert all(f['quality']['complete'] for f in manifests[-1]['files'])
-        # Renamed opinion files are immediately valid and don't inherit guards.
+        # Renaming and reselecting work without carrying any approval state.
         open_tab('reports');pick([names[0].replace('数据报告-','数据报告质控意见-')])
-        assert states()[0]['complete'] and not states()[0]['report']['required']
+        assert states()[0]['complete']
         pick([names[0]])
-        assert not states()[0]['complete'] and not states()[0]['report']['confirmed']
+        assert states()[0]['complete']
         page.locator('#soilAdminImport .adm-close').click()
         # Screenshot 2: the file says PROPERTY mapping, not TYPE mapping.
         name='黄骅市_土壤属性制图_河北玛恩农业科技有限公司_2026年第三次第1批.pdf'
@@ -112,8 +106,9 @@ def check_upload_metadata_ui(page,out,prefix):
         assert 32*1024*1024 in file_sizes
         assert page.evaluate('JSON.stringify(SoilTaskUnitLists)')==original
         assert not errors,errors
+        assert not dialogs,dialogs
         (out/(prefix+'-upload-metadata-staged-manifests.json')).write_text(json.dumps(manifests,ensure_ascii=False,indent=2))
-        return {'status':'passed','mode':'mock GitHub APIs; no production writes','submissions':2,'reportBatch':16,'attributeBytes':32*1024*1024,'checks':['visible required type','precise missing-field error','no incomplete writes','editable rows after preparation','type selected before files','report acknowledgement cancel/confirm/revoke','renaming/reselection resets guard','16-file batch manifest','32 MiB actual upload event chain','third round and correct property roster','directory unchanged']}
+        return {'status':'passed','mode':'mock GitHub APIs; no production writes','submissions':2,'reportBatch':16,'attributeBytes':32*1024*1024,'checks':['visible required type','precise missing-field error','no incomplete writes','editable rows after preparation','type selected before files','no document-nature dialogs','marker-free reports upload directly','renaming/reselection needs no approval','16-file batch manifest','32 MiB actual upload event chain','third round and correct property roster','directory unchanged']}
     except Exception:
         diagnostic={'progress':page.locator('#adm-text').inner_text(),'states':states(),'errors':errors,'requests':writes,'stagedManifestCount':len(manifests),'committedBranches':committed,'fileSizes':file_sizes}
         (out/(prefix+'-upload-metadata-failure.json')).write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2))
@@ -122,6 +117,7 @@ def check_upload_metadata_ui(page,out,prefix):
     finally:
         page.unroute(pattern,api)
         page.remove_listener('pageerror',on_error)
+        page.remove_listener('dialog',on_dialog)
         # Only disposable state was touched; uploaded file index remains mocked.
         if page.locator('#soilAdminImport.show').count():page.locator('#soilAdminImport .adm-close').click()
         page.locator('[data-tab="soilType"]').click()
