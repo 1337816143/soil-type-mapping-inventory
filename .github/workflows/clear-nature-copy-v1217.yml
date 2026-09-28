@@ -1,0 +1,40 @@
+name: Clear obsolete upload nature copy
+on:
+  push:
+    branches: [fix/remove-nature-gate-v1.2.17]
+    paths: [.github/workflows/clear-nature-copy-v1217.yml]
+permissions:
+  contents: write
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Remove stale banner and assert absence in browser regression
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          assert Path('VERSION').read_text().strip()=='v1.2.17'
+          def replace(name,old,new):
+              p=Path(name);s=p.read_text();assert old in s,name;p.write_text(s.replace(old,new))
+          replace('admin-import-v2.js','只导入质控意见，不上传任何成果原件。','自动归档与预览')
+          replace('scripts/validate-upload-metadata.js','qualityOpinionConfirmation|不上传任何报告原件/','qualityOpinionConfirmation|不上传任何(?:报告|成果)原件/')
+          replace('scripts/check-upload-metadata-ui.py',"        expect(page.locator('.confirm-report-opinion,.confirm-report-opinions')).to_have_count(0)","        expect(page.locator('.confirm-report-opinion,.confirm-report-opinions')).to_have_count(0)\n        assert '成果原件' not in page.locator('#soilAdminImport').inner_text()")
+          PY
+          node --check admin-import-v2.js
+          node scripts/validate-upload-metadata.js
+          node scripts/validate-project.js
+          git diff --check
+          git diff --quiet -- task-unit-mappings.js data replies assets upload-config.js
+      - name: Commit copy and regression assertions only
+        run: |
+          test "$GITHUB_REF_NAME" = 'fix/remove-nature-gate-v1.2.17'
+          git add admin-import-v2.js scripts/validate-upload-metadata.js scripts/check-upload-metadata-ui.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: remove obsolete document-nature warning from upload banner'
+          git push origin HEAD:fix/remove-nature-gate-v1.2.17
