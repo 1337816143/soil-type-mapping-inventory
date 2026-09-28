@@ -146,6 +146,8 @@ with sync_playwright() as p:
             import runpy
             report_ui=runpy.run_path(str(ROOT/'scripts/check-report-tab-ui.py'))['check_report_tab_ui'](page,OUT,engine)
             (OUT/(engine+'-report-tab-ui.json')).write_text(json.dumps(report_ui,ensure_ascii=False,indent=2))
+            recognition_ui=runpy.run_path(str(ROOT/'scripts/check-upload-recognition-ui.py'))['check_upload_recognition_ui'](page,OUT,engine)
+            (OUT/(engine+'-upload-recognition-ui.json')).write_text(json.dumps(recognition_ui,ensure_ascii=False,indent=2))
             assignment_ui=runpy.run_path(str(ROOT/'scripts/check-assignment-ui.py'))['check_assignment_ui'](page,OUT,engine)
             (OUT/(engine+'-assignment-ui-report.json')).write_text(json.dumps(assignment_ui,ensure_ascii=False,indent=2))
             directory_ui=runpy.run_path(str(ROOT/'scripts/check-directory-ui.py'))['check_directory_ui'](page,OUT,engine)

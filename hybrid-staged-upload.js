@@ -215,6 +215,7 @@
         var meta = itemMetadata(item);
         var dataKeys = kind === 'quality' ? itemDataKeys(item, dataKey) : [];
         if(kind==='quality' && meta && meta.assignment && !meta.assignment.complete)throw new Error(classifier.matchingDescription(meta));
+        if(kind==='quality' && classifier && classifier.qualityContentError){var contentError=classifier.qualityContentError(item,meta);if(contentError)throw new Error(item.file.name+'：'+contentError);}
         var shared = kind === 'quality' ? sharedInspection(item, dataKeys) : null;
         var targetPath = shared && router ?
           uniquePath(router.sharedStoragePath(item.file.name, item.batch || '管理员导入'), used) :
@@ -405,7 +406,7 @@
         if(meta && meta.assignment)return !meta.assignment.complete;
         return !isSharedItem(item) && (!itemDataKeys(item, fallbackDataKey).length || !item.city || !item.unit || !item.district);
       });
-      if (incomplete.length && !confirm('有 ' + incomplete.length + ' 个文件归档信息不完整，请核对并补充归属信息。是否继续保存？')) return;
+      if (incomplete.length) { progress('归属信息尚未完整：'+incomplete.slice(0,5).map(function(item){var meta=itemMetadata(item);return item.file.name+'：'+(classifier&&meta?classifier.matchingDescription(meta):'请补齐成果类型、市、作业单位和任务单元。');}).join('\n'),0); return; }
       try {
         files.forEach(function (item) { if (isSharedItem(item)) sharedInspection(item, itemDataKeys(item, fallbackDataKey)); });
       } catch (error) {

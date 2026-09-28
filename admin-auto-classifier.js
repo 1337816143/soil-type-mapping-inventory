@@ -102,7 +102,7 @@
   }
 
   function keysForSegment(segment) {
-    segment = normalize(segment);
+    segment = normalize(segment).replace(/\s+/g, '');
     var keys = [];
     var rules = [
       ['specialty', /土特产品(?:土壤)?适宜性|特色(?:农)?产品.*适宜性|特色产品/],
@@ -110,15 +110,15 @@
       ['landUse', /土地资源评价与利用报告|土地资源评价|土地利用评价/],
       ['farmland', /耕地质量(?:等级)?评价|耕地质量等级|耕地质量评价|耕评|耕地等级/],
       ['degradation', /土壤退化|退化与障碍|障碍分析|障碍因素/],
-      ['soilAttr', /土壤属性图|土壤属性成果|属性图成果|属性图/],
-      ['soilType', /土壤类型图|土壤类型成果|土类图|类型图成果/]
+      ['soilAttr', /土壤属性(?:制图|图件|图|成果)|属性图成果|属性制图|属性图/],
+      ['soilType', /土壤类型(?:制图|图件|图|成果)|土类图|类型图成果/]
     ];
     rules.forEach(function (rule) { if (rule[1].test(segment)) keys.push(rule[0]); });
     return unique(keys);
   }
 
   function isReportFamily(text) {
-    return /总体报告|工作报告|数据报告/.test(normalize(text));
+    return /总体报告|工作报告|数据报告/.test(normalize(text).replace(/\s+/g, ''));
   }
   function isReportReference(text) {
     return /模板|范本|指南|导引|规范|规程|编制要求|培训|参考资料|参考文件/.test(text) &&
@@ -126,6 +126,37 @@
   }
   function isReportOpinion(text) {
     return /质控|质量控制|审核意见|审查意见|复核意见|反馈意见|检查意见/.test(normalize(text));
+  }
+  var opinionConfirmations = new WeakMap();
+  function qualityContentStatus(item, meta) {
+    meta = meta || item.autoMeta || {};
+    if (meta.kind !== 'quality') return {required:false, blocked:false};
+    var name = normalize(basename(item.file && item.file.name || item.path || '')).replace(/\s+/g, '');
+    var keys = meta.dataKeys || [];
+    var blocked = /报告原件|成果原件|报告原文|成果原文|报告正文|报告完整版|非质控意见|非质量控制意见/.test(name) ||
+      isReportReference(name);
+    if (blocked) return {required:false, blocked:true, message:'文件名明确标示为报告原件或参考资料；本入口只接收质控意见，请核对并选择正确文件。'};
+    // A report title, a date, or a parent folder called 质控 does not prove that
+    // the bytes are an opinion. Obtain explicit confirmation, never auto-approve.
+    var required = keys.indexOf('reports') >= 0 && !isReportOpinion(name);
+    if (!required) return {required:false, blocked:false};
+    var association = meta.assignment && meta.assignment.byKey || {};
+    var signature = JSON.stringify([item.path || '',item.sourcePath || '',keys,meta.batch || item.batch || '',
+      Object.keys(association).map(function(k){return association[k].map(function(r){return [k,r.city,r.unit,r.district];});})]);
+    var confirmed = !!item.file && opinionConfirmations.get(item.file) === signature;
+    return {required:true, blocked:false, confirmed:confirmed, signature:signature,
+      message:confirmed?'已确认文件内容为质控意见（非报告原件）。':'归属已识别；文件名未注明“质控意见”，开始上传时须确认内容为质控意见，而非报告原件。'};
+  }
+  function confirmQualityContent(files) {
+    (files || []).forEach(function(item){
+      var meta=applyItemMetadata(item),review=qualityContentStatus(item,meta);
+      if(review.blocked || !isResolved(item,meta))throw new Error(review.blocked?review.message:matchingDescription(meta));
+      if(review.required)opinionConfirmations.set(item.file,review.signature);
+    });
+  }
+  function qualityContentError(item, meta) {
+    var review=qualityContentStatus(item,meta);
+    return review.blocked || review.required&&!review.confirmed ? review.message : '';
   }
   function inferDataKeys(text) {
     text = normalize(text);
@@ -506,12 +537,15 @@
     var company=companySignal(item), byKey={}, problems=[], filename=basename(item.file&&item.file.name||item.path||'');
     var context=[item.sourcePath,item.path].filter(Boolean).join(' / '), manual=item.manualAssociation;
     keys.forEach(function(key){byKey[key]=[];});
-    if (!keys.length) problems.push(issue('','missing-type','尚未识别成果类型，请使用完整成果名称或人工选择成果类型。'));
+    if (!keys.length || keys.some(function(k){return !TYPE_LABELS[k];})) problems.push(issue('','missing-type','未识别成果类型；请在本条文件右侧的“成果类型”中选择，或补充文件名中的成果名称。'));
     if (company.names.length>1) problems.push(issue('','multiple-companies','识别到多个不同公司：'+company.names.join('；')+'。请明确本文件作业单位；联合体请使用清单中的完整单位名称。'));
     if (company.unparsed) problems.push(issue('','unparsed-company','检测到公司名称，但未能完整提取。请以“_公司全称_”单独分隔，避免默认为清单单位。'));
     if (manual) {
       problems=[];
-      if (!keys.length || !manual.city || !manual.unit || !manual.district) problems.push(issue('','manual-incomplete','人工调整尚未填写完整，请选择成果类型、市、作业单位和任务单元。'));
+      var missing=[];
+      if(!keys.length || keys.some(function(k){return !TYPE_LABELS[k];}))missing.push('成果类型');
+      if(!manual.city)missing.push('市');if(!manual.unit)missing.push('作业单位');if(!manual.district)missing.push('任务单元');
+      if (missing.length) problems.push(issue('','manual-incomplete','尚缺：'+missing.join('、')+'。请在本条文件右侧补齐'+(missing.indexOf('成果类型')>=0?'“成果类型”等对应项':'对应项')+'；已填信息已保留。'));
       else keys.forEach(function(key){byKey[key]=[{dataKey:key,city:manual.city,unit:manual.unit,district:manual.district,unitSource:'manual'}];});
     } else if (!problems.length) {
       keys.forEach(function(key){
@@ -597,6 +631,13 @@
     var text = [item.sourcePath, item.path, file && file.name].filter(Boolean).join(' / ');
     var fileName = basename(file && file.name || item.path || '');
     var keys = exact ? exact.dataKeys.slice() : item.manualDataKey ? [item.manualDataKey] : inferDataKeys(text);
+    // Within an explicitly opened quality importer, identify a report family
+    // provisionally even if its name omits 质控意见. Upload still needs the
+    // separate, file-bound content confirmation below. Generic files get no
+    // silent fallback from whichever global dropdown happened to be selected.
+    var state=Q()&&Q().state;
+    if (!exact && !keys.length && isReportFamily(fileName) && !isReportReference(fileName) &&
+        (currentMode()==='quality' || state&&state.context&&state.context.kind==='quality')) keys=['reports'];
     var kind = exact ? exact.kind : inferKind(text, keys);
     var batch = exact ? exact.batch : (inferBatch(text) || String(item.batch && item.batch !== '管理员导入' ? item.batch : ''));
     var targets = exact ? exact.targets.slice() : [];
@@ -666,7 +707,7 @@
   function isResolved(item, meta) {
     if (!meta || meta.kind === 'unknown') return false;
     if (meta.kind !== 'quality') return true;
-    if (meta.assignment) return meta.assignment.complete;
+    if (meta.assignment) return meta.assignment.complete && meta.dataKeys.every(function(k){return !!TYPE_LABELS[k];});
     if (!meta.dataKeys.length) return false;
     if (meta.targets.length) return meta.unresolvedTargets.length === 0;
     return !!(item && item.city && item.unit && item.district);
@@ -765,7 +806,13 @@
     }
     var kindText = state.kind === 'quality' ? '质控意见' : state.kind === 'reference' ? '参考资料' : state.kind === 'mixed' ? '混合类型' : '未识别';
     var matchText = state.catalogMatched ? '；' + state.catalogMatched + ' 份命中北部28份登记表' : '';
-    var reviewText = state.unresolved ? '；仍有 ' + state.unresolved + ' 份需要人工检查' : '；全部已自动识别，无需手动指定';
+    var contentReviews=(Q()&&Q().state&&Q().state.files||[]).map(function(item,index){return qualityContentStatus(item,state.metas[index]);});
+    var blocked=contentReviews.filter(function(r){return r.blocked;}).length;
+    var pending=contentReviews.filter(function(r){return r.required&&!r.confirmed;}).length;
+    var manualCount=(Q()&&Q().state&&Q().state.files||[]).filter(function(item){return item.manualDataKey||item.manualAssociation;}).length;
+    var reviewText = state.unresolved ? '；仍有 ' + state.unresolved + ' 份归属信息需要补齐' : '；归属信息完整'+(manualCount?'（含人工指定）':'');
+    if(blocked)reviewText+='；'+blocked+' 份文件需更换为质控意见';
+    else if(pending)reviewText+='；'+pending+' 份文件将在上传前单独确认内容';
     summary.innerHTML = '<strong>自动识别：</strong>' + kindText + (state.batch ? ' · ' + state.batch : '') + ' · ' + typeSummary(state.metas) + matchText + reviewText +
       '<div class="auto-import-actions"><button type="button" data-auto-import-toggle="1">' + (manualMode ? '恢复自动模式' : '显示人工调整') + '</button></div>';
     var button = summary.querySelector('[data-auto-import-toggle]');
@@ -806,6 +853,11 @@
       } else {
         text = '自动识别信息不足，请展开人工调整。';
         className = 'warn';
+      }
+      var contentReview=qualityContentStatus(item,meta);
+      if(contentReview.blocked || contentReview.required){
+        text+='\n'+contentReview.message;
+        if(contentReview.blocked || !contentReview.confirmed)className='warn';
       }
       status.textContent = text;
       status.className = className;
@@ -930,6 +982,7 @@
     inferBatch:inferBatch,
     inferDataKeys:inferDataKeys,
     inferKind:inferKind,
+    qualityContentStatus:qualityContentStatus,confirmQualityContent:confirmQualityContent,qualityContentError:qualityContentError,
     inferSingleAssociation:inferSingleAssociation,
     unitEvidence:unitEvidence,unknownUnit:unknownUnit,
     directoryStatus:directoryStatus,directoryAttributes:directoryAttributes,confirmOutside:confirmOutside,
