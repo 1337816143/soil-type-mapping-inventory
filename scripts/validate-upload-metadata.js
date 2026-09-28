@@ -76,7 +76,7 @@ for(const i of [raw,renamed.item,attr.item,unknown.item,explicit.item,stale.item
 check(manifests[2].files[0].quality.dataKeys.join()==='soilAttr'&&manifests[2].files[0].quality.batch==='2026年第三次第1批','Alias and batch reach actual upload manifest');
 assert.throws(()=>w.__metadataManifest([incomplete.item],'base','bad'),/成果类型/);count++;
 for(const path of ['admin-auto-classifier.js','admin-import-v2.js','admin-import-v2-bridge.js','hybrid-staged-upload.js','dashboard-extension.js']){
- check(!/reportOpinionState|confirmReportOpinion|confirmQualityOnly|confirm-report-opinion|qualityOpinionConfirmation|不上传任何报告原件/.test(fs.readFileSync(path,'utf8')),'No retired nature guard in '+path);
+ check(!/reportOpinionState|confirmReportOpinion|confirmQualityOnly|confirm-report-opinion|qualityOpinionConfirmation|不上传任何(?:报告|成果)原件/.test(fs.readFileSync(path,'utf8')),'No retired nature guard in '+path);
 }
 check(JSON.stringify(w.SoilTaskUnitLists)===roster&&JSON.stringify(records)===original,'Directories and existing associations unchanged');
 check(hashes.master==='ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52'&&hashes.mapping==='00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8','Original roster hash');

@@ -78,6 +78,7 @@ def check_upload_metadata_ui(page,out,prefix):
         open_tab('reports');pick(names)
         assert len(states())==16 and all(s['keys']==['reports'] and s['complete'] for s in states())
         expect(page.locator('.confirm-report-opinion,.confirm-report-opinions')).to_have_count(0)
+        assert '成果原件' not in page.locator('#soilAdminImport').inner_text()
         page.locator('#soilAdminImport .adm-card').screenshot(path=str(out/(prefix+'-report-upload-ready.png')))
         click_upload()
         assert len(committed)==1 and len(manifests[-1]['files'])==16
