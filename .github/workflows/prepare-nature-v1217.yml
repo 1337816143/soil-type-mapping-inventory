@@ -1,0 +1,64 @@
+name: Prepare document-nature removal v1217
+on:
+  push:
+    branches: [fix/remove-nature-gate-v1.2.17]
+    paths: [.github/workflows/prepare-nature-v1217.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply and verify bounded source changes
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,runpy,hashlib,subprocess
+          token=re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group()
+          runpy.run_path('.github/apply-nature-v1217.py',run_name='__main__')
+          assert token==re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group()
+          expected={
+            'admin-auto-classifier.js':'d8a0a2f6b6c7bcae1bea82e4ba8521c108e410e45e24f1299be44beed5d9bde0',
+            'admin-import-v2.js':'7ed433e79cf7437ce869ef49a7b5fc97f49fff49cb946c81114dc17e5b3ea234',
+            'admin-import-v2-bridge.js':'d4b6347ea450df91ebbfd5cf1fe1fa9f71f4291ea8b536726cfbad1742fe5d56',
+            'hybrid-staged-upload.js':'61a02ec47e449019acb2aad899cfc18fdfdbe49c9376c3b8543b9578f18a5747',
+            'dashboard-extension.js':'4205192cfe918f41ebddbb3d726242ae481378e8a1bb531c3aaf6f27c8d47ca0',
+            'scripts/check-upload-metadata-ui.py':'27597c598ca4f821652fc883adf346f7c274406896404bf3197f792791ab2c71',
+            'scripts/test-live-workspace.py':'662617a5924859f0efb9286a2ac86223ae5609c96632d908e26db4e63830fb4a',
+            'scripts/validate-upload-metadata.js':'09ed6b721ddbf4b372d4a2a72bad171eb83a35a813b3ff570c8c8fce640f7a4c'
+          }
+          for path,sha in expected.items():assert hashlib.sha256(Path(path).read_bytes()).hexdigest()==sha,path
+          allowed={'CHANGELOG.md','MAINTENANCE_RULES.md','VERSION','admin-auto-classifier.js','admin-import-v2.js','admin-import-v2-bridge.js','app-release-ui.js','app-version-guard.js','dashboard-extension.js','docs/UPLOAD_METADATA_FIX.md','hybrid-staged-upload.js','index.html','page-enhancements.js','scripts/check-report-tab-ui.py','scripts/check-upload-metadata-ui.py','scripts/test-live-workspace.py','scripts/validate-report-tab.js','upload-config.js'}
+          changed=set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))-{''}
+          assert changed<=allowed,changed-allowed
+          print('Expected source verified; original rosters, data and credentials untouched')
+          PY
+          node --check admin-auto-classifier.js
+          node --check admin-import-v2.js
+          node --check admin-import-v2-bridge.js
+          node --check hybrid-staged-upload.js
+          node scripts/validate-project.js
+          node scripts/validate-auto-import-classifier.js
+          node scripts/validate-workspace.js
+          git diff --quiet -- task-unit-mappings.js data replies assets work-records.js work-records-core.js regional-progress-dashboard.js
+      - name: Commit ordinary source files on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'fix/remove-nature-gate-v1.2.17'
+          git rm .github/apply-nature-v1217.py
+          git add -u
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: v1.2.17 remove redundant document-nature checks'
+          git push origin HEAD:fix/remove-nature-gate-v1.2.17
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: direct-upload-unit-results
+          path: test-artifacts/upload-metadata*.json
+          retention-days: 5
