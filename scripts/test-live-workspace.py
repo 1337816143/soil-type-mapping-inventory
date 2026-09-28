@@ -53,6 +53,18 @@ with sync_playwright() as p:
           if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Directory mutated');
           return {status:'passed',fengfeng:covered.message,uncovered:absent.message,actualLinkTitle:links[0].title};
         }""")
+        report['uploadMetadata']=page.evaluate(r"""()=>{
+          const C=SoilAdminAutoClassifier,before=JSON.stringify(SoilTaskUnitLists);
+          if(C.inferDataKeys('黄骅市_土壤属性制图_河北玛恩农业科技有限公司_2026年第三次第1批.pdf').join()!=='soilAttr')throw Error('Property-mapping alias failed');
+          const name='元氏县_总体、工作、数据报告-河北湛泸软件开发有限公司_2026年第二次第1批.pdf';
+          const item={file:{name,size:16,lastModified:1},path:name,sourcePath:name,manualDataKey:'reports'};
+          let m=C.applyItemMetadata(item);
+          if(m.assignment.complete||!m.reportOpinion.required)throw Error('Unmarked report requires attestation');
+          C.confirmReportOpinion(item);m=C.applyItemMetadata(item);
+          if(!m.assignment.complete||item.unit!=='河北湛泸软件开发有限公司')throw Error('Attested opinion metadata failed');
+          if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Roster mutated');
+          return {status:'passed',mode:'disposable memory only',checks:['property mapping alias','unmarked report protected','attestation resolves known report','other roster remains unchanged']};
+        }""")
         tabs=page.locator('header .tabs .tab').all_text_contents()
         assert '工作记录' in tabs and len(tabs)>=9,tabs
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')

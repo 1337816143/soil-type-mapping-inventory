@@ -258,6 +258,7 @@
         if(kind==='quality' && meta && meta.assignment && meta.assignment.complete){
           record.quality.associationsByDataKey=meta.assignment.byKey;
           record.quality.assignmentVersion=2;
+          if(meta.reportOpinion && meta.reportOpinion.confirmed)record.quality.opinionConfirmation=Object.assign({},item.qualityOpinionConfirmation);
           record.quality.complete=true;
         }
         return record;
@@ -399,6 +400,7 @@
     var kind = selection && (selection.kind === 'quality' || selection.kind === 'reference') ? selection.kind : document.getElementById('adm-kind').value;
     if (kind === 'quality') {
       var fallbackDataKey = document.getElementById('adm-data-key').value;
+      if (typeof q.validateQualityMetadata === 'function' && !q.validateQualityMetadata(files)) return;
       if (typeof q.confirmQualityOnly === 'function' && !q.confirmQualityOnly(files, kind, fallbackDataKey)) return;
       var incomplete = files.filter(function (item) {
         var meta=itemMetadata(item);

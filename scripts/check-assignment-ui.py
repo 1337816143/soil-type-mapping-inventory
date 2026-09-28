@@ -37,7 +37,7 @@ def check_assignment_ui(page,out,prefix):
     expect(first.locator('.rc')).to_have_value('沧州市')
     expect(first.locator('.ru')).to_have_value('')
     expect(first.locator('.rd')).to_have_value('')
-    expect(statuses.nth(0)).to_contain_text('人工调整尚未填写完整')
+    expect(statuses.nth(0)).to_contain_text('尚未填写：作业单位、任务单元。')
     assert page.evaluate('SoilAdminAutoClassifier.lastSelection.unresolved')==1
     first.locator('.ru').select_option('河北司南测绘服务有限公司')
     expect(first.locator('.rc')).to_have_value('沧州市')
