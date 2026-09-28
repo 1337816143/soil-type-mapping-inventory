@@ -53,6 +53,21 @@ with sync_playwright() as p:
           if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Directory mutated');
           return {status:'passed',fengfeng:covered.message,uncovered:absent.message,actualLinkTitle:links[0].title};
         }""")
+        page.evaluate("openSoilAdminImport({kind:'quality',dataKey:'reports'})")
+        report['uploadRecognition']=page.evaluate(r"""()=>{
+          const C=SoilAdminAutoClassifier,before=JSON.stringify(SoilTaskUnitLists);
+          const names=['元氏县_总体、工作、数据报告-河北湛泸软件开发有限公司_2026年第二次第1批.pdf','黄骅市_土壤属性制图_河北玛恩农业科技有限公司_2026年第三次第1批.pdf'];
+          const items=names.map(name=>({file:new File(['read-only fixture'],name,{type:'application/pdf'}),path:name,sourcePath:name}));
+          const metas=items.map(i=>C.applyItemMetadata(i));
+          if(metas[0].dataKeys.join()!=='reports'||!metas[0].assignment.complete||items[0].unit!=='河北湛泸软件开发有限公司')throw Error('Screenshot report classification');
+          if(metas[1].dataKeys.join()!=='soilAttr'||!metas[1].assignment.complete||items[1].batch!=='2026年第三次第1批')throw Error('Screenshot attribute classification');
+          if(!C.qualityContentError(items[0],metas[0]))throw Error('Missing separate content confirmation');
+          SoilAdminImport.normalizePreparedFiles(items);SoilAdminImport.renderPreview();
+          if(document.querySelectorAll('#adm-list .rk').length!==2)throw Error('Missing per-file category controls');
+          if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Roster changed');
+          return {status:'passed',mode:'memory-only; no upload',keys:metas.map(m=>m.dataKeys),thirdRound:items[1].batch,contentConfirmationRequired:true};
+        }""")
+        page.locator('#soilAdminImport .adm-close').click()
         tabs=page.locator('header .tabs .tab').all_text_contents()
         assert '工作记录' in tabs and len(tabs)>=9,tabs
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')

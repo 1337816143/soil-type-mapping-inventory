@@ -8,6 +8,8 @@ code='\n'.join(line[10:] if line.startswith('          ') else line for line in 
 fixtures=json.loads((ROOT/'test-artifacts/assignment-manifests.json').read_text())
 extra=ROOT/'test-artifacts/report-tab-manifests.json'
 if extra.exists():fixtures+=json.loads(extra.read_text())
+recognition=ROOT/'test-artifacts/upload-recognition-manifests.json'
+if recognition.exists():fixtures+=json.loads(recognition.read_text())
 checks=0
 for fixture in fixtures:
     with tempfile.TemporaryDirectory() as directory:
