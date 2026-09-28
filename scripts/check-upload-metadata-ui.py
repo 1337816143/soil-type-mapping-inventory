@@ -114,6 +114,11 @@ def check_upload_metadata_ui(page,out,prefix):
         assert not errors,errors
         (out/(prefix+'-upload-metadata-staged-manifests.json')).write_text(json.dumps(manifests,ensure_ascii=False,indent=2))
         return {'status':'passed','mode':'mock GitHub APIs; no production writes','submissions':2,'reportBatch':16,'attributeBytes':32*1024*1024,'checks':['visible required type','precise missing-field error','no incomplete writes','editable rows after preparation','type selected before files','report acknowledgement cancel/confirm/revoke','renaming/reselection resets guard','16-file batch manifest','32 MiB actual upload event chain','third round and correct property roster','directory unchanged']}
+    except Exception:
+        diagnostic={'progress':page.locator('#adm-text').inner_text(),'states':states(),'errors':errors,'requests':writes,'stagedManifestCount':len(manifests),'committedBranches':committed,'fileSizes':file_sizes}
+        (out/(prefix+'-upload-metadata-failure.json')).write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2))
+        page.locator('#soilAdminImport .adm-card').screenshot(path=str(out/(prefix+'-upload-metadata-failure.png')))
+        raise
     finally:
         page.unroute(pattern,api)
         page.remove_listener('pageerror',on_error)
