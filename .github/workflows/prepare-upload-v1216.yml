@@ -1,0 +1,69 @@
+name: Prepare upload metadata v1216
+on:
+  push:
+    branches: [fix/upload-metadata-v1.2.16]
+    paths: [.github/workflows/prepare-upload-v1216.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply and verify bounded changes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re,runpy,hashlib,subprocess
+          token=re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group()
+          runpy.run_path('.github/apply-upload-v1216.py',run_name='__main__')
+          assert token==re.search(r'var tokenCodes = \[[^\]]+\]',Path('upload-config.js').read_text()).group()
+          expected={
+            'admin-auto-classifier.js':'a97d97170fe47844518de61bf7b80a3ed30250e2c9f1eb0171b6d10555411a04',
+            'admin-import-v2.js':'5fc7abf7c9300dc524f3bda950702f9efa7b47b0dcdc19d99786fd7252ea15d8',
+            'hybrid-staged-upload.js':'11a4a776388d8b2f61d236074df3d85f26cd1dce9cb140ecd0fc8f377c81c70c',
+            'pptx-auto-split.js':'7ef1e547cee2a4262ec05951fd9fd1c556089634f4508a8decbf64b513d6eb2c',
+            'scripts/test-live-workspace.py':'aaa64eccd9586a192faed5bf5cd84fb943576a0eabe480e1eea5f6ae2cf3c7bb',
+            'scripts/test-workspace-browser.py':'d9bad5c8812dc90eef6f56a5a850fee626dab350962c02c0f8daec3dfda2bd2a',
+            'scripts/check-assignment-ui.py':'a43ae4866988fc62ccc0c13e5f93986bb2a97e38585a5b696d126fae5557d2dd',
+            'scripts/validate-upload-metadata.js':'ae8cc495b04326c3fc0e32bb0e0a7a2f7e5f44545f35b1e4e3bddbcb396bd065',
+            'scripts/check-upload-metadata-ui.py':'3e80e8abd518a1994852ba2cc28790ce5d8c42783cef73022d610a416c107317'
+          }
+          for path,sha in expected.items():assert hashlib.sha256(Path(path).read_bytes()).hexdigest()==sha,path
+          allowed={'CHANGELOG.md','MAINTENANCE_RULES.md','VERSION','admin-auto-classifier.js','admin-import-v2.js','app-release-ui.js','app-version-guard.js','hybrid-staged-upload.js','index.html','page-enhancements.js','pptx-auto-split.js','scripts/check-assignment-ui.py','scripts/test-live-workspace.py','scripts/test-workspace-browser.py','scripts/validate-auto-import-classifier.js','upload-config.js'}
+          changed=set(subprocess.check_output(['git','diff','--name-only','-z']).decode().split('\0'))-{''}
+          assert changed<=allowed,changed-allowed
+          print('Exact source checksums verified; original rosters, data and credentials preserved')
+          PY
+          node --check admin-auto-classifier.js
+          node --check admin-import-v2.js
+          node --check hybrid-staged-upload.js
+          node --check pptx-auto-split.js
+          node scripts/validate-project.js
+          node scripts/validate-upload-metadata.js
+          node scripts/validate-auto-import-classifier.js
+          node scripts/validate-workspace.js
+          git diff --quiet -- task-unit-mappings.js data replies assets work-records.js work-records-core.js regional-progress-dashboard.js
+      - name: Commit tested source on feature branch only
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'fix/upload-metadata-v1.2.16'
+          git rm .github/apply-upload-v1216.py
+          git add -u
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: v1.2.16 explicit upload types and report opinion confirmation'
+          git push origin HEAD:fix/upload-metadata-v1.2.16
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: upload-metadata-unit-results
+          path: test-artifacts/upload-metadata*.json
+          retention-days: 5
