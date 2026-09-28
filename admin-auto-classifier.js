@@ -124,9 +124,6 @@
     return /模板|范本|指南|导引|规范|规程|编制要求|培训|参考资料|参考文件/.test(text) &&
       !/质控意见|审核意见|审查意见|复核意见/.test(text);
   }
-  function isReportOpinion(text) {
-    return /质控|质量控制|审核意见|审查意见|复核意见|反馈意见|检查意见/.test(normalize(text));
-  }
   function inferDataKeys(text) {
     text = normalize(text);
     var segments = text.split('/').filter(Boolean);
@@ -136,38 +133,11 @@
     }
     var keys = keysForSegment(text);
     if (keys.length) return keys;
-    if (isReportFamily(text) && isReportOpinion(text) && !isReportReference(text)) return ['reports'];
+    if (isReportFamily(text) && !isReportReference(text)) return ['reports'];
     if (/三普.*成果.*(?:质控|质量控制).*报告|第三次全国土壤普查.*成果.*(?:质控|质量控制).*报告|综合质控报告|成果综合质控/.test(text)) {
       return COMPREHENSIVE_KEYS.slice();
     }
     return [];
-  }
-
-  // A filename is evidence of category, not proof of document content. Keep
-  // unmarked report originals unresolved until the administrator attests that
-  // the selected file is actually a quality opinion. Do not rename its bytes.
-  function reportOpinionState(item, dataKeys) {
-    item=item||{};
-    var file=item.file||{}, name=basename(file.name||item.path||'');
-    var inferred=inferDataKeys(name), keys=dataKeys||inferred;
-    var relevant=keys.indexOf('reports')>=0 || (!inferred.length && isReportFamily(name) && !isReportReference(name));
-    var required=relevant && !isReportOpinion(name);
-    var signature=JSON.stringify([name,Number(file.size||0),Number(file.lastModified||0),normalize(item.sourcePath||item.path||'')]);
-    var saved=item.qualityOpinionConfirmation;
-    return {required:required,confirmed:!!(required && saved && saved.signature===signature && saved.kind==='quality-opinion'),signature:signature};
-  }
-  function confirmReportOpinion(item) {
-    var state=reportOpinionState(item,item.autoMeta&&item.autoMeta.dataKeys);
-    if(!state.required)return false;
-    item.qualityOpinionConfirmation={kind:'quality-opinion',signature:state.signature,confirmedAt:new Date().toISOString()};
-    applyItemMetadata(item);return true;
-  }
-  function askReportOpinions(items) {
-    if(!items.length)return;
-    if(!window.confirm('请打开并核对所选 '+items.length+' 份文件的实际内容。\n\n文件必须是总体、工作、数据报告的质控意见，不得为报告原件。\n文件名未写“质控意见”并不代表内容已通过检查。\n\n确认这些文件均为质控意见后继续？'))return;
-    items.forEach(confirmReportOpinion);
-    var q=Q();if(q&&q.renderPreview)q.renderPreview();
-    refresh();
   }
 
   function inferKind(text, dataKeys) {
@@ -627,9 +597,6 @@
     var text = [item.sourcePath, item.path, file && file.name].filter(Boolean).join(' / ');
     var fileName = basename(file && file.name || item.path || '');
     var keys = exact ? exact.dataKeys.slice() : Object.prototype.hasOwnProperty.call(TYPE_LABELS,item.manualDataKey) ? [item.manualDataKey] : inferDataKeys(text);
-    // Do not reuse a dropdown's default type for an unrecognized filename.
-    // Report candidates have a known category but require content attestation.
-    if(!exact && !keys.length && currentMode()==='quality' && isReportFamily(text) && !isReportReference(text))keys=['reports'];
     var kind = exact ? exact.kind : inferKind(text, keys);
     var batch = exact ? exact.batch : (inferBatch(text) || String(item.batch && item.batch !== '管理员导入' ? item.batch : ''));
     var targets = exact ? exact.targets.slice() : [];
@@ -649,11 +616,6 @@
     if (kind === 'quality' && targets.length) shared = resolveShared(targets, keys, fileName);
     else if (kind === 'quality') association = inferSingleAssociation(text, keys);
     var assignment = kind === 'quality' && !exact ? resolveAssignments(item,keys,targets) : null;
-    var reportOpinion=reportOpinionState(item,keys);
-    if(assignment && reportOpinion.required && !reportOpinion.confirmed){
-      assignment.issues.unshift(issue('reports','report-opinion-unconfirmed','文件名未明确标注质控意见。请核对文件内容；确为意见文件可点“确认是质控意见”，报告原件请移除。'));
-      assignment.complete=false;assignment.canConfirmOutside=false;
-    }
     if(assignment){
       var assigned=[];Object.keys(assignment.byKey).forEach(function(k){assigned=assigned.concat(assignment.byKey[k]);});
       association=assignment.complete && assigned.length && assigned.every(function(r){return r.city===assigned[0].city&&r.unit===assigned[0].unit&&r.district===assigned[0].district;}) ? assigned[0] : null;
@@ -670,7 +632,6 @@
     result.targets = targets;
     result.association = association;
     result.assignment = assignment;
-    result.reportOpinion = reportOpinion;
     result.associations = shared.associations || [];
     result.unresolvedTargets = shared.unresolved || [];
     result.expectedSha256 = String(result.expectedSha256 || '');
@@ -809,12 +770,6 @@
       '<div class="auto-import-actions"><button type="button" data-auto-import-toggle="1">' + (manualMode ? '恢复自动模式' : '显示人工调整') + '</button></div>';
     var button = summary.querySelector('[data-auto-import-toggle]');
     if (button) button.onclick = function () { manualMode = !manualMode; if(!manualMode){var q=Q();if(q&&q.state)q.state.manualDataKey='';(q&&q.state&&q.state.files||[]).forEach(function(item){delete item.manualAssociation;delete item.manualDataKey;});} refresh(); var current=Q();if(current&&typeof current.renderPreview==='function')current.renderPreview(); };
-    var pending=(Q()&&Q().state&&Q().state.files||[]).filter(function(item){var info=item.autoMeta&&item.autoMeta.reportOpinion;return info&&info.required&&!info.confirmed;});
-    if(pending.length>1){
-      var confirmButton=document.createElement('button');confirmButton.type='button';confirmButton.className='confirm-report-opinions';
-      confirmButton.textContent='确认这'+pending.length+'份为质控意见';confirmButton.onclick=function(){askReportOpinions(pending);};
-      summary.querySelector('.auto-import-actions').appendChild(confirmButton);
-    }
     setManualFieldsVisible(manualMode || state.unresolved > 0 || state.kind === 'mixed');
   }
 
@@ -857,13 +812,6 @@
       var assignments=meta.assignment, hasMismatch=assignments&&Object.keys(assignments.byKey).some(function(k){return assignments.byKey[k].some(function(r){return r.directoryStatus&&r.directoryStatus!=='matched';});});
       row.classList.toggle('directory-mismatch-preview',!!hasMismatch);
       if(hasMismatch)status.title='与作业单位通讯录不一致';else status.removeAttribute('title');
-      var prior=row.querySelector('.confirm-report-opinion');if(prior)prior.remove();
-      if(meta.reportOpinion&&meta.reportOpinion.required){
-        var reportButton=document.createElement('button');reportButton.type='button';reportButton.className='confirm-report-opinion';
-        reportButton.textContent=meta.reportOpinion.confirmed?'撤销质控意见确认':'确认是质控意见';
-        reportButton.onclick=function(){if(meta.reportOpinion.confirmed){delete item.qualityOpinionConfirmation;applyItemMetadata(item);if(Q()&&Q().renderPreview)Q().renderPreview();refresh();}else askReportOpinions([item]);};
-        row.querySelector('.v2-file').appendChild(reportButton);
-      }
       var oldButton=row.querySelector('.confirm-outside-task');if(oldButton)oldButton.remove();
       if(assignments && (assignments.canConfirmOutside || assignments.hasOutside&&assignments.complete)){
         var button=document.createElement('button');button.type='button';button.className='confirm-outside-task';
@@ -982,7 +930,6 @@
     inferBatch:inferBatch,
     inferDataKeys:inferDataKeys,
     inferKind:inferKind,
-    reportOpinionState:reportOpinionState,confirmReportOpinion:confirmReportOpinion,
     inferSingleAssociation:inferSingleAssociation,
     unitEvidence:unitEvidence,unknownUnit:unknownUnit,
     directoryStatus:directoryStatus,directoryAttributes:directoryAttributes,confirmOutside:confirmOutside,

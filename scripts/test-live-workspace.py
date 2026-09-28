@@ -59,11 +59,11 @@ with sync_playwright() as p:
           const name='元氏县_总体、工作、数据报告-河北湛泸软件开发有限公司_2026年第二次第1批.pdf';
           const item={file:{name,size:16,lastModified:1},path:name,sourcePath:name,manualDataKey:'reports'};
           let m=C.applyItemMetadata(item);
-          if(m.assignment.complete||!m.reportOpinion.required)throw Error('Unmarked report requires attestation');
-          C.confirmReportOpinion(item);m=C.applyItemMetadata(item);
-          if(!m.assignment.complete||item.unit!=='河北湛泸软件开发有限公司')throw Error('Attested opinion metadata failed');
+          if(!m.assignment.complete||item.unit!=='河北湛泸软件开发有限公司')throw Error('Report filename without opinion marker did not resolve');
+          if(C.reportOpinionState||C.confirmReportOpinion||SoilAdminImport.confirmQualityOnly)throw Error('Retired document-nature guard remains');
+          if(document.querySelector('.confirm-report-opinion,.confirm-report-opinions'))throw Error('Retired document-nature buttons remain');
           if(JSON.stringify(SoilTaskUnitLists)!==before)throw Error('Roster mutated');
-          return {status:'passed',mode:'disposable memory only',checks:['property mapping alias','unmarked report protected','attestation resolves known report','other roster remains unchanged']};
+          return {status:'passed',mode:'disposable memory only',checks:['property mapping alias','marker-free report upload ready','no document-nature guards or buttons','other roster remains unchanged']};
         }""")
         tabs=page.locator('header .tabs .tab').all_text_contents()
         assert '工作记录' in tabs and len(tabs)>=9,tabs

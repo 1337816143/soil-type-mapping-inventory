@@ -13,7 +13,7 @@ for(const kind of titles)for(const city of C.listForKey('reports'))for(const uni
  verify(m.dataKeys.join()==='reports'&&m.assignment.complete&&i.unit===unit.unit&&i.city===city.city&&i.district===district,'Typed report assignment '+[city.city,district,kind]);
 }
 for(const text of ['总体、工作、数据报告','总体报告','工作报告','数据报告']){
- verify(!C.inferDataKeys('石家庄市_平山县_'+text+'.docx').includes('reports'),'Report original must not be treated as quality opinion');
+ verify(C.inferDataKeys('石家庄市_平山县_'+text+'.docx').join()==='reports','Routing does not require a quality-opinion marker');
 }
 const combined=item('石家庄市_平山县_总体、工作、数据报告_质控意见_2026年第二次第1批.docx');
 verify(combined.m.dataKeys.join()==='reports'&&combined.m.assignment.complete,'One combined opinion file stays one report-family record');

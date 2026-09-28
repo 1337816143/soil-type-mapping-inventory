@@ -25,7 +25,7 @@ def check_report_tab_ui(page,out,prefix):
     original=page.evaluate("JSON.stringify(Object.fromEntries(Object.entries(tabData).filter(([k])=>k!=='reports')))")
     page.locator('[data-tab="reports"]').click()
     baseline_empty=page.locator('#tab-reports .report-family-empty').count()
-    expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('不上传任何报告原件')
+    expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('无需确认文件性质')
     expect(page.locator('#tab-reports .report-family-guide')).to_contain_text('合并出具为一份文件')
     expect(page.locator('#missingBanner .quality-admin-global').first).to_have_text('管理员导入质控意见')
     page.locator('#missingBanner .quality-admin-global').first.click()
