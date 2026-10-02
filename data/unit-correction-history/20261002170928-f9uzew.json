@@ -1,0 +1,179 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 16,
+  "documentsChecked": 16,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/沧州市/河北平普数政科技有限公司/沧州市/河北省_沧州市_总体、工作、数据报告_河北平普数政科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/河北省_辛集市_总体、工作、数据报告_河北玛恩农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邢台市/河北科沃生态科技有限公司/邢台市/河北省_邢台市_总体、工作、数据报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市_元氏县_总体、工作、数据报告_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市_平山县_总体、工作、数据报告_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/新乐市/石家庄市_新乐市_总体、工作、数据报告_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/无极县/石家庄市_无极县_总体、工作、数据报告_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/北京元图科技发展有限公司/晋州市/石家庄市_晋州市_总体、工作、数据报告_北京元图科技发展有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市_赞皇县_总体、工作、数据报告_河北湛泸软件开发有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/石家庄市/河北通烯科技有限公司/赵县/石家庄市_赵县_总体、工作、数据报告_河北通烯科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/衡水市/河北满山红农业科技有限公司/冀州区/衡水市_冀州区_总体、工作、数据报告_河北满山红农业科技有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邯郸市/河北科沃生态科技有限公司/成安县/邯郸市_成安县_总体、工作、数据报告_河北科沃生态科技有限公司_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "reports",
+          "city": "邯郸市",
+          "district": "成安县",
+          "oldUnit": "河北科沃生态科技有限公司",
+          "newUnit": "河北科沃生态科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：石家庄师兄弟土地环境技术服务有限公司；当前记录单位：河北科沃生态科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邯郸市/河北省农林科学院农业资源环境研究所/永年区/邯郸市_永年区_总体、工作、数据报告_河北省农林科学院农业资源环境研究所_2026年第二次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "reports",
+          "city": "邯郸市",
+          "district": "永年区",
+          "oldUnit": "河北省农林科学院农业资源环境研究所",
+          "newUnit": "河北省农林科学院农业资源环境研究所",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“永年区”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邯郸市/河北合众恩规划管理有限公司/涉县/邯郸市_涉县_总体、工作、数据报告_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/邱县/邯郸市_邱县_总体、工作、数据报告_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第二次第1批/邯郸市/石家庄商胜信息技术有限公司/馆陶县/邯郸市_馆陶县_总体、工作、数据报告_石家庄商胜信息技术有限公司_2026年第二次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
