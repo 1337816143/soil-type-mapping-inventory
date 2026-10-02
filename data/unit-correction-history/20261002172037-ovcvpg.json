@@ -1,0 +1,253 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 24,
+  "documentsChecked": 24,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/邢台市/河北雍荣信息技术服务有限公司/广宗县/广宗县_土壤类型图工作报告_河北雍荣信息技术服务有限公司_2026年第三次第一批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/邢台市/河北雍荣信息技术服务有限公司/广宗县/广宗县_土壤类型图技术报告_河北雍荣信息技术服务有限公司_2026年第三次第一批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北盛图地理信息有限公司/井陉县（含矿区）/石家庄市_井陉县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北盛图地理信息有限公司/元氏县/石家庄市_元氏县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/合并区/石家庄市_合并区_土壤类型制图_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/合并区/石家庄市_合并区_土壤类型制图技术报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北图宇科技有限公司/无极县/石家庄市_无极县_土壤类型成果工作报告质控反馈_河北图宇科技有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北图宇科技有限公司/无极县/石家庄市_无极县_土壤类型成果技术报告质控反馈_河北图宇科技有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北图宇科技有限公司/晋州市/石家庄市_晋州市_土壤类型图_河北图宇科技有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/栾城区/石家庄市_栾城区_土壤类型制图专题报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/栾城区/石家庄市_栾城区_土壤类型制图技术报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/正定县/石家庄市_正定县_土壤类型制图专题报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/正定县/石家庄市_正定县_土壤类型制图技术报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北图宇科技有限公司/深泽县/石家庄市_深泽县_土壤类型制图_河北图宇科技有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北图宇科技有限公司/藁城区/石家庄市_藁城区_土壤类型图_河北图宇科技有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北盛图地理信息有限公司/赞皇县/石家庄市_赞皇县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/赵县/石家庄市_赵县_土壤类型制图专题报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北高翔地理信息技术服务有限公司/赵县/石家庄市_赵县_土壤类型制图技术报告_河北高翔地理信息技术服务有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北通烯科技有限公司/赵县/石家庄市_赵县_土壤类型图_河北通烯科技有限公司_2026年第三次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "赵县",
+          "oldUnit": "河北通烯科技有限公司",
+          "newUnit": "河北通烯科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北高翔地理信息技术服务有限公司；当前记录单位：河北通烯科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型制图工作报告_河北盛图地理信息有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型制图技术报告_河北盛图地理信息有限公司_2026年第三次第1批.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/石家庄市/河北通烯科技有限公司/高邑县/石家庄市_高邑县_土壤类型图_河北通烯科技有限公司_2026年第三次第1批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "高邑县",
+          "oldUnit": "河北通烯科技有限公司",
+          "newUnit": "河北通烯科技有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北盛图地理信息有限公司；当前记录单位：河北通烯科技有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/邢台市/河北雍荣信息技术服务有限公司/平乡县/邢台市_平乡县_土壤类型图_河北雍荣信息技术服务有限公司_2026年第三次第1批-数据部分.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北雍荣信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "平乡县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/邢台市/河北雍荣信息技术服务有限公司/平乡县/邢台市_平乡县_土壤类型图_河北雍荣信息技术服务有限公司_2026年第三次第1批-文本部分.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
