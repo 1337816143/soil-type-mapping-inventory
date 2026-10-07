@@ -19,7 +19,7 @@
     '土壤退化与障碍分析',
     '土特产品土壤适宜性评价',
     '土壤农业利用适宜性评价',
-    '土地资源评价与利用报告'
+    '土壤资源评价与利用报告'
   ];
 
   window.SoilReferenceLibraryConfig = {
@@ -184,7 +184,7 @@
     if (compact.indexOf('土壤退化与障碍分析') >= 0) return '土壤退化与障碍分析';
     if (compact.indexOf('土特产品土壤适宜性评价') >= 0 || compact.indexOf('土特产品适宜性评价') >= 0) return '土特产品土壤适宜性评价';
     if (compact.indexOf('土壤农业利用适宜性评价') >= 0) return '土壤农业利用适宜性评价';
-    if (compact.indexOf('土地资源评价与利用报告') >= 0) return '土地资源评价与利用报告';
+    if (compact.indexOf('土壤资源评价与利用报告') >= 0 || compact.indexOf('土地资源评价与利用报告') >= 0) return '土壤资源评价与利用报告';
 
     raw = raw.replace(/[\s_\-—·｜|/]*三普成果编制及(?:质控|质量控制)(?:主要)?参考资料[\s_\-—·｜|/]*/g, '').trim();
     return raw || '其他资料';

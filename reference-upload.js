@@ -24,7 +24,7 @@
     '土壤退化与障碍分析',
     '土特产品土壤适宜性评价',
     '土壤农业利用适宜性评价',
-    '土地资源评价与利用报告'
+    '土壤资源评价与利用报告'
   ];
 
   var state = {
@@ -50,7 +50,7 @@
 
   function inferCategory(path) {
     var text = normalize(path);
-    if (/土地资源评价与利用报告|土地资源评价与利用|土地资源评价/.test(text)) return '土地资源评价与利用报告';
+    if (/土壤资源评价与利用报告|土地资源评价与利用报告|土地资源评价与利用|土壤资源评价|土地资源评价/.test(text)) return '土壤资源评价与利用报告';
     if (/土特产品土壤适宜性评价|土特产品适宜性评价|特色农产品.*适宜性|特色产品.*适宜性/.test(text)) return '土特产品土壤适宜性评价';
     if (/土壤农业利用适宜性评价|农业利用适宜性评价|农业适宜性评价/.test(text)) return '土壤农业利用适宜性评价';
     if (/土壤退化与障碍分析|土壤退化|退化与障碍|障碍分析|障碍因素/.test(text)) return '土壤退化与障碍分析';
@@ -88,13 +88,17 @@
 
   function directoryForCategory(category) {
     if (!category || category === '其他资料') return ROOT;
-    var key = normalize(category);
+    var keys = (category === '土壤资源评价与利用报告' ? ['土壤资源评价与利用报告', '土地资源评价与利用报告'] : [category]).map(normalize);
+    var knownDirectories = (state.dirs || []).concat(A.dirs || []).map(clean);
     var candidates = currentDirectories().filter(function (path) {
-      return normalize(path).indexOf(key) >= 0;
+      return keys.some(function (key) { return normalize(path).indexOf(key) >= 0; });
     });
     candidates.sort(function (a, b) {
-      var aLast = normalize(a.slice(a.lastIndexOf('/') + 1)).indexOf(key) >= 0 ? 1 : 0;
-      var bLast = normalize(b.slice(b.lastIndexOf('/') + 1)).indexOf(key) >= 0 ? 1 : 0;
+      var aKnown = knownDirectories.indexOf(a) >= 0 ? 1 : 0;
+      var bKnown = knownDirectories.indexOf(b) >= 0 ? 1 : 0;
+      if (aKnown !== bKnown) return bKnown - aKnown;
+      var aLast = keys.some(function (key) { return normalize(a.slice(a.lastIndexOf('/') + 1)).indexOf(key) >= 0; }) ? 1 : 0;
+      var bLast = keys.some(function (key) { return normalize(b.slice(b.lastIndexOf('/') + 1)).indexOf(key) >= 0; }) ? 1 : 0;
       if (aLast !== bLast) return bLast - aLast;
       return b.split('/').length - a.split('/').length;
     });

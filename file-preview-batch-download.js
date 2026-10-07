@@ -11,7 +11,7 @@
     degradation: '土壤退化与障碍分析',
     specialty: '土特产品土壤适宜性评价',
     agriSuitability: '土壤农业利用适宜性评价',
-    landUse: '土地资源评价与利用报告'
+    landUse: '土壤资源评价与利用报告'
   }, window.SoilDashboardTypes || {});
 
   var JSZIP_URL = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';

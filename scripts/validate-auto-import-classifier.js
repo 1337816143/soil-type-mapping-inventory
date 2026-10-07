@@ -80,7 +80,8 @@ assert.deepStrictEqual(arr(classifier.inferDataKeys('耕地质量等级评价 �
 assert.deepStrictEqual(arr(classifier.inferDataKeys('耕地质量评价成果质控意见_衡水市131182深州市质控.pdf')), ['farmland']);
 assert.deepStrictEqual(arr(classifier.inferDataKeys('土特产品土壤适宜性评价质控意见.docx')), ['specialty']);
 assert.deepStrictEqual(arr(classifier.inferDataKeys('土壤农业利用适宜性评价质控意见.docx')), ['agriSuitability']);
-assert.deepStrictEqual(arr(classifier.inferDataKeys('土地资源评价与利用报告质控意见.docx')), ['landUse']);
+assert.deepStrictEqual(arr(classifier.inferDataKeys('土壤资源评价与利用报告质控意见.docx')), ['landUse']);
+assert.deepStrictEqual(arr(classifier.inferDataKeys('土地资源评价与利用报告质控意见.docx')), ['landUse'], '历史文件名仍应识别');
 assert.deepStrictEqual(arr(classifier.inferDataKeys('某县第三次全国土壤普查成果质控报告.docx')), activeKeys, '未明确成果名的综合质控报告默认只能匹配当前3类主要成果');
 assert.strictEqual(classifier.inferBatch('2026年第二批补充/某县/土壤属性图.docx'), '第二批补充');
 assert.strictEqual(classifier.inferBatch('第一轮/综合质控报告.docx'), '第一轮');
