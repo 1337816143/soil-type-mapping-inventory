@@ -21,8 +21,8 @@
     specialtyProduct:'土特产品土壤适宜性评价',
     agriSuitability:'土壤农业利用适宜性评价',
     agriculturalSuitability:'土壤农业利用适宜性评价',
-    landUse:'土地资源评价与利用报告',
-    landResource:'土地资源评价与利用报告'
+    landUse:'土壤资源评价与利用报告',
+    landResource:'土壤资源评价与利用报告'
   };
 
   function esc(value) {
