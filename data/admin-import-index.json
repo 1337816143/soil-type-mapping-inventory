@@ -10500,5 +10500,143 @@
     "listedUnits": [
       "河北雍荣信息技术服务有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/石家庄市（市级）/河北省_石家庄市_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "name": "河北省_石家庄市_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "sourcePath": "河北省_石家庄市_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北高翔地理信息技术服务有限公司",
+    "district": "石家庄市（市级）",
+    "dataKey": "soilType",
+    "directoryStatus": "outside-list",
+    "directoryMessage": "与作业单位通讯录不一致；该类成果通讯录未单列“石家庄市（市级）”，现有合并区范围及备注也未明确包含该地区。",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "中地科勘察设计有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/栾城区/石家庄市_栾城区_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "name": "石家庄市_栾城区_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "sourcePath": "石家庄市_栾城区_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北高翔地理信息技术服务有限公司",
+    "district": "栾城区",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北高翔地理信息技术服务有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/正定县/石家庄市_正定县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "name": "石家庄市_正定县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "sourcePath": "石家庄市_正定县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "order": 3,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北高翔地理信息技术服务有限公司",
+    "district": "正定县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北高翔地理信息技术服务有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/赵县/石家庄市_赵县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "name": "石家庄市_赵县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "sourcePath": "石家庄市_赵县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+    "order": 4,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北高翔地理信息技术服务有限公司",
+    "district": "赵县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北高翔地理信息技术服务有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型制图技术报告__河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "name": "石家庄市_高邑县_土壤类型制图技术报告__河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "sourcePath": "石家庄市_高邑县_土壤类型制图技术报告__河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "order": 5,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北盛图地理信息有限公司",
+    "district": "高邑县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北盛图地理信息有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第2批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "name": "石家庄市_高邑县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "sourcePath": "石家庄市_高邑县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第2批.docx",
+    "order": 6,
+    "complete": true,
+    "uploadId": "20261009163450-1egu50",
+    "uploadedAt": "2026-10-09T08:34:52.298Z",
+    "city": "石家庄市",
+    "unit": "河北盛图地理信息有限公司",
+    "district": "高邑县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北盛图地理信息有限公司"
+    ]
   }
 ]

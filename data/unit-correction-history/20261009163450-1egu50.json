@@ -1,0 +1,87 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 6,
+  "documentsChecked": 6,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/石家庄市（市级）/河北省_石家庄市_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "石家庄市",
+          "district": "石家庄市（市级）",
+          "oldUnit": "河北高翔地理信息技术服务有限公司",
+          "newUnit": "河北高翔地理信息技术服务有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“石家庄市（市级）”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "石家庄市"
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/栾城区/石家庄市_栾城区_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130111 栾城区"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/正定县/石家庄市_正定县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130123 石家庄市正定县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北高翔地理信息技术服务有限公司/赵县/石家庄市_赵县_土壤类型图_河北高翔地理信息技术服务有限公司_整改复核_2026年第三次第二批.pdf",
+      "associations": [],
+      "header": {
+        "value": "河北高翔地理信息技术服务有限公司",
+        "label": "提交单位",
+        "geo": "130133 赵县"
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型制图技术报告__河北盛图地理信息有限公司_2026年第三次第2批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第2批/石家庄市/河北盛图地理信息有限公司/高邑县/石家庄市_高邑县_土壤类型图_河北盛图地理信息有限公司_2026年第三次第2批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
