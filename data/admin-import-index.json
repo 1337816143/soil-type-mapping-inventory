@@ -11297,5 +11297,28 @@
     "listedUnits": [
       "天津华勘检验测试有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第3批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第3批/石家庄市/河北高翔地理信息技术服务有限公司/赵县/石家庄市_赵县_土壤类型图成果质控_河北高翔地理信息技术服务有限公司_2026年第三次第三批.pdf",
+    "name": "石家庄市_赵县_土壤类型图成果质控_河北高翔地理信息技术服务有限公司_2026年第三次第三批.pdf",
+    "sourcePath": "石家庄市_赵县_土壤类型图成果质控_河北高翔地理信息技术服务有限公司_2026年第三次第三批.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261009200651-6vlhnq",
+    "uploadedAt": "2026-10-09T12:06:53.802Z",
+    "city": "石家庄市",
+    "unit": "河北高翔地理信息技术服务有限公司",
+    "district": "赵县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北高翔地理信息技术服务有限公司"
+    ]
   }
 ]
