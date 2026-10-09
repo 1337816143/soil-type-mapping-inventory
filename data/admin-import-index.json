@@ -10638,5 +10638,74 @@
     "listedUnits": [
       "河北盛图地理信息有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市_元氏县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "name": "石家庄市_元氏县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "sourcePath": "石家庄市_元氏县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261009164228-tapmah",
+    "uploadedAt": "2026-10-09T08:42:29.588Z",
+    "city": "石家庄市",
+    "unit": "河北湛泸软件开发有限公司",
+    "district": "元氏县",
+    "dataKey": "degradation",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北湛泸软件开发有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市_平山县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "name": "石家庄市_平山县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "sourcePath": "石家庄市_平山县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261009164228-tapmah",
+    "uploadedAt": "2026-10-09T08:42:29.588Z",
+    "city": "石家庄市",
+    "unit": "河北湛泸软件开发有限公司",
+    "district": "平山县",
+    "dataKey": "degradation",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北湛泸软件开发有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市_赞皇县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "name": "石家庄市_赞皇县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "sourcePath": "石家庄市_赞皇县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+    "order": 3,
+    "complete": true,
+    "uploadId": "20261009164228-tapmah",
+    "uploadedAt": "2026-10-09T08:42:29.588Z",
+    "city": "石家庄市",
+    "unit": "河北湛泸软件开发有限公司",
+    "district": "赞皇县",
+    "dataKey": "degradation",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北湛泸软件开发有限公司"
+    ]
   }
 ]

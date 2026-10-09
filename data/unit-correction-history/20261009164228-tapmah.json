@@ -1,0 +1,42 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 3,
+  "documentsChecked": 3,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/元氏县/石家庄市_元氏县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市_平山县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/赞皇县/石家庄市_赞皇县_土壤退化与障碍分析_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核_20260928.pdf",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
