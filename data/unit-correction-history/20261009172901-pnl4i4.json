@@ -1,0 +1,241 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 24,
+  "documentsChecked": 24,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤农业利用适宜性评价/2026年第三次第1批/保定市/河北满山红农业科技有限公司/徐水区/土壤农业利用适宜性/0925保定市徐水区土壤农业利用适宜性评价质控.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/昌黎县/耕地等级评价/0921秦皇岛市昌黎县耕地质量等级评价质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/抚宁区/耕地等级评价/0921秦皇岛市抚宁区耕地质量等级评价质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/卢龙县/耕地等级评价/0921秦皇岛市卢龙县耕地质量等级评价质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/合并区/耕地等级评价/0921秦皇岛合并区耕地质量等级评价质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/秦皇岛市（市级）/耕地等级评价/0921秦皇岛市耕地质量等级评价质控报告.docx",
+      "associations": [
+        {
+          "dataKey": "farmland",
+          "city": "秦皇岛市",
+          "district": "秦皇岛市（市级）",
+          "oldUnit": "天津华勘检验测试有限公司",
+          "newUnit": "天津华勘检验测试有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录未单列“秦皇岛市（市级）”，现有合并区范围及备注也未明确包含该地区。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/保定市/河北满山红农业科技有限公司/徐水区/耕地等级评价/0925保定市徐水区耕地质量等级评价.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/耕地质量等级评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/青龙县/耕地等级评价/秦皇岛市青龙满族自治县耕地质量等级评价.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤属性图/2026年第一次第1批/保定市/河北满山红农业科技有限公司/徐水区/土壤属性制图/保定市徐水区第三次土壤普查土壤属性与制图质控意见(1).docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北省坤正地质勘查技术服务有限公司/三河市/土壤类型制图/9.30土壤类型图质控报告/三河市质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北云图数字科技有限公司/固安县/土壤类型制图/9.30土壤类型图质控报告/固安县质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北省坤正地质勘查技术服务有限公司/大厂县/土壤类型制图/9.30土壤类型图质控报告/大厂回族自治区质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北聚浩测绘技术服务有限公司/安次区/土壤类型制图/9.30土壤类型图质控报告/安次区土壤类型图质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北聚浩测绘技术服务有限公司/广阳区/土壤类型制图/9.30土壤类型图质控报告/广阳土壤类型图质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/保定市/河北玛恩农业科技有限公司/徐水区/土壤类型制图/9.30土壤类型图质控报告/徐水土壤类型图质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北云图数字科技有限公司/霸州市/土壤类型制图/9.30土壤类型图质控报告/霸州市质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/廊坊市/河北省坤正地质勘查技术服务有限公司/香河县/土壤类型制图/9.30土壤类型图质控报告/香河县质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/保定市/河北满山红农业科技有限公司/徐水区/土壤退化/保定市/徐水区退化质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤退化与障碍分析/2026年第三次第1批/辛集市/河北玛恩农业科技有限公司/辛集市/土壤退化/辛集市/辛集市退化质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第三次第1批/保定市/河北农业大学/阜平县/土特产/保定市/阜平县土特产质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/卢龙县/土特产/秦皇岛市/卢龙县土特产质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/合并区/土特产/秦皇岛市/合并区土特产质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第三次第1批/秦皇岛市/天津华勘检验测试有限公司/昌黎县/土特产/秦皇岛市/昌黎县土特产质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第一次第1批/秦皇岛市/天津华勘检验测试有限公司/青龙县/土特产/秦皇岛市/青龙县土特产质控报告.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    }
+  ]
+}
