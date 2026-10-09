@@ -10707,5 +10707,28 @@
     "listedUnits": [
       "河北湛泸软件开发有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土特产品土壤适宜性评价/2026年第三次第1批/沧州市/中友四达（北京）科技有限公司/泊头市/泊头市土特产品土壤适宜性评价报告(质控）.docx",
+    "name": "泊头市土特产品土壤适宜性评价报告(质控）.docx",
+    "sourcePath": "泊头市土特产品土壤适宜性评价报告(质控）.docx",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261009170039-z6xz3m",
+    "uploadedAt": "2026-10-09T09:00:41.359Z",
+    "city": "沧州市",
+    "unit": "中友四达（北京）科技有限公司",
+    "district": "泊头市",
+    "dataKey": "specialty",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "type-district-list",
+    "listedUnits": [
+      "中友四达（北京）科技有限公司"
+    ]
   }
 ]
