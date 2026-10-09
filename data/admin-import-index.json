@@ -11320,5 +11320,28 @@
     "listedUnits": [
       "河北高翔地理信息技术服务有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/总体、工作、数据报告/2026年第三次第1批/石家庄市/河北湛泸软件开发有限公司/平山县/石家庄市_平山县_总体数据工作报告_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核.pdf",
+    "name": "石家庄市_平山县_总体数据工作报告_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核.pdf",
+    "sourcePath": "石家庄市_平山县_总体数据工作报告_河北湛泸软件开发有限公司_2026年第三次第1批_整改答复复核.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261009200914-7tdspp",
+    "uploadedAt": "2026-10-09T12:09:16.745Z",
+    "city": "石家庄市",
+    "unit": "河北湛泸软件开发有限公司",
+    "district": "平山县",
+    "dataKey": "reports",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北湛泸软件开发有限公司"
+    ]
   }
 ]
