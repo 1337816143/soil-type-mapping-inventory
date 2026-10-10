@@ -1,0 +1,7 @@
+.dev.vars*
+.env*
+.secrets*
+.wrangler/
+node_modules/
+src/directory.mjs
+test-results/
