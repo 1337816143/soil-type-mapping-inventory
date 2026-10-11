@@ -11849,5 +11849,51 @@
     "listedUnits": [
       "河北鸿源润泽土地规划设计有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北惠之纳农业科技有限公司/衡水市/衡水市_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261011141016-54xq88",
+    "uploadedAt": "2026-10-11T06:10:18.818Z",
+    "city": "衡水市",
+    "unit": "河北惠之纳农业科技有限公司",
+    "district": "衡水市",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北惠之纳农业科技有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北惠之纳农业科技有限公司/武邑县/衡水市_武邑县_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_武邑县_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_武邑县_土壤类型图_河北惠之纳农业科技有限公司_2026年第三次第1批.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261011141016-54xq88",
+    "uploadedAt": "2026-10-11T06:10:18.818Z",
+    "city": "衡水市",
+    "unit": "河北惠之纳农业科技有限公司",
+    "district": "武邑县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北惠之纳农业科技有限公司"
+    ]
   }
 ]
