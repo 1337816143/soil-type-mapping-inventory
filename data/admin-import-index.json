@@ -11895,5 +11895,51 @@
     "listedUnits": [
       "河北惠之纳农业科技有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北万山信息技术有限公司/安平县/衡水市_安平县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_安平县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_安平县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261011141244-2g7bhb",
+    "uploadedAt": "2026-10-11T06:12:46.293Z",
+    "city": "衡水市",
+    "unit": "河北万山信息技术有限公司",
+    "district": "安平县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北万山信息技术有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北万山信息技术有限公司/饶阳县/衡水市_饶阳县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_饶阳县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_饶阳县_土壤类型图_河北万山信息技术有限公司_2026年第三次第1批.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261011141244-2g7bhb",
+    "uploadedAt": "2026-10-11T06:12:46.293Z",
+    "city": "衡水市",
+    "unit": "河北万山信息技术有限公司",
+    "district": "饶阳县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北万山信息技术有限公司"
+    ]
   }
 ]
