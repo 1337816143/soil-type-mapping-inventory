@@ -1,0 +1,43 @@
+{
+  "policy": "v1.2.7",
+  "directoryHashes": {
+    "master": "ae80ce5de012806935cf9ce6a739212954338d3670b3b652e8b96e1d544dce52",
+    "mapping": "00cf15e864c6cc479058b721768e381de3a15420a1be86f8018ebd1163d597e8"
+  },
+  "scope": "incoming",
+  "originals": "Historical originals remain in parent commit; new originals remain on source staging branch. Paths are stable.",
+  "recordsChecked": 2,
+  "documentsChecked": 2,
+  "documentsChanged": 0,
+  "platformCorrections": 0,
+  "reports": [
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北冠卓检测科技股份有限公司/景县/衡水市_景县_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+      "associations": [],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "unchanged"
+    },
+    {
+      "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北冠卓检测科技股份有限公司/衡水市/衡水市_阜城市_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+      "associations": [
+        {
+          "dataKey": "soilType",
+          "city": "衡水市",
+          "district": "衡水市",
+          "oldUnit": "河北冠卓检测科技股份有限公司",
+          "newUnit": "河北冠卓检测科技股份有限公司",
+          "reason": "与作业单位通讯录不一致；该类成果通讯录单位：河北惠之纳农业科技有限公司；当前记录单位：河北冠卓检测科技股份有限公司。 未达到自动订正证据门槛，保留红色。",
+          "action": "retained-red"
+        }
+      ],
+      "header": {
+        "absent": true
+      },
+      "documentChanged": false,
+      "status": "retained-red"
+    }
+  ]
+}

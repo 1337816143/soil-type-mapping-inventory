@@ -11757,5 +11757,51 @@
     "listedUnits": [
       "北京世纪国源科技股份有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北冠卓检测科技股份有限公司/景县/衡水市_景县_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "name": "衡水市_景县_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "sourcePath": "衡水市_景县_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261011140333-bjjv4n",
+    "uploadedAt": "2026-10-11T06:03:35.566Z",
+    "city": "衡水市",
+    "unit": "河北冠卓检测科技股份有限公司",
+    "district": "景县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北冠卓检测科技股份有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/河北冠卓检测科技股份有限公司/衡水市/衡水市_阜城市_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "name": "衡水市_阜城市_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "sourcePath": "衡水市_阜城市_土壤类型图_河北冠卓检测科技股份有限公司_2026年第三次第1批.docx",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261011140333-bjjv4n",
+    "uploadedAt": "2026-10-11T06:03:35.566Z",
+    "city": "衡水市",
+    "unit": "河北冠卓检测科技股份有限公司",
+    "district": "衡水市",
+    "dataKey": "soilType",
+    "directoryStatus": "unit-mismatch",
+    "directoryMessage": "与作业单位通讯录不一致；该类成果通讯录单位：河北惠之纳农业科技有限公司；当前记录单位：河北冠卓检测科技股份有限公司。",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "河北惠之纳农业科技有限公司"
+    ]
   }
 ]
