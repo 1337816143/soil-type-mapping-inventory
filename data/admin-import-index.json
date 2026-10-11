@@ -11665,5 +11665,97 @@
     "listedUnits": [
       "河北云图数字科技有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/北京世纪国源科技股份有限公司/武强县/衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "name": "衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "sourcePath": "衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261011135742-or4oj8",
+    "uploadedAt": "2026-10-11T05:57:44.294Z",
+    "city": "衡水市",
+    "unit": "北京世纪国源科技股份有限公司",
+    "district": "武强县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "北京世纪国源科技股份有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/北京世纪国源科技股份有限公司/武强县/衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_武强县_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261011135742-or4oj8",
+    "uploadedAt": "2026-10-11T05:57:44.294Z",
+    "city": "衡水市",
+    "unit": "北京世纪国源科技股份有限公司",
+    "district": "武强县",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "北京世纪国源科技股份有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/北京世纪国源科技股份有限公司/深州市/衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "name": "衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "sourcePath": "衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.docx",
+    "order": 3,
+    "complete": true,
+    "uploadId": "20261011135742-or4oj8",
+    "uploadedAt": "2026-10-11T05:57:44.294Z",
+    "city": "衡水市",
+    "unit": "北京世纪国源科技股份有限公司",
+    "district": "深州市",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "北京世纪国源科技股份有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/北京世纪国源科技股份有限公司/深州市/衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_深州市_土壤类型图_北京世纪国源科技股份有限公司_2026年第三次第1批.pdf",
+    "order": 4,
+    "complete": true,
+    "uploadId": "20261011135742-or4oj8",
+    "uploadedAt": "2026-10-11T05:57:44.294Z",
+    "city": "衡水市",
+    "unit": "北京世纪国源科技股份有限公司",
+    "district": "深州市",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "北京世纪国源科技股份有限公司"
+    ]
   }
 ]
