@@ -11941,5 +11941,51 @@
     "listedUnits": [
       "河北万山信息技术有限公司"
     ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/爬山虎科技股份有限公司/冀州区/衡水市_冀州区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_冀州区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_冀州区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "order": 1,
+    "complete": true,
+    "uploadId": "20261011141602-08jjj0",
+    "uploadedAt": "2026-10-11T06:16:04.264Z",
+    "city": "衡水市",
+    "unit": "爬山虎科技股份有限公司",
+    "district": "冀州区",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "爬山虎科技股份有限公司"
+    ]
+  },
+  {
+    "kind": "quality-control",
+    "batch": "2026年第三次第1批",
+    "path": "data/质控意见反馈_管理员导入/土壤类型图/2026年第三次第1批/衡水市/爬山虎科技股份有限公司/桃城区/衡水市_桃城区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "name": "衡水市_桃城区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "sourcePath": "衡水市_桃城区_土壤类型图_爬山虎科技股份有限公司_2026年第三次第1批.pdf",
+    "order": 2,
+    "complete": true,
+    "uploadId": "20261011141602-08jjj0",
+    "uploadedAt": "2026-10-11T06:16:04.264Z",
+    "city": "衡水市",
+    "unit": "爬山虎科技股份有限公司",
+    "district": "桃城区",
+    "dataKey": "soilType",
+    "directoryStatus": "matched",
+    "directoryMessage": "",
+    "unlistedConfirmed": false,
+    "unitCorrection": {},
+    "unitSource": "filename",
+    "listedUnits": [
+      "爬山虎科技股份有限公司"
+    ]
   }
 ]
