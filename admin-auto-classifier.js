@@ -86,11 +86,52 @@
     });
   }
 
+  var DOCUMENT_ROLE_LABELS = {quality:'质控', score:'评分', 'quality-score':'质控＋评分'};
+  // Optional filename-derived labels, never a new upload confirmation gate.
+  function documentRole(value) {
+    if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(DOCUMENT_ROLE_LABELS, value.documentRole)) return value.documentRole;
+    var input = typeof value === 'string' ? value : value && (typeof value.file === 'string' ? value.file : value.file && value.file.name || value.name || value.originalName || value.path) || '';
+    try { input = decodeURIComponent(input); } catch (error) {}
+    // Only the physical filename is evidence, not the enclosing directory.
+    var name = basename(input).replace(/\s+/g, '');
+    if (!/评分|打分|计分/.test(name) || /模板|范本|样表|空白表|手册|指南|评分(?:标准|细则|办法|规则)|打分(?:标准|细则|办法|规则)/.test(name)) return 'quality';
+    var quality = /(?:质控|质量控制|审核|审查|复核)(?:报告|意见|反馈|记录)|问题反馈|整改意见/.test(name);
+    if (/(?:质控|质量控制)报告(?:验收)?(?:评分|打分|计分)(?:表|报告)/.test(name)) quality = false;
+    return quality ? 'quality-score' : 'score';
+  }
+  function roleLabel(value) { return DOCUMENT_ROLE_LABELS[documentRole(value)]; }
+  function roleBadge(value) {
+    var role = documentRole(value);
+    if (role === 'quality') return '';
+    var label = DOCUMENT_ROLE_LABELS[role];
+    var title = role === 'score' ? '评分文件（按文件名识别）；不代表已收到单独质控意见，具体内容以原文件为准。' : '文件名同时包含质控报告/意见与评分；一份原文件，具体内容以原文件为准。';
+    return '<span class="file-role-badge file-role-' + role + '" data-document-role="' + role + '" title="' + title + '" aria-label="' + label + '">' + label + '</span>';
+  }
+  function roleSearchMatch(value, token) {
+    var role = documentRole(value), t = String(token || '').replace(/\s+/g, '');
+    if (/^(?:评分|打分|计分)(?:报告|文件|表)?$|^验收评分(?:表)?$/.test(t)) return role !== 'quality';
+    if (/^(?:仅|纯)(?:评分|打分)$/.test(t)) return role === 'score';
+    if (/^质控[＋+和与及]评分$/.test(t)) return role === 'quality-score';
+    if (/^质控(?:报告|意见|文件)?$/.test(t)) return role !== 'score';
+    return null;
+  }
+
   function inferBatch(text) {
     text = normalize(text);
     var policy = window.SoilBatchPolicy;
-    var roundInfo = policy && policy.parse(text);
-    if (roundInfo && roundInfo.explicit) return policy.format(roundInfo);
+    // Nearest filename fields win over ZIP folders. National survey 3 is
+    // not QC round 3. Existing explicit manualBatch remains authoritative.
+    var segments = text.replace(/第三次全国土壤普查|全国第三次土壤普查/g, '三普').split('/').reverse();
+    var year = '', round = '', feedback = '';
+    segments.forEach(function (segment) {
+      segment = segment.replace(/\s+/g, '');
+      var y = segment.match(/20\d{2}年/), r = segment.match(/第[一二三四五六七八九十两\d]+(?:次(?:质控)?|轮)/), b = segment.match(/第[一二三四五六七八九十两\d]+批(?:补充)?/);
+      if (!year && y) year = y[0];
+      if (!round && r) round = r[0];
+      if (!feedback && b) feedback = b[0];
+    });
+    var roundInfo = policy && policy.parse((year || '') + round + feedback);
+    if (roundInfo && (roundInfo.explicit || /次/.test(round))) return policy.format(roundInfo);
     var special = text.match(/第[一二三四五六七八九十0-9]+批\s*补充/);
     if (special) return special[0].replace(/\s+/g, '');
     var round = text.match(/第[一二三四五六七八九十0-9]+轮/);
@@ -110,7 +151,7 @@
       ['landUse', /土壤资源评价与利用报告|土地资源评价与利用报告|土壤资源评价|土地资源评价|土地利用评价/],
       ['farmland', /耕地质量(?:等级)?评价|耕地质量等级|耕地质量评价|耕评|耕地等级/],
       ['degradation', /土壤退化|退化与障碍|障碍分析|障碍因素/],
-      ['soilAttr', /土壤属性(?:图|制图)|土壤属性成果|属性图成果|属性图/],
+      ['soilAttr', /土壤属性(?:(?:与|及)?制图|图)|土壤属性成果|属性图成果|属性图/],
       ['soilType', /土壤类型(?:图|制图)|土壤类型成果|土类图|类型图成果/]
     ];
     rules.forEach(function (rule) { if (rule[1].test(segment)) keys.push(rule[0]); });
@@ -624,6 +665,7 @@
 
     var result = exact || {};
     result.kind = kind || result.kind || 'unknown';
+    if (result.kind === 'quality') result.documentRole = documentRole(fileName);
     result.confidence = result.confidence || ((keys.length || targets.length || association || inferBatch(text)) ? 'high' : 'low');
     result.catalogExact = !!result.catalogExact;
     result.catalogMatched = !!result.catalogMatched;
@@ -644,6 +686,7 @@
     var meta = classifyItem(item);
     if (window.SoilBatchPolicy) window.SoilBatchPolicy.applyToItem(item, meta, Q() && Q().state && Q().state.batchSelection);
     item.autoMeta = meta;
+    if (meta.kind === 'quality') item.documentRole = meta.documentRole;
     if (meta.batch) item.batch = meta.batch;
     if (meta.assignment) {
       // Discard stale guesses from the legacy importer; a different result type
@@ -925,6 +968,7 @@
 
   window.SoilAdminAutoClassifier = {
     get applyingDefaults(){return applyingDefaults;},
+    documentRole:documentRole,roleLabel:roleLabel,roleBadge:roleBadge,roleSearchMatch:roleSearchMatch,
     comprehensiveKeys:COMPREHENSIVE_KEYS.slice(),
     typeLabels:Object.assign({}, TYPE_LABELS),
     inferBatch:inferBatch,

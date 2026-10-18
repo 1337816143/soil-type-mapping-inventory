@@ -167,10 +167,12 @@
     }
     function directoryAttrs(info){return (info.mismatch||info.relation==='merged-member'||info.reportFamily)?' data-directory-status="'+info.code+'" title="'+escapeAttribute(info.title)+'" aria-label="'+escapeAttribute(info.title)+'"':'';}
     function reportDocLabel(key, doc) {
-      if (key !== 'reports') return '';
+      var classifier = window.SoilAdminAutoClassifier;
+      var badge = classifier && classifier.roleBadge ? classifier.roleBadge(doc) : '';
+      if (key !== 'reports') return badge;
       var name = String(doc.file || '').split('/').pop().replace(/\.[^.]+$/, '');
       var kinds = ['总体报告','工作报告','数据报告'].filter(function (kind) { return name.indexOf(kind) >= 0; });
-      return ' · ' + escapeAttribute(kinds.length ? kinds.join('、') : name);
+      return ' · ' + escapeAttribute(kinds.length ? kinds.join('、') : name) + badge;
     }
     window.renderCities = function(cities, dataKey) {
       var s = window.calculateDashboardStats(dataKey);

@@ -219,6 +219,8 @@ jobs:
                       'uploadId': str(manifest.get('uploadId') or ''),
                       'uploadedAt': str(manifest.get('createdAt') or '')
                   }
+                  if quality.get('documentRole') in {'quality', 'score', 'quality-score'}:
+                      common['documentRole'] = quality['documentRole']
                   data_keys = [str(x) for x in (quality.get('dataKeys') or []) if str(x)]
                   if not data_keys and str(quality.get('dataKey') or ''):
                       data_keys = [str(quality.get('dataKey'))]
