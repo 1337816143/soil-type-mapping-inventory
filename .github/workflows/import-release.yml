@@ -132,6 +132,7 @@ jobs:
               quality = item.get('quality')
               if kind == 'quality' and isinstance(quality, dict):
                   quality_records.append({
+                      **({'documentRole': quality['documentRole']} if quality.get('documentRole') in {'quality', 'score', 'quality-score'} else {}),
                       'kind': 'quality-control',
                       'dataKey': str(quality.get('dataKey') or ''),
                       'city': str(quality.get('city') or ''),

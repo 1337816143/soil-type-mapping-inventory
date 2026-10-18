@@ -114,6 +114,7 @@ jobs:
           node scripts/validate-file-preview-batch-download.js
           node scripts/validate-document-preview-controls.js
           node scripts/validate-mobile-dialog-reference-batch.js
+          node scripts/validate-scoring-files.js
           node scripts/validate-project.js
           node scripts/validate-embedded-token-live.js
 

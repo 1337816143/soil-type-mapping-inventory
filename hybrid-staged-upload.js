@@ -260,6 +260,7 @@
           record.quality.assignmentVersion=2;
           record.quality.complete=true;
         }
+        if (kind === 'quality' && meta && ['quality','score','quality-score'].indexOf(meta.documentRole) >= 0) record.quality.documentRole = meta.documentRole;
         return record;
       })
     };

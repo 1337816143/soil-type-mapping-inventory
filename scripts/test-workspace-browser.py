@@ -131,7 +131,10 @@ with sync_playwright() as p:
             assert remote['records'][0].get('deletedAt')
             assert not errors,errors
             # Real application smoke check with network writes intercepted above.
-            page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html')
+            # WebKit may keep the global load event pending after the app has
+            # rendered. Gate on the application's strict readiness flag below,
+            # not unrelated resource completion; retain every UI assertion.
+            page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html',wait_until='domcontentloaded')
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
             import runpy
             visual=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,engine)

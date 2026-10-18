@@ -318,6 +318,7 @@
                 item = byPath[repoPath] = {
                   repoPath:repoPath,
                   name:basename(repoPath),
+                  documentRole:doc.documentRole,
                   sourceUrl:sourceUrlForRepoPath(repoPath),
                   associations:[]
                 };
@@ -372,6 +373,9 @@
     if (!query) return true;
     var haystack = [item.name, item.repoPath, assoc.city, assoc.unit, assoc.district, assoc.resultType, assoc.batch].join(' ').toLowerCase();
     return query.split(/\s+/).filter(Boolean).every(function (token) {
+      var classifier = window.SoilAdminAutoClassifier;
+      var roleMatch = classifier && classifier.roleSearchMatch ? classifier.roleSearchMatch(item, token) : null;
+      if (roleMatch !== null) return roleMatch;
       // Report-subtype searches must use the file name, not the shared parent
       // directory/category which contains all three report names.
       if (assoc.dataKey === 'reports' && /^(总体报告|工作报告|数据报告)$/.test(token)) {
@@ -403,7 +407,9 @@
       if (values.length <= limit) return values.join('、');
       return values.slice(0, limit).join('、') + ' 等' + values.length + '项';
     }
-    return '成果：' + short(types, 4) + '　|　市：' + short(cities, 4) + '　|　作业单位：' + short(units, 3) + '　|　区县：' + short(districts, 6);
+    var classifier = window.SoilAdminAutoClassifier;
+    var role = classifier && classifier.documentRole ? classifier.documentRole(item) : 'quality';
+    return (role !== 'quality' ? classifier.roleLabel(item) + '　|　' : '') + '成果：' + short(types, 4) + '　|　市：' + short(cities, 4) + '　|　作业单位：' + short(units, 3) + '　|　区县：' + short(districts, 6);
   }
 
   function renderBatchResults(modal) {
