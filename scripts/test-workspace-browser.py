@@ -131,13 +131,13 @@ with sync_playwright() as p:
             assert remote['records'][0].get('deletedAt')
             assert not errors,errors
             # Real application smoke check with network writes intercepted above.
+            # Isolate full-app startup from the synthetic harness page lifecycle;
+            # retain this context's storage and network-write interception.
+            page.close();page=ctx.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             # WebKit may keep the global load event pending after the app has
             # rendered. Gate on the application's strict readiness flag below,
             # not unrelated resource completion; retain every UI assertion.
             page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html',wait_until='domcontentloaded')
-            # Headless WebKit can defer native animation frames on a reused
-            # page until rendering is requested. Keep the real boot-ready gate.
-            if engine=='webkit':page.screenshot()
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
             import runpy
             visual=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,engine)
