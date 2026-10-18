@@ -8,33 +8,13 @@ BOOT="window.SOIL_RELEASE_VERSION='v1.2.0';window.SOIL_APP_VERSION='v1.2.0';wind
 VERSION=(ROOT/'VERSION').read_text().strip()
 HARNESS=HARNESS.replace('v1.2.0',VERSION)
 BOOT=BOOT.replace('v1.2.0',VERSION)
-# Diagnostic branch only: annotate the served copy, never production source.
-def diagnostic_boot_source():
-    source=(ROOT/'page-enhancements.js').read_text()
-    patches=[
-      ("  var VERSION =", "  var trace=window.__soilBootDiagnostic=[]; function mark(value){trace.push(value);}\n  var VERSION ="),
-      ("      script.onload = resolve;", "      script.onload = function(){mark('loaded:'+src);resolve();};"),
-      ("    .then(whenDomReady)", "    .then(function(){mark('modules-complete');return whenDomReady();})"),
-      ("      if (typeof window.updateSoilBootStatus", "      mark('dom-ready');\n      if (typeof window.updateSoilBootStatus"),
-      ("      if (typeof window.refreshAllTabs === 'function') window.refreshAllTabs();", "      mark('refresh-start');if (typeof window.refreshAllTabs === 'function') window.refreshAllTabs();mark('refresh-end');"),
-      ("        window.SoilRegionalProgress.refresh();", "        mark('regional-start');window.SoilRegionalProgress.refresh();mark('regional-end');"),
-      ("      return new Promise(function (resolve) { setTimeout(resolve, 120); });", "      mark('timer-scheduled');return new Promise(function(resolve){setTimeout(function(){mark('timer-fired');resolve();},120);});"),
-      ("        requestAnimationFrame(function () { requestAnimationFrame(resolve); });", "        mark('raf1-scheduled');requestAnimationFrame(function(){mark('raf1-fired');mark('raf2-scheduled');requestAnimationFrame(function(){mark('raf2-fired');resolve();});});"),
-      ("      document.documentElement.setAttribute('data-soil-enhancements-ready', 'true');", "      mark('pre-ready-flag');document.documentElement.setAttribute('data-soil-enhancements-ready', 'true');"),
-      ("      console.error(error);", "      mark('boot-rejected');console.error(error);")
-    ]
-    for old,new in patches:
-        assert source.count(old)==1,old
-        source=source.replace(old,new)
-    return source
-DIAGNOSTIC_BOOT=diagnostic_boot_source()
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self,*a,**kw):super().__init__(*a,directory=str(ROOT),**kw)
     def log_message(self,*a):pass
     def do_GET(self):
         path=urllib.parse.urlsplit(self.path).path
-        if path in ('/__workspace_test__.html','/upload-config.js','/page-enhancements.js'):
-            body=(HARNESS if path.endswith('.html') else DIAGNOSTIC_BOOT if path=='/page-enhancements.js' else BOOT).encode()
+        if path in ('/__workspace_test__.html','/upload-config.js'):
+            body=(HARNESS if path.endswith('.html') else BOOT).encode()
             self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8' if path.endswith('.html') else 'application/javascript');self.end_headers();self.wfile.write(body)
         else:super().do_GET()
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler)
@@ -49,14 +29,6 @@ with sync_playwright() as p:
         browser=getattr(p,engine).launch(**args)
         ctx=browser.new_context(viewport={'width':1280,'height':900},has_touch=True)
         page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-        pending_requests={}
-        def request_started(request):
-            parsed=urllib.parse.urlsplit(request.url)
-            pending_requests[id(request)]={'host':parsed.hostname,'path':parsed.path,'type':request.resource_type}
-        def request_finished(request):pending_requests.pop(id(request),None)
-        page.on('request',request_started)
-        page.on('requestfinished',request_finished)
-        page.on('requestfailed',request_finished)
         remote={'schemaVersion':1,'records':[]};trees={};commits={};uploaded={};attachment_paths={};requests=[]
         def route(r):
             u=r.request.url
@@ -163,6 +135,9 @@ with sync_playwright() as p:
             # rendered. Gate on the application's strict readiness flag below,
             # not unrelated resource completion; retain every UI assertion.
             page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html',wait_until='domcontentloaded')
+            # Headless WebKit can defer native animation frames on a reused
+            # page until rendering is requested. Keep the real boot-ready gate.
+            if engine=='webkit':page.screenshot()
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
             import runpy
             visual=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,engine)
@@ -194,16 +169,7 @@ with sync_playwright() as p:
             report['engines'].append(engine)
             report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save/close/authorization, attachment garbage collection, metadata-only draft listing, stale-refresh protection, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration, long batch label containment at four widths')
         except Exception:
-            # Inspect before screenshot capture can request a rendering frame.
-            diagnostic={'engine':engine,'pendingRequests':list(pending_requests.values()),'pageErrors':errors}
-            try:
-                diagnostic['page']=page.evaluate('''() => ({ready:document.documentElement.getAttribute('data-soil-enhancements-ready'),readyState:document.readyState,visibility:document.visibilityState,focused:document.hasFocus(),version:window.SOIL_RELEASE_VERSION,enhancementsPromise:!!window.SOIL_ENHANCEMENTS_READY,stages:window.__soilBootDiagnostic,scripts:Array.from(document.scripts).filter(s=>s.src).map(s=>new URL(s.src).pathname)})''')
-            except Exception as diagnostic_error:diagnostic['inspectionError']=type(diagnostic_error).__name__
-            (OUT/f'{engine}-readiness-diagnostic.json').write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2))
             page.screenshot(path=str(OUT/f'{engine}-failure.png'),full_page=True)
-            try:diagnostic['afterScreenshot']=page.evaluate("({ready:document.documentElement.getAttribute('data-soil-enhancements-ready'),stages:window.__soilBootDiagnostic})")
-            except Exception as diagnostic_error:diagnostic['afterScreenshotError']=type(diagnostic_error).__name__
-            (OUT/f'{engine}-readiness-diagnostic.json').write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2))
             (OUT/f'{engine}-errors.json').write_text(json.dumps(errors,ensure_ascii=False))
             (OUT/f'{engine}-failure.txt').write_text(traceback.format_exc())
             raise
