@@ -4,7 +4,9 @@ const assert=require('assert'),fs=require('fs'),vm=require('vm');
 const source=fs.readFileSync('file-preview-batch-download.js','utf8');
 const start=source.indexOf('  function associationMatches('),end=source.indexOf('  function matchingCatalog(',start);
 assert(start>=0&&end>start,'Cannot locate real predicate');
-const match=vm.runInNewContext('('+source.slice(start,end).trim()+')');
+// Model the browser host with the optional scoring helper not yet loaded.
+// validate-scoring-files separately exercises the real loaded classifier.
+const match=vm.runInNewContext('('+source.slice(start,end).trim()+')',{window:{}});
 const filters={city:new Set(),unit:new Set(),resultType:new Set(),district:new Set()};
 const assoc={dataKey:'reports',resultType:'总体、工作、数据报告',city:'石家庄市',unit:'河北湛泸软件开发有限公司',district:'平山县',batch:'2026年第二次第1批'};
 const files=['总体报告','工作报告','数据报告'].map(kind=>({name:'平山县_'+kind+'_质控意见.docx',repoPath:'data/总体、工作、数据报告/平山县_'+kind+'_质控意见.docx'}));
