@@ -29,6 +29,14 @@ with sync_playwright() as p:
         browser=getattr(p,engine).launch(**args)
         ctx=browser.new_context(viewport={'width':1280,'height':900},has_touch=True)
         page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+        pending_requests={}
+        def request_started(request):
+            parsed=urllib.parse.urlsplit(request.url)
+            pending_requests[id(request)]={'host':parsed.hostname,'path':parsed.path,'type':request.resource_type}
+        def request_finished(request):pending_requests.pop(id(request),None)
+        page.on('request',request_started)
+        page.on('requestfinished',request_finished)
+        page.on('requestfailed',request_finished)
         remote={'schemaVersion':1,'records':[]};trees={};commits={};uploaded={};attachment_paths={};requests=[]
         def route(r):
             u=r.request.url
@@ -166,6 +174,12 @@ with sync_playwright() as p:
             report['engines'].append(engine)
             report['checks'].append(engine+': CRUD/password, persistent draft attachment bytes, single-flight save/close/authorization, attachment garbage collection, metadata-only draft listing, stale-refresh protection, search/table, image keyboard/wheel, 9 responsive sizes, full application/tab/round integration, long batch label containment at four widths')
         except Exception:
+            # Inspect before screenshot capture can request a rendering frame.
+            diagnostic={'engine':engine,'pendingRequests':list(pending_requests.values()),'pageErrors':errors}
+            try:
+                diagnostic['page']=page.evaluate('''() => ({ready:document.documentElement.getAttribute('data-soil-enhancements-ready'),readyState:document.readyState,visibility:document.visibilityState,focused:document.hasFocus(),version:window.SOIL_RELEASE_VERSION,enhancementsPromise:!!window.SOIL_ENHANCEMENTS_READY,scripts:Array.from(document.scripts).filter(s=>s.src).map(s=>new URL(s.src).pathname)})''')
+            except Exception as diagnostic_error:diagnostic['inspectionError']=type(diagnostic_error).__name__
+            (OUT/f'{engine}-readiness-diagnostic.json').write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2))
             page.screenshot(path=str(OUT/f'{engine}-failure.png'),full_page=True)
             (OUT/f'{engine}-errors.json').write_text(json.dumps(errors,ensure_ascii=False))
             (OUT/f'{engine}-failure.txt').write_text(traceback.format_exc())
