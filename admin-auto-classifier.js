@@ -131,13 +131,13 @@
       if (!feedback && b) feedback = b[0];
     });
     var roundInfo = policy && policy.parse((year || '') + round + feedback);
-    if (roundInfo && (roundInfo.explicit || /次/.test(round))) return policy.format(roundInfo);
-    var special = text.match(/第[一二三四五六七八九十0-9]+批\s*补充/);
-    if (special) return special[0].replace(/\s+/g, '');
-    var round = text.match(/第[一二三四五六七八九十0-9]+轮/);
-    if (round) return round[0];
-    var batch = text.match(/第[一二三四五六七八九十0-9]+批/);
-    if (batch) return batch[0];
+    // Keep legacy standalone labels, but never rescan the full path after
+    // choosing the nearest fields: that would restore stale folder values.
+    if (roundInfo && (year || /次/.test(round) || (round && feedback))) return policy.format(roundInfo);
+    if (round && feedback) return round + feedback;
+    if (feedback && /补充$/.test(feedback)) return feedback;
+    if (round) return round;
+    if (feedback) return feedback;
     if (/首轮|第一轮质控/.test(text)) return '第一轮';
     return '';
   }

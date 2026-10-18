@@ -34,6 +34,15 @@ check(sample(cases[1][0],{manualBatch:'2027年第二次第4批'}).item.batch==='
 check(sample('沧县_土壤类型图_第四批_评分报告.pdf',{sourcePath:'2027年第三次质控/沧县_土壤类型图_第四批_评分报告.pdf'}).item.batch==='2027年第三次第4批','filename batch + folder year/round');
 check(sample(cases[13][0],{sourcePath:'2025年第一次第1批/'+cases[13][0]}).item.batch==='2026年第三次第4批','filename outranks stale folder');
 check(sample('第三次全国土壤普查_沧县_土壤类型图_第一批_评分表.pdf').item.batch==='2026年第一次第1批','national survey 3 is not QC round 3');
+for(const [name,expected] of [
+ ['第三批/沧县土壤类型图第一批评分表.pdf','第一批'],
+ ['第一轮/沧县土壤类型图第三轮第二批评分表.pdf','2026年第三次第2批'],
+ ['第二批补充/沧县土壤类型图第一批评分表.pdf','第一批'],
+ ['第二批/沧县土壤类型图第三批补充评分表.pdf','第三批补充'],
+ ['第一轮/沧县土壤类型图第三轮评分表.pdf','第三轮'],
+ ['第三轮/沧县土壤类型图第一轮第二批评分表.pdf','2026年第一次第2批'],
+ ['沧县土壤类型图2027年第二批评分表.pdf','2027年第一次第2批']
+]) check(C.inferBatch(name)===expected,'nearest batch fields: '+name);
 for(const [name,role] of [['沧县质控报告.docx','quality'],['沧县验收评分表.xlsx','score'],['沧县打分表.pdf','score'],['沧县质控评分表.docx','score'],['沧县质控报告评分表.docx','score'],['沧县质控意见及评分表.docx','quality-score'],['沧县质量控制报告与打分表.pdf','quality-score'],['评分报告/沧县质控报告.docx','quality'],['第三次土壤普查评分手册.pdf','quality'],['评分标准.docx','quality'],['土壤属性图评分模板.docx','quality']])check(C.documentRole(name)===role,'role boundary: '+name);
 check(C.roleBadge('沧县质控意见.pdf')==='','normal QC UI unchanged');
 check(!C.roleBadge('<img src=x onerror=alert(1)>评分表.pdf').includes('<img'),'badge contains static labels only');
