@@ -40,6 +40,10 @@ jobs:
             batch-management.js
             work-records-core.js
             work-records.js
+            national-inspection-core.js
+            national-inspection.js
+            national-inspection.css
+            national-inspection-files
             work-record-attachments
             upload-config.js
             page-enhancements.js
@@ -104,6 +108,8 @@ jobs:
           required_files=(
             glass-navigation.js assets/cau-logo-transparent.png glass-interface.css work-records.css batch-policy.js batch-management.js work-records-core.js work-records.js
             data/work-records.json scripts/validate-workspace.js
+            national-inspection-core.js national-inspection.js national-inspection.css data/national-inspection.json
+            scripts/test-national-inspection.js scripts/test-national-inspection-dom.js
             VERSION VERSIONING.md MAINTENANCE_RULES.md CHANGELOG.md index.html upload-config.js
             page-enhancements.js page-enhancements-core.js app-release-ui.js
             app-version-guard.js repository-manifest-loader.js reference-upload.js file-preview-batch-download.js document-preview-controls.js mobile-dialog-reference-batch.js reply-workflow-core.js
@@ -134,6 +140,10 @@ jobs:
           node --check batch-management.js
           node --check work-records-core.js
           node --check work-records.js
+          node --check national-inspection-core.js
+          node --check national-inspection.js
+          node scripts/test-national-inspection.js
+          node scripts/test-national-inspection-dom.js
           node --check upload-config.js
           node --check page-enhancements.js
           node --check app-release-ui.js

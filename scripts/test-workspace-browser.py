@@ -137,6 +137,8 @@ with sync_playwright() as p:
             page.set_viewport_size({'width':1440,'height':1000});errors.clear();page.goto(URL+'/index.html',wait_until='domcontentloaded')
             page.wait_for_function("document.documentElement.getAttribute('data-soil-enhancements-ready') === 'true'",timeout=30000)
             import runpy
+            national_ui=runpy.run_path(str(ROOT/'scripts/check-national-inspection-ui.py'))['check_national_inspection_ui'](page,OUT,engine)
+            (OUT/(engine+'-national-inspection-report.json')).write_text(json.dumps(national_ui,ensure_ascii=False,indent=2))
             visual=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,engine)
             (OUT/(engine+'-glass-report.json')).write_text(json.dumps(visual,ensure_ascii=False,indent=2))
             page.locator('[data-tab="workRecords"]').click();expect(page.locator('#wr-new')).to_be_visible()

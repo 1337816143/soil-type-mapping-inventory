@@ -69,6 +69,7 @@ with sync_playwright() as p:
         assert '工作记录' in tabs and len(tabs)>=9,tabs
         report['tabs']=tabs;report['checks'].append('deployed version and all original tabs')
         import runpy
+        report['nationalInspection']=runpy.run_path(str(ROOT/'scripts/check-national-inspection-ui.py'))['check_national_inspection_ui'](page,OUT,'live')
         report['glassUI']=runpy.run_path(str(ROOT/'scripts/glass-ui-checks.py'))['check_glass_ui'](page,OUT,'live')
         page.locator('[data-tab="soilType"]').click()
         expect(page.locator('.batch-tag').first).to_contain_text('2026年第一次')

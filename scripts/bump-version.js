@@ -60,6 +60,8 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'batch-management.js',
   'work-records-core.js',
   'work-records.js',
+  'national-inspection-core.js',
+  'national-inspection.js',
   'page-enhancements-core.js',
   'task-unit-mappings.js',
   'quality-file-routing.js',
@@ -93,7 +95,7 @@ replace('page-enhancements.js', /var VERSION = '\d+\.\d+\.\d+';/, `var VERSION =
   'upload-success-notice.js'
 ].forEach(replaceLoaderVersion);
 
-replace('index.html', /((?:glass-interface|work-records)\.css\?v=)\d+\.\d+\.\d+/g, '$1' + bare);
+replace('index.html', /((?:glass-interface|work-records|national-inspection)\.css\?v=)\d+\.\d+\.\d+/g, '$1' + bare);
 
 console.log(`${current} -> ${next}`);
 console.log('请在 CHANGELOG.md 顶部补充本次变更说明后再提交。');
