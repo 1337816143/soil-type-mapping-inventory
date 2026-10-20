@@ -234,11 +234,11 @@
   }
   function ensureZip() {
     if (window.JSZip) return Promise.resolve();
-    var script = document.getElementById('soil-public-jszip');
+    var script = document.getElementById('soil-national-inspection-jszip');
     if (script && script.__soilLoadPromise) return script.__soilLoadPromise;
     script = script || document.createElement('script');
-    script.id = 'soil-public-jszip'; script.async = true;
-    script.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    script.id = 'soil-national-inspection-jszip'; script.async = true;
+    script.src = './assets/national-inspection-preview/jszip.min.js';
     script.__soilLoadPromise = new Promise(function (resolve, reject) {
       script.addEventListener('load', function () { if (window.JSZip) resolve(); else reject(new Error('ZIP 组件初始化失败')); }, {once:true});
       script.addEventListener('error', function () { reject(new Error('ZIP 组件加载失败，请刷新页面后重试')); }, {once:true});

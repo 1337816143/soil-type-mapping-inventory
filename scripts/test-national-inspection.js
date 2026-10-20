@@ -68,6 +68,16 @@ assert(!source.includes("el('button', 'tab'"), 'Nested topic tabs must not use g
 assert(source.includes('window.SoilDocumentPreview.open(url, entry.name)'), 'PDF/Word must reuse current preview controls');
 assert(source.includes('window.SoilFileAccess.openPreview(url, entry.name)'), 'Unsupported formats must still enter preview before download');
 assert(source.includes('C.uniqueFiles(filteredMaterials())'), 'ZIP must deduplicate physical files');
+const previewSource = fs.readFileSync('document-preview-controls.js','utf8');
+const assetRouterSource = previewSource.match(/function previewAssetUrl\(url\) \{[\s\S]*?\n  \}/)[0];
+for (const active of [false,true]) {
+  const routeAsset = vm.runInNewContext('('+assetRouterSource+')',{document:{getElementById:()=>({classList:{contains:()=>active}})}});
+  for (const file of ['pdf.min.js','pdf.worker.min.js','docx-preview.min.js','jszip.min.js']) {
+    const cdn='https://cdn.jsdelivr.net/npm/example/'+file;
+    assert.equal(routeAsset(cdn),active?'./assets/national-inspection-preview/'+file:cdn,'Only the active national inspection column selects same-origin dependencies');
+    assert(fs.existsSync('assets/national-inspection-preview/'+file),'National inspection preview dependency must deploy with the site');
+  }
+}
 const loader = fs.readFileSync('page-enhancements.js','utf8');
 const order = ['work-records.js','national-inspection-core.js','national-inspection.js','glass-navigation.js'].map(p => loader.indexOf("src:'./"+p));
 assert(order.every((position,i) => position >= 0 && (!i || position > order[i-1])), 'National inspection must install before glass navigation captures nodes');
