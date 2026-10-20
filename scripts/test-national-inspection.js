@@ -35,6 +35,23 @@ assert.equal(C.latestScore(scored,{countyId:'bazhou'}),null,'No score is manufac
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'landUse'}).score,79.4,'Use original converted total, not 71.5 subtotal');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'reports'}),null,'Different report scopes and partial physical-data scoring must not become one full score');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).score,76);
+const separate = C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports'});
+assert.equal(separate.version,3);
+assert.deepEqual(separate.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',88,'full'],['work',74,'full'],['work',75,'full'],['data',81,'content']]);
+assert.equal(C.latestReportScores(deployed,{countyId:'bazhou',topicId:'reports'}),null);
+const report = {...first,topicId:'reports',materialType:'scoring',reportScores:[{reportId:'data',value:0,basis:'2026版',scope:'content',evidence:'原表内容评分0'}]};
+const reportInput = {schemaVersion:1,batches:[sample.batches[0]],materials:[report,{...report,id:'report-v3',version:3,path:'national-inspection-files/report-v3.pdf',name:'report-v3.pdf'}]};
+assert.equal(C.latestReportScores(C.catalog(reportInput),{topicId:'reports'}).id,'report-v3','Separate scores follow the original batch/version order');
+function invalidReport(mutator) { const copy=JSON.parse(JSON.stringify(reportInput));mutator(copy.materials[0]);assert.throws(()=>C.catalog(copy),/国家抽查清单/); }
+invalidReport(m=>m.topicId='soilType');
+invalidReport(m=>m.materialType='quality');
+invalidReport(m=>{m.score=10;m.scoreEvidence='不能把分报告分数合成总分';});
+invalidReport(m=>m.reportScores=[]);
+invalidReport(m=>m.reportScores[0].value=101);
+invalidReport(m=>m.reportScores[0].reportId='other');
+invalidReport(m=>m.reportScores[0].scope='database');
+invalidReport(m=>m.reportScores[0].evidence='');
+invalidReport(m=>m.reportScores.push({...m.reportScores[0]}));
 for (const county of C.counties) {
   const entries=C.query(deployed,{countyId:county.id});
   assert.equal(C.summary(entries).files,new Set(entries.map(m=>m.path)).size,'Row counts deduplicate shared QC/scoring files');

@@ -45,23 +45,32 @@
 #tab-nationalInspection [hidden]{display:none!important}
 #tab-nationalInspection .ni-view-switch{display:flex;gap:6px;margin-bottom:8px}
 #tab-nationalInspection .ni-view-switch [aria-pressed="true"]{background:#285c78;color:#fff;border-color:#285c78}
-#tab-nationalInspection .ni-matrix-panel{max-width:1040px}
-#tab-nationalInspection .ni-matrix{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;background:linear-gradient(125deg,#ffffffb8,#eaf5fc80 55%,#edf0fa91);backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%);font-size:.76rem;border:1px solid #ffffffed;border-radius:12px;overflow:hidden;box-shadow:inset 0 1px 1px #fff,0 3px 14px #345d7712,0 0 0 1px #b8cddd91}
-#tab-nationalInspection .ni-matrix caption{text-align:left;font-size:.9rem;font-weight:700;padding:0 0 6px}
-#tab-nationalInspection .ni-matrix :is(th,td){padding:6px 3px;border:0;border-right:1px solid #c5d8e678;border-bottom:1px solid #c5d8e678;text-align:center;overflow-wrap:anywhere;line-height:1.45;vertical-align:middle}
+#tab-nationalInspection .ni-matrix-panel{width:100%;min-width:0}
+#tab-nationalInspection .ni-matrix{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;background:linear-gradient(125deg,#ffffffb8,#eaf5fc80 55%,#edf0fa91);backdrop-filter:blur(16px) saturate(125%);-webkit-backdrop-filter:blur(16px) saturate(125%);font-size:clamp(.875rem,1vw,1rem);border:1px solid #ffffffed;border-radius:12px;overflow:hidden;box-shadow:inset 0 1px 1px #fff,0 3px 14px #345d7712,0 0 0 1px #b8cddd91}
+#tab-nationalInspection .ni-matrix col.ni-col-county{width:9%}
+#tab-nationalInspection .ni-matrix col.ni-col-soilType,#tab-nationalInspection .ni-matrix col.ni-col-soilAttr{width:7.5%}
+#tab-nationalInspection .ni-matrix col.ni-col-farmland{width:11%}
+#tab-nationalInspection .ni-matrix col.ni-col-degradation{width:11.5%}
+#tab-nationalInspection .ni-matrix col.ni-col-specialty,#tab-nationalInspection .ni-matrix col.ni-col-agriSuitability,#tab-nationalInspection .ni-matrix col.ni-col-landUse{width:13.5%}
+#tab-nationalInspection .ni-matrix col.ni-col-reports{width:13%}
+#tab-nationalInspection .ni-matrix caption{text-align:left;font-size:1rem;font-weight:700;padding:0 0 6px}
+#tab-nationalInspection .ni-matrix :is(th,td){padding:7px 4px;border:0;border-right:1px solid #c5d8e678;border-bottom:1px solid #c5d8e678;text-align:center;white-space:nowrap;overflow-wrap:normal;word-break:keep-all;line-height:1.4;vertical-align:middle}
 #tab-nationalInspection .ni-matrix tr>:last-child{border-right:0}
 #tab-nationalInspection .ni-matrix tbody tr:last-child>*{border-bottom:0}
 #tab-nationalInspection .ni-matrix th{background:#e2eef780;color:#36566d;font-weight:650;box-shadow:inset 0 1px #ffffffab}
-#tab-nationalInspection .ni-matrix thead th{width:auto;white-space:normal;position:static}
-#tab-nationalInspection .ni-matrix th:first-child{width:92px;text-align:left;padding-left:8px}
-#tab-nationalInspection .ni-matrix-count{display:inline-block;margin-left:4px;color:#416880;font-size:.72rem;font-weight:700;font-variant-numeric:tabular-nums}
-#tab-nationalInspection .ni-col-short{display:none}
-#tab-nationalInspection .ni-cell-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
-#tab-nationalInspection .ni-cell-button{padding:4px 6px;min-height:30px;border-radius:7px;font-size:.73rem;line-height:1.3;background:#ffffffb5;border-color:#b7cedf;color:#355b77;box-shadow:inset 0 1px #fff,0 1px 3px #44698210;white-space:nowrap;font-variant-numeric:tabular-nums}
+#tab-nationalInspection .ni-matrix thead th{width:auto;white-space:nowrap;position:static}
+#tab-nationalInspection .ni-matrix th:first-child{width:auto;text-align:left;padding-left:8px}
+#tab-nationalInspection .ni-matrix tbody th{font-size:.9375rem}
+#tab-nationalInspection .ni-matrix-count{display:inline-block;margin-left:5px;color:#416880;font-size:.82rem;font-weight:700;font-variant-numeric:tabular-nums}
+#tab-nationalInspection .ni-col-short,#tab-nationalInspection .ni-col-mobile{display:none}
+#tab-nationalInspection .ni-cell-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;gap:5px}
+#tab-nationalInspection .ni-cell-button{box-sizing:border-box;width:100%;padding:5px 4px;min-height:36px;border-radius:7px;font-size:clamp(.875rem,1.05vw,1rem);line-height:1.3;background:#ffffffb5;border-color:#b7cedf;color:#355b77;box-shadow:inset 0 1px #fff,0 1px 3px #44698210;white-space:nowrap;font-variant-numeric:tabular-nums}
+#tab-nationalInspection .ni-report-scores{display:grid;gap:3px;min-width:0}
+#tab-nationalInspection .ni-report-score{display:flex;align-items:center;justify-content:space-between;gap:2px;min-height:30px;padding:3px 4px}
 #tab-nationalInspection .ni-cell-button.scoring{background:#eeeaf9ba;color:#635183;border-color:#d3c9e5}
 #tab-nationalInspection .ni-cell-button:not(:disabled):hover{background:#fff;border-color:#779fb9;box-shadow:inset 0 1px #fff,0 2px 6px #44698226}
 #tab-nationalInspection .ni-cell-button.ni-no-files{color:#87939d;background:#e8edf280;border-color:#d4dee680;box-shadow:none}
-#tab-nationalInspection .ni-matrix-note{font-size:.73rem;color:#617c90;margin:8px 0;line-height:1.6}
+#tab-nationalInspection .ni-matrix-note{font-size:.82rem;color:#617c90;margin:8px 0;line-height:1.6}
 #tab-nationalInspection .ni-matrix-error{font-size:.8rem;color:#a93535;line-height:1.7;margin-bottom:8px}
 #tab-nationalInspection .ni-popover{position:fixed;z-index:10080;box-sizing:border-box;max-height:calc(100dvh - 16px);display:flex;flex-direction:column;background:#fffffff2;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid #ffffffed;border-radius:12px;box-shadow:inset 0 1px #fff,0 8px 32px #213e5938,0 0 0 1px #b6cbd9;overflow:hidden}
 #tab-nationalInspection .ni-popover-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid #dce6ed;font-size:.8rem;background:#edf4f8;flex:none}
@@ -71,5 +80,8 @@
 #tab-nationalInspection .ni-popover-file:last-child{border:0}
 #tab-nationalInspection .ni-popover-file .ni-file-name{font-size:.78rem;margin:4px 0 7px;line-height:1.5}
 #tab-nationalInspection .ni-popover-file .ni-button{min-height:34px;padding:5px 10px}
-@media(max-width:900px){#tab-nationalInspection .ni-matrix th:first-child{width:80px}#tab-nationalInspection .ni-row-city{display:block}}
-@media(max-width:600px){#tab-nationalInspection .ni-cell-actions{flex-direction:column;align-items:center;gap:3px}#tab-nationalInspection .ni-matrix{font-size:.65rem}#tab-nationalInspection .ni-matrix :is(th,td){padding:4px 1px;line-height:1.4}#tab-nationalInspection .ni-matrix th:first-child{width:47px;padding-left:3px}#tab-nationalInspection .ni-col-full{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}#tab-nationalInspection .ni-col-short{display:block}#tab-nationalInspection .ni-matrix-count{display:block;margin:2px 0 0;font-size:.65rem}#tab-nationalInspection .ni-cell-button{min-height:27px;max-width:100%;padding:3px 1px;font-size:.62rem;letter-spacing:0;border-radius:4px}#tab-nationalInspection .ni-matrix caption{font-size:.88rem}}
+@media(max-width:1350px){#tab-nationalInspection .ni-col-full{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}#tab-nationalInspection .ni-col-short{display:inline}}
+@media(max-width:1100px){#tab-nationalInspection .ni-matrix col.ni-col-county{width:12%}#tab-nationalInspection .ni-matrix col.ni-col-soilType,#tab-nationalInspection .ni-matrix col.ni-col-soilAttr{width:8%}#tab-nationalInspection .ni-matrix col.ni-col-farmland,#tab-nationalInspection .ni-matrix col.ni-col-degradation,#tab-nationalInspection .ni-matrix col.ni-col-agriSuitability{width:10%}#tab-nationalInspection .ni-matrix col.ni-col-specialty{width:11%}#tab-nationalInspection .ni-matrix col.ni-col-landUse{width:13%}#tab-nationalInspection .ni-matrix col.ni-col-reports{width:18%}#tab-nationalInspection .ni-row-city{display:none}#tab-nationalInspection .ni-cell-actions{grid-template-columns:minmax(0,1fr);gap:4px}#tab-nationalInspection .ni-cell-button{min-height:30px;padding:3px 4px}#tab-nationalInspection .ni-report-scores{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}#tab-nationalInspection .ni-report-score{flex-direction:column;justify-content:center;font-size:.8rem;min-height:42px;padding:2px}}
+@media(max-width:900px){#tab-nationalInspection .ni-col-short{display:none}#tab-nationalInspection .ni-col-mobile{display:inline}}
+@media(max-width:760px){#tab-nationalInspection .ni-matrix-count{display:block;margin:2px 0 0}#tab-nationalInspection .ni-report-scores{grid-template-columns:minmax(0,1fr)}#tab-nationalInspection .ni-report-score{flex-direction:row;justify-content:space-between;min-height:30px}}
+@media(max-width:600px){#tab-nationalInspection .ni-matrix col[class]{width:auto}#tab-nationalInspection .ni-matrix col.ni-col-county{width:44px}#tab-nationalInspection .ni-matrix{font-size:.75rem}#tab-nationalInspection .ni-matrix :is(th,td){padding:4px 1px;line-height:1.4}#tab-nationalInspection .ni-matrix th:first-child{padding-left:3px}#tab-nationalInspection .ni-matrix tbody th{font-size:.75rem}#tab-nationalInspection .ni-col-short{display:none}#tab-nationalInspection .ni-col-mobile{display:inline}#tab-nationalInspection .ni-matrix-count{display:block;margin:2px 0 0;font-size:.72rem}#tab-nationalInspection .ni-cell-actions{gap:3px}#tab-nationalInspection .ni-cell-button{min-height:30px;max-width:100%;padding:3px 1px;font-size:.75rem;letter-spacing:0;border-radius:4px}#tab-nationalInspection .ni-report-scores{grid-template-columns:minmax(0,1fr);gap:3px}#tab-nationalInspection .ni-report-score{flex-direction:column;min-height:38px;padding:2px 0;gap:0}#tab-nationalInspection .ni-report-value{font-size:.69rem}#tab-nationalInspection .ni-matrix caption{font-size:.94rem}}

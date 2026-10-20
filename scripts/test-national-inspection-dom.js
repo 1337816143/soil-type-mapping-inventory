@@ -159,5 +159,15 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   // An explicit >80-file warning is also present in the old public batch module.
   const bulk=await harness({schemaVersion:1,batches:[{id:'actual',label:'真实批次'}],materials:Array.from({length:81},(_,i)=>({...record,id:'bulk-'+i,batchId:'actual',path:'national-inspection-files/bulk/'+i+'.pdf',name:i+'.pdf'}))});
   let prompted=false;bulk.window.confirm=()=>{prompted=true;return false;};bulk.document.getElementById('glass-tab-nationalInspection').click();await tick();byText(bulk.document,'下载当前筛选 ZIP').click();await tick();assert(prompted);assert.equal(bulk.zipEntries.length,0);
+  const real=await harness(JSON.parse(fs.readFileSync('data/national-inspection.json','utf8')));
+  real.document.getElementById('glass-tab-nationalInspection').click();await tick();
+  const parts=real.document.querySelectorAll('.ni-report-score');
+  assert.equal(parts.map(n=>n.textContent).join('|'),'总体88|工作74/75|数据81*','Three report scores stay in one existing column and retain scope distinctions');
+  assert.equal(real.document.querySelectorAll('.ni-matrix thead th').length,9,'Report scores do not create additional outcome columns');
+  parts[2].querySelector('.ni-report-name').click();
+  assert(real.document.querySelector('.ni-popover').getAttribute('aria-label').includes('数据报告评分'));
+  assert(real.document.querySelector('.ni-popover-file .ni-file-meta').textContent.includes('仅报告内容'));
+  assert(real.document.querySelector('.ni-popover-file .ni-file-name').textContent.includes('v3'));
+  assert(real.document.querySelector('.ni-popover-file .ni-download'));
   console.log('National inspection DOM simulation passed: preserved main tabs/glass keyboard navigation, 8 accessible subtabs, honest empty/error states, filters, text safety, shared previews, deduplicated ZIP, async topic capture, retry and large-batch warning. No browser rendering or geometry claimed.');
 })().catch(error=>{console.error(error);process.exitCode=1;});

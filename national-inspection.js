@@ -64,7 +64,29 @@
     var parts = [lookup(data.batches, entry.batchId).label];
     if (entry.version) parts.push('v' + entry.version);
     if (entry.score != null) parts.push(entry.score + ' 分');
+    entry.reportScores.forEach(function (item) { parts.push(reportScoreText(item)); });
     return parts.join(' ｜ ');
+  }
+  var reportNames = {overall:'总体', work:'工作', data:'数据'};
+  function reportScoreText(item) {
+    return reportNames[item.reportId] + ' ' + item.value + ' 分（' + item.basis + (item.scope === 'content' ? '，仅报告内容' : '') + '）';
+  }
+  function reportScoreControls(county, matches, source) {
+    var group = el('div', 'ni-report-scores');
+    ['overall','work','data'].forEach(function (id) {
+      var scores = source.reportScores.filter(function (item) { return item.reportId === id; });
+      if (!scores.length) return;
+      var control = button('', 'ni-cell-button scoring ni-report-score', function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + reportNames[id] + '报告评分'); });
+      control.setAttribute('data-report', id);
+      control.appendChild(el('span', 'ni-report-name', reportNames[id]));
+      control.appendChild(el('span', 'ni-report-value', scores.map(function (item) { return item.value; }).join('/') + (scores.some(function (item) { return item.scope === 'content'; }) ? '*' : '')));
+      var description = scores.map(reportScoreText).join('；');
+      control.setAttribute('aria-label', county.city + '·' + county.label + '，' + description + '，查看评分原件');
+      control.setAttribute('title', scores.map(function (item) { return reportScoreText(item) + '；' + item.evidence; }).join('\n'));
+      control.setAttribute('aria-haspopup', 'dialog'); control.setAttribute('aria-controls', 'ni-file-popover'); control.setAttribute('aria-expanded', 'false');
+      group.appendChild(control);
+    });
+    return group;
   }
   function renderMaterials() {
     if (!results) return;
@@ -152,19 +174,23 @@
     if (!loaded) { matrixPanel.appendChild(el('p', 'ni-load-message', loading ? '正在读取国家抽查材料清单…' : '材料清单尚未读取，请切换专题视图重试。')); return; }
     var table = el('table', 'ni-matrix'); table.setAttribute('aria-label', '区县 × 成果类型，文件数按物理文件去重');
     var caption = el('caption', '', '区县 × 成果类型'); table.appendChild(caption);
+    var columns = el('colgroup');
+    ['county'].concat(C.topics.map(function (topic) { return topic.id; })).forEach(function (id) { var col = el('col', 'ni-col-' + id); columns.appendChild(col); }); table.appendChild(columns);
     var thead = el('thead'), header = el('tr'), corner = el('th', '', '区县'); corner.setAttribute('scope', 'col'); header.appendChild(corner);
     var shortNames = ['类型图','属性图','耕评','退化障碍','土特产','农适','资源评价','三报告'];
+    var mobileNames = ['类型','属性','耕评','退障','特产','农适','资源','报告'];
     C.topics.forEach(function (topic, i) {
       var th = el('th'); th.setAttribute('scope', 'col'); th.setAttribute('title', topic.label);
       th.appendChild(el('span', 'ni-col-full', topic.label));
       var short = el('span', 'ni-col-short', shortNames[i]); short.setAttribute('aria-hidden', 'true'); th.appendChild(short);
+      var mobile = el('span', 'ni-col-mobile', mobileNames[i]); mobile.setAttribute('aria-hidden', 'true'); th.appendChild(mobile);
       th.appendChild(el('span', 'ni-matrix-count', String(C.summary(C.query(data, {topicId:topic.id})).files))); header.appendChild(th);
     });
     thead.appendChild(header); table.appendChild(thead);
     var tbody = el('tbody');
     C.counties.forEach(function (county) {
       var tr = el('tr'); tr.setAttribute('data-county', county.id);
-      var th = el('th'); th.setAttribute('scope', 'row');
+      var th = el('th'); th.setAttribute('scope', 'row'); th.setAttribute('aria-label', county.city + '·' + county.label); th.setAttribute('title', county.city + '·' + county.label);
       th.appendChild(el('span', 'ni-row-city', county.city + '·'));
       th.appendChild(el('span', 'ni-row-county', county.label));
       th.appendChild(el('span', 'ni-matrix-count', String(C.summary(C.query(data, {countyId:county.id})).files))); tr.appendChild(th);
@@ -173,6 +199,8 @@
         var actions = el('div', 'ni-cell-actions');
           C.kinds.forEach(function (kind) {
             var matches = entries.filter(function (entry) { return entry.materialType === kind.id; });
+            var reports = topic.id === 'reports' && kind.id === 'scoring' ? C.latestReportScores(data, {countyId:county.id, topicId:topic.id}) : null;
+            if (reports) { cell.classList.add('ni-report-cell'); actions.appendChild(reportScoreControls(county, matches, reports)); return; }
             var label = kind.id === 'quality' ? '质控' : '评分';
             var score = kind.id === 'scoring' ? C.latestScore(data, {countyId:county.id, topicId:topic.id}) : null;
             var control = button(score ? String(score.score) : label, 'ni-cell-button ' + kind.id, function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + topic.label + ' · ' + label); });
@@ -189,7 +217,7 @@
       tbody.appendChild(tr);
     });
     table.appendChild(tbody); matrixPanel.appendChild(table);
-    matrixPanel.appendChild(el('p', 'ni-matrix-note', '行列计数按文件去重。分数为最新完整评分；点击查看、下载原件。'));
+    matrixPanel.appendChild(el('p', 'ni-matrix-note', '行列计数按文件去重。工作评分依次为2026版/2024版；数据分数带*表示仅报告内容评分。点击查看、下载原件。'));
   }
   function selectView(next) {
     closePopup(false); view = next;
@@ -359,7 +387,7 @@
     page.appendChild(topicPanel);
     matrixPanel = el('section', 'ni-matrix-panel'); matrixPanel.id = 'ni-matrix-panel'; page.appendChild(matrixPanel);
     panel.appendChild(page); host.appendChild(panel);
-    document.addEventListener('click', function (event) { if (popup && event.target !== popupAnchor && event.target.closest('.ni-popover') !== popup) closePopup(false); });
+    document.addEventListener('click', function (event) { if (popup && event.target.closest('.ni-cell-button') !== popupAnchor && event.target.closest('.ni-popover') !== popup) closePopup(false); });
     document.addEventListener('keydown', function (event) { if (popup && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closePopup(true); } });
     window.addEventListener('resize', positionPopup);
     window.addEventListener('scroll', function (event) { if (popup && (!event.target.closest || event.target.closest('.ni-popover') !== popup)) positionPopup(); }, true);

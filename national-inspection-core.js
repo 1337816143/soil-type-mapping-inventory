@@ -73,7 +73,18 @@
         if (entry.materialType !== 'scoring' || typeof entry.score !== 'number' || !Number.isFinite(entry.score) || entry.score < 0 || entry.score > 100) fail('完整评分无效');
         score = entry.score; scoreEvidence = text(entry.scoreEvidence, '完整评分原件依据');
       }
-      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null, score:score, scoreEvidence:scoreEvidence};
+      var reportScores = [], reportKeys = new Set();
+      if (entry.reportScores != null) {
+        if (entry.topicId !== 'reports' || entry.materialType !== 'scoring' || score != null || !Array.isArray(entry.reportScores) || !entry.reportScores.length || entry.reportScores.length > 6) fail('分报告评分无效');
+        reportScores = entry.reportScores.map(function (item) {
+          if (!item || !['overall','work','data'].includes(item.reportId) || typeof item.value !== 'number' || !Number.isFinite(item.value) || item.value < 0 || item.value > 100 || !['full','content'].includes(item.scope)) fail('分报告评分项目无效');
+          var basis = text(item.basis, '评分口径'), key = item.reportId + '|' + basis;
+          if (reportKeys.has(key)) fail('分报告评分口径重复');
+          reportKeys.add(key);
+          return {reportId:item.reportId, value:item.value, basis:basis, scope:item.scope, evidence:text(item.evidence, '分报告评分原件依据')};
+        });
+      }
+      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null, score:score, scoreEvidence:scoreEvidence, reportScores:reportScores};
     });
     batches.forEach(function (batch) {
       if (!materials.some(function (entry) { return entry.batchId === batch.id; })) fail('不得登记没有真实材料的空批次');
@@ -106,5 +117,8 @@
   function latestScore(data, filters) {
     return query(data, filters).find(function (entry) { return entry.materialType === 'scoring' && entry.score != null; }) || null;
   }
-  return {topics:TOPICS, counties:COUNTIES, kinds:KINDS, fileRoot:FILE_ROOT, catalog:catalog, query:query, uniqueFiles:uniqueFiles, summary:summary, sourceUrl:sourceUrl, latestScore:latestScore};
+  function latestReportScores(data, filters) {
+    return query(data, filters).find(function (entry) { return entry.reportScores.length; }) || null;
+  }
+  return {topics:TOPICS, counties:COUNTIES, kinds:KINDS, fileRoot:FILE_ROOT, catalog:catalog, query:query, uniqueFiles:uniqueFiles, summary:summary, sourceUrl:sourceUrl, latestScore:latestScore, latestReportScores:latestReportScores};
 });

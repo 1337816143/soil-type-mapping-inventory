@@ -494,7 +494,37 @@
       "batchId": "2026-round3-batch1",
       "path": "national-inspection-files/补充材料20261020/石家庄市_晋州市_总体、数据、工作报告_北京元图科技发展有限公司_2026年第三次第一批_质控报告及评分情况v3数据报告仅按报告内容评分.pdf",
       "name": "石家庄市_晋州市_总体、数据、工作报告_北京元图科技发展有限公司_2026年第三次第一批_质控报告及评分情况v3数据报告仅按报告内容评分.pdf",
-      "version": 3
+      "version": 3,
+      "reportScores": [
+        {
+          "reportId": "overall",
+          "value": 88,
+          "basis": "2026版",
+          "scope": "full",
+          "evidence": "PDF第1页，总体报告总评88分"
+        },
+        {
+          "reportId": "work",
+          "value": 74,
+          "basis": "2026版",
+          "scope": "full",
+          "evidence": "PDF第22页，2026版工作报告总评74分"
+        },
+        {
+          "reportId": "work",
+          "value": 75,
+          "basis": "2024版",
+          "scope": "full",
+          "evidence": "PDF第21页，2024版工作报告总评75分"
+        },
+        {
+          "reportId": "data",
+          "value": 81,
+          "basis": "2024/2026版",
+          "scope": "content",
+          "evidence": "PDF第9至10页，两版报告内容总分81分，不代表全部数据库实物核验"
+        }
+      ]
     },
     {
       "id": "ni-supplement-01ef576fa1e27b8f-quality",
