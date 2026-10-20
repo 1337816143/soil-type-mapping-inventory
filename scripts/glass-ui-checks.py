@@ -7,7 +7,9 @@ def check_glass_ui(page, out, prefix):
     expect(page.locator('.glass-header-top .glass-controls')).to_have_count(1)
     tabs = page.locator('header .tabs .tab')
     keys = tabs.evaluate_all('(ns)=>ns.map(n=>n.dataset.tab)')
-    assert len(keys) == 10 and len(set(keys)) == 10, keys
+    assert keys == ['soilType', 'soilAttr', 'farmland', 'degradation', 'specialty',
+                    'agriSuitability', 'landUse', 'reports', 'references',
+                    'workRecords', 'nationalInspection'], keys
     assert keys.index('reports') + 1 == keys.index('references'), keys
     expect(page.locator('[data-tab="reports"]')).to_have_text('总体、工作、数据报告')
     for key in keys:
@@ -19,7 +21,7 @@ def check_glass_ui(page, out, prefix):
     first = page.locator('[data-tab="soilType"]')
     first.click(); first.focus()
     first.press('End')
-    expect(page.locator('[data-tab="workRecords"]')).to_have_attribute('aria-selected','true')
+    expect(page.locator('[data-tab="nationalInspection"]')).to_have_attribute('aria-selected','true')
     page.keyboard.press('Home')
     expect(first).to_have_attribute('aria-selected','true')
     page.keyboard.press('ArrowRight')
