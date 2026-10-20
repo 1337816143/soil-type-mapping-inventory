@@ -1,5 +1,6 @@
 """Read-only checks of the real national-inspection page. No fixtures or writes."""
 import json
+import time
 from playwright.sync_api import expect
 
 TOPICS = [
@@ -13,13 +14,29 @@ COUNTIES = ['jinzhou', 'shexian', 'ningjin', 'bazhou']
 
 def check_national_inspection_ui(page, out, prefix):
     """Accept a ready real app page; restore viewport and the original soilType tab."""
-    # The old dashboard starts its admin-index fetch outside the enhancement
-    # promise. Wait for that existing initialization to settle before comparing
-    # collection data; do not mistake its legitimate late merge for our mutation.
-    page.wait_for_load_state('networkidle', timeout=45000)
+    # Wait for the old dashboard's actual index associations, not unrelated
+    # page requests (which may remain active after application readiness).
+    deadline = time.monotonic() + 45
+    associations = page.evaluate("""async () => {
+      const r = await fetch('./data/admin-import-index.json', {cache:'no-cache',credentials:'omit',signal:AbortSignal.timeout(45000)});
+      if (!r.ok) throw Error('Original dashboard index HTTP '+r.status);
+      const entries = await r.json();
+      if (!Array.isArray(entries)) throw Error('Original dashboard index must be an array');
+      return entries.flatMap(e => window.SoilQualityFileRouting ? window.SoilQualityFileRouting.expandRecord(e) : [e])
+        .filter(e => e && e.kind === 'quality-control' && window.SoilDashboardTypes[e.dataKey] && e.city && e.unit && e.district && e.path)
+        .map(e => ({key:e.dataKey,city:e.city,unit:e.unit,district:e.district,file:String(e.path).replace(/^data\\//,''),batch:e.batch||'管理员导入'}));
+    }""")
+    remaining_ms = int((deadline - time.monotonic()) * 1000)
+    assert remaining_ms > 0, 'Original dashboard index readiness exceeded 45 seconds'
+    page.wait_for_function("""entries => entries.every(e => {
+      const city = (window.tabData[e.key]||[]).find(c=>c.name===e.city);
+      const unit = city && city.units.find(u=>u.name===e.unit);
+      const district = unit && unit.districts.find(d=>d.label===e.district);
+      return district && district.docs.some(d=>d.file===e.file && d.batch===e.batch);
+    })""", arg=associations, timeout=remaining_ms)
     viewport = dict(page.viewport_size)
     summary_text = lambda entries: f"{len({m['path'] for m in entries})} 个文件 · {len({m['batchId'] for m in entries})} 个批次"
-    report = {'mode': 'read-only; actual deployed catalog, no injected materials', 'initialization': 'networkidle before original data snapshot', 'checks': []}
+    report = {'mode': 'read-only; actual deployed catalog, no injected materials', 'initialization': 'actual original index associations present before data snapshot', 'checks': []}
     original = page.evaluate("""() => {
       const tabs = Array.from(document.querySelectorAll('header .tabs .tab'));
       window.__nationalInspectionTabIdentity = tabs.slice();
@@ -42,6 +59,11 @@ def check_national_inspection_ui(page, out, prefix):
     assert manifest['schemaVersion'] == 1
     materials = manifest['materials']
     expect(page.locator('.ni-summary')).to_have_text(summary_text(materials))
+    expect(page.locator('.ni-material-group')).to_have_count(2)
+    expect(page.locator('.ni-load-message')).to_have_count(0)
+    expect(page.get_by_role('button', name='刷新清单', exact=True)).to_be_enabled()
+    expect(page.locator('.ni-status')).to_contain_text('当前专题筛选结果：')
+    assert not page.locator('.ni-status').evaluate('(n)=>n.classList.contains("error")'), 'Catalog must finish rendering without error or retry state'
     assert page.locator('.ni-topic').count() == 8
     assert page.locator('.ni-topic.tab').count() == 0
     county_values = page.locator('#ni-county option').evaluate_all('nodes=>nodes.map(n=>n.value)')
