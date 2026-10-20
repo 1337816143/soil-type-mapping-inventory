@@ -142,8 +142,8 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   h.setFail(true);await h.window.SoilNationalInspection.refresh();assert.equal(d.querySelector('.ni-summary').textContent,'2 个文件 · 2 个批次标签');assert(d.querySelector('.ni-status').textContent.includes('继续显示上次成功'));
   const failed=await harness(empty,true);failed.document.getElementById('glass-tab-nationalInspection').click();await tick();assert.equal(failed.document.querySelector('.ni-summary').textContent,'材料清单待读取');assert(failed.document.querySelector('.ni-status').textContent.includes('尚不能确认'));
   byText(failed.document,'区县 × 成果类型').click();
-  assert.equal(failed.document.querySelector('.ni-matrix-panel .ni-status').hidden,false);
-  assert(failed.document.querySelector('.ni-matrix-panel .ni-status').textContent.includes('清单读取失败'));
+  assert.equal(failed.document.querySelector('.ni-matrix-error').hidden,false);
+  assert(failed.document.querySelector('.ni-matrix-error').textContent.includes('清单读取失败'));
   failed.setFail(false);await failed.window.SoilNationalInspection.refresh();assert.equal(failed.document.querySelector('.ni-summary').textContent,'0 个文件 · 0 个批次标签');
   // An explicit >80-file warning is also present in the old public batch module.
   const bulk=await harness({schemaVersion:1,batches:[{id:'actual',label:'真实批次'}],materials:Array.from({length:81},(_,i)=>({...record,id:'bulk-'+i,batchId:'actual',path:'national-inspection-files/bulk/'+i+'.pdf',name:i+'.pdf'}))});

@@ -134,7 +134,7 @@
   function renderMatrix() {
     if (!matrixPanel) return;
     matrixPanel.replaceChildren();
-    matrixStatus = el('div', 'ni-status error'); matrixStatus.setAttribute('role', 'alert');
+    matrixStatus = el('div', 'ni-matrix-error'); matrixStatus.setAttribute('role', 'alert');
     matrixStatus.hidden = !status.classList.contains('error');
     matrixStatus.appendChild(el('span', '', matrixStatus.hidden ? '' : status.textContent));
     matrixStatus.appendChild(button('重新读取清单', '', function () { refresh(); })); matrixPanel.appendChild(matrixStatus);

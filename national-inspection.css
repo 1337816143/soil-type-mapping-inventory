@@ -58,6 +58,7 @@
 #tab-nationalInspection .ni-cell-button.ni-no-files{color:#758794;background:#f5f7f9;border-color:#dee5eb}
 #tab-nationalInspection .ni-cell-empty{color:#758794;font-size:.7rem}
 #tab-nationalInspection .ni-matrix-note{font-size:.73rem;color:#617c90;margin:8px 0;line-height:1.6}
+#tab-nationalInspection .ni-matrix-error{font-size:.8rem;color:#a93535;line-height:1.7;margin-bottom:8px}
 #tab-nationalInspection .ni-popover{position:fixed;z-index:10080;box-sizing:border-box;max-height:calc(100dvh - 16px);display:flex;flex-direction:column;background:#fff;border:1px solid #b6cbd9;border-radius:10px;box-shadow:0 8px 32px #213e5940;overflow:hidden}
 #tab-nationalInspection .ni-popover-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid #dce6ed;font-size:.8rem;background:#edf4f8;flex:none}
 #tab-nationalInspection .ni-popover-head .ni-button{padding:4px 8px;min-height:32px;flex:none}
