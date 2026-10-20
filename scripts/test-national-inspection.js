@@ -22,6 +22,17 @@ const second = {...first,id:'material-b',materialType:'scoring',batchId:'batch-b
 const shared = {...first,id:'material-c',countyId:'shexian',cityId:'handan'};
 const sample = {schemaVersion:1,batches:[{id:'batch-a',label:'实际首批'},{id:'batch-b',label:'实际补充批'}],materials:[first,second,shared]};
 const valid = C.catalog(sample);
+const ordered = C.catalog({schemaVersion:1,batches:[{id:'batch-a',label:'同批次',order:2},{id:'batch-b',label:'后批次',order:3}],materials:[first,{...first,id:'v2',version:2,path:first.path.replace('.pdf','_v2.pdf'),name:'质控材料_v2.pdf'},{...first,id:'v3',version:3,path:first.path.replace('.pdf','_v3.pdf'),name:'质控材料_v3.pdf'},second]});
+assert.deepEqual(C.query(ordered).map(m=>m.id),['material-b','v3','v2','material-a'],'Batch order first, then versions descending within the same batch');
+assert.equal(C.query(ordered,{batchId:'batch-a'}).length,3,'Versions must not create batches');
+for (const county of C.counties) {
+  const entries=C.query(deployed,{countyId:county.id});
+  assert.equal(C.summary(entries).files,new Set(entries.map(m=>m.path)).size,'Row counts deduplicate shared QC/scoring files');
+}
+for (const topic of C.topics) {
+  const entries=C.query(deployed,{topicId:topic.id});
+  assert.equal(C.summary(entries).files,new Set(entries.map(m=>m.path)).size,'Column counts deduplicate shared QC/scoring files');
+}
 assert.deepEqual(C.summary(valid.materials), {files:2,batches:2});
 assert.equal(C.uniqueFiles(valid.materials).length, 2);
 assert.equal(C.query(valid,{topicId:'soilType',countyId:'jinzhou',batchId:'batch-b',search:'评分'}).length,1);
@@ -46,6 +57,9 @@ invalid(d => d.materials[0].name = 'different.pdf');
 invalid(d => d.materials.push({...d.materials[0],id:'another-id'}));
 invalid(d => d.batches.push({id:'placeholder',label:'不能伪造批次'}));
 invalid(d => d.materials[0].id = '../invalid');
+invalid(d => d.materials[0].version = -1);
+invalid(d => d.materials[0].version = 1.5);
+invalid(d => d.batches[0].order = '2026');
 assert.throws(() => C.catalog({schemaVersion:1,batches:[{id:'empty',label:'空批次'}],materials:[]}));
 const source = fs.readFileSync('national-inspection.js','utf8');
 assert(!source.includes('innerHTML'), 'Material metadata must use textContent, never HTML interpolation');

@@ -76,7 +76,7 @@ async function harness(manifest, failure) {
   const oldNodes = oldIds.map((id,i)=>{const n=node('div','tab'+(!i?' active':''),navigation);n.dataset.tab=id;n.textContent=id;const p=node('section','tab-content'+(!i?' active':''),host);p.id='tab-'+id;n.addEventListener('click',()=>{document.querySelectorAll('.tab,.tab-content').forEach(x=>x.classList.remove('active'));n.classList.add('active');p.classList.add('active');banner.style.display=id==='references'||id==='workRecords'?'none':'';});return n;});
   let fail=failure, current=manifest, fileGate=null;
   Object.assign(window,{document,console,AbortController,Set,Map,Promise,SOIL_RELEASE_VERSION:'vtest',tabData:{soilType:['original']},SoilDashboardTypes:{soilType:'original'},confirm:()=>true,
-    setTimeout:(fn,ms)=>{const timer=setTimeout(fn,ms);if(ms>1000)timer.unref();return timer;},clearTimeout,
+    innerWidth:1280,innerHeight:900,setTimeout:(fn,ms)=>{const timer=setTimeout(fn,ms);if(ms>1000)timer.unref();return timer;},clearTimeout,
     requestAnimationFrame:fn=>setTimeout(fn,0),matchMedia:()=>({matches:true}),
     URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},
     SoilDocumentPreview:{open:(url,name)=>previews.push({kind:'document',url,name})},SoilFileAccess:{openPreview:(url,name)=>previews.push({kind:'other',url,name})},
@@ -101,7 +101,7 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   assert.equal(d.querySelector('.ni-summary').textContent,'材料清单待读取');
   d.getElementById('glass-tab-nationalInspection').click();await tick();
   assert.equal(h.banner.style.display,'none');assert(d.getElementById('tab-nationalInspection').classList.contains('active'));
-  assert.equal(d.querySelector('.ni-summary').textContent,'0 个文件 · 0 个批次');
+  assert.equal(d.querySelector('.ni-summary').textContent,'0 个文件 · 0 个批次标签');
   assert.equal(d.querySelectorAll('.ni-material-group').length,2);
   assert.equal(d.querySelectorAll('.ni-file').length,0);
   assert.equal(d.getElementById('ni-batch').children.length,1);assert(d.getElementById('ni-batch').disabled);
@@ -118,16 +118,29 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   const record={id:'file-a',topicId:'soilType',countyId:'jinzhou',cityId:'shijiazhuang',materialType:'quality',batchId:'actual-a',path:'national-inspection-files/a/<script>.pdf',name:'<script>.pdf'};
   const sample={schemaVersion:1,batches:[{id:'actual-a',label:'实际首批'},{id:'actual-b',label:'实际补充'}],materials:[record,{...record,id:'file-b',countyId:'shexian',cityId:'handan'},{...record,id:'file-c',materialType:'scoring',batchId:'actual-b',path:'national-inspection-files/b/评分.xlsx',name:'评分.xlsx'}]};
   h.setManifest(sample);await h.window.SoilNationalInspection.refresh();
-  assert.equal(d.querySelector('.ni-summary').textContent,'2 个文件 · 2 个批次');assert.equal(d.querySelectorAll('.ni-file').length,3);assert.equal(d.querySelectorAll('script').length,0);
+  byText(d,'区县 × 成果类型').click();
+  assert.equal(d.getElementById('ni-topic-panel').hidden,true);
+  assert.equal(d.getElementById('ni-matrix-panel').hidden,false);
+  assert.equal(d.querySelectorAll('.ni-matrix tbody tr').length,4);
+  assert.equal(d.querySelector('.ni-matrix tbody tr .ni-matrix-count').textContent,'2');
+  const trigger=d.querySelector('.ni-cell-button');trigger.click();
+  assert.equal(d.querySelectorAll('.ni-popover').length,1);
+  assert.equal(trigger.getAttribute('aria-expanded'),'true');
+  assert.equal(d.querySelectorAll('.ni-popover-file').length,1);
+  d.dispatchEvent({type:'keydown',key:'Escape'});assert.equal(d.querySelectorAll('.ni-popover').length,0);assert.equal(d.activeElement,trigger);
+  trigger.click();trigger.click();assert.equal(d.querySelectorAll('.ni-popover').length,0);
+  trigger.click();d.body.click();assert.equal(d.querySelectorAll('.ni-popover').length,0);
+  byText(d,'按专题').click();assert.equal(d.getElementById('ni-topic-panel').hidden,false);
+  assert.equal(d.querySelector('.ni-summary').textContent,'2 个文件 · 2 个批次标签');assert.equal(d.querySelectorAll('.ni-file').length,3);assert.equal(d.querySelectorAll('script').length,0);
   byText(d,'预览文件').click();assert.equal(h.previews[0].kind,'document');assert.equal(h.previews[0].name,'<script>.pdf');
   const county=d.getElementById('ni-county'),batch=d.getElementById('ni-batch');county.value='shexian';county.dispatchEvent({type:'change'});batch.value='actual-b';batch.dispatchEvent({type:'change'});
   assert.equal(d.querySelectorAll('.ni-file').length,0);assert(byText(d,'下载当前筛选 ZIP').disabled);
   byText(d,'清除筛选').click();assert.equal(d.querySelectorAll('.ni-file').length,3);
   let release;h.setGate(new Promise(resolve=>{release=resolve;}));byText(d,'下载当前筛选 ZIP').click();d.getElementById('ni-topic-reports').click();release();await tick();await tick();
   assert.equal(h.zipEntries.length,2,'Shared physical file must only be packaged once');assert.equal(d.downloads[0].name,'国家抽查_土壤类型图.zip','Download filename must retain captured topic during asynchronous switches');
-  h.setFail(true);await h.window.SoilNationalInspection.refresh();assert.equal(d.querySelector('.ni-summary').textContent,'2 个文件 · 2 个批次');assert(d.querySelector('.ni-status').textContent.includes('继续显示上次成功'));
+  h.setFail(true);await h.window.SoilNationalInspection.refresh();assert.equal(d.querySelector('.ni-summary').textContent,'2 个文件 · 2 个批次标签');assert(d.querySelector('.ni-status').textContent.includes('继续显示上次成功'));
   const failed=await harness(empty,true);failed.document.getElementById('glass-tab-nationalInspection').click();await tick();assert.equal(failed.document.querySelector('.ni-summary').textContent,'材料清单待读取');assert(failed.document.querySelector('.ni-status').textContent.includes('尚不能确认'));
-  failed.setFail(false);await failed.window.SoilNationalInspection.refresh();assert.equal(failed.document.querySelector('.ni-summary').textContent,'0 个文件 · 0 个批次');
+  failed.setFail(false);await failed.window.SoilNationalInspection.refresh();assert.equal(failed.document.querySelector('.ni-summary').textContent,'0 个文件 · 0 个批次标签');
   // An explicit >80-file warning is also present in the old public batch module.
   const bulk=await harness({schemaVersion:1,batches:[{id:'actual',label:'真实批次'}],materials:Array.from({length:81},(_,i)=>({...record,id:'bulk-'+i,batchId:'actual',path:'national-inspection-files/bulk/'+i+'.pdf',name:i+'.pdf'}))});
   let prompted=false;bulk.window.confirm=()=>{prompted=true;return false;};bulk.document.getElementById('glass-tab-nationalInspection').click();await tick();byText(bulk.document,'下载当前筛选 ZIP').click();await tick();assert(prompted);assert.equal(bulk.zipEntries.length,0);

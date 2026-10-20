@@ -35,7 +35,7 @@ def check_national_inspection_ui(page, out, prefix):
       return district && district.docs.some(d=>d.file===e.file && d.batch===e.batch);
     })""", arg=associations, timeout=remaining_ms)
     viewport = dict(page.viewport_size)
-    summary_text = lambda entries: f"{len({m['path'] for m in entries})} 个文件 · {len({m['batchId'] for m in entries})} 个批次"
+    summary_text = lambda entries: f"{len({m['path'] for m in entries})} 个文件 · {len({m['batchId'] for m in entries})} 个批次标签"
     report = {'mode': 'read-only; actual deployed catalog, no injected materials', 'initialization': 'actual original index associations present before data snapshot', 'checks': []}
     original = page.evaluate("""() => {
       const tabs = Array.from(document.querySelectorAll('header .tabs .tab'));

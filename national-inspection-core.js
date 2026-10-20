@@ -49,7 +49,8 @@
       var id = identifier(entry.id, '批次');
       if (batchIds.has(id)) fail('批次 ID 重复');
       batchIds.add(id);
-      return {id:id, label:text(entry.label, '批次名称')};
+      if (entry.order != null && (!Number.isSafeInteger(entry.order) || entry.order < 0)) fail('批次排序无效');
+      return {id:id, label:text(entry.label, '批次名称'), order:entry.order || 0};
     });
     var materials = input.materials.map(function (entry) {
       if (!entry || typeof entry !== 'object') fail('材料无效');
@@ -66,7 +67,8 @@
       var relation = [entry.topicId, entry.countyId, entry.materialType, entry.batchId, path].join('|');
       if (relations.has(relation)) fail('相同材料关联重复');
       relations.add(relation);
-      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name};
+      if (entry.version != null && (!Number.isSafeInteger(entry.version) || entry.version < 1)) fail('文件版本无效');
+      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null};
     });
     batches.forEach(function (batch) {
       if (!materials.some(function (entry) { return entry.batchId === batch.id; })) fail('不得登记没有真实材料的空批次');
@@ -82,6 +84,10 @@
       if (filters.batchId && entry.batchId !== filters.batchId) return false;
       var county = find(COUNTIES, entry.countyId), batch = find(data.batches, entry.batchId);
       return !search || [entry.name, county.city, county.label, batch.label, find(KINDS, entry.materialType).label].join(' ').toLocaleLowerCase().includes(search);
+    }).sort(function (a, b) {
+      var batchA = find(data.batches, a.batchId), batchB = find(data.batches, b.batchId);
+      return (batchB.order || 0) - (batchA.order || 0) || a.batchId.localeCompare(b.batchId) ||
+        (b.version || 1) - (a.version || 1) || a.name.localeCompare(b.name, 'zh-CN');
     });
   }
   function uniqueFiles(materials) {

@@ -7,6 +7,7 @@
   var data = {schemaVersion:1, batches:[], materials:[]};
   var loaded = false, loading = false, downloadBusy = false;
   var topicId = C.topics[0].id, panel, tab, topicPanel, results, summary, status, tabs, filters, downloadButton, refreshButton;
+  var view = 'topics', matrixPanel, topicTabs, viewButtons, popup, popupAnchor;
   function el(tag, className, value) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -24,7 +25,7 @@
     status.textContent = message;
     status.classList.toggle('error', !!error);
   }
-  function countText(materials) { var count = C.summary(materials); return count.files + ' 个文件 · ' + count.batches + ' 个批次'; }
+  function countText(materials) { var count = C.summary(materials); return count.files + ' 个文件 · ' + count.batches + ' 个批次标签'; }
   function currentFilters() {
     return {topicId:topicId, countyId:filters.county.value, batchId:filters.batch.value, search:filters.search.value};
   }
@@ -36,6 +37,7 @@
     });
   }
   function preview(entry) {
+    closePopup(false);
     var url = C.sourceUrl(entry.path);
     if (/\.(pdf|docx)$/i.test(entry.name) && window.SoilDocumentPreview) {
       window.SoilDocumentPreview.open(url, entry.name);
@@ -47,6 +49,8 @@
   }
   function renderMaterials() {
     if (!results) return;
+    closePopup(false);
+    renderMatrix();
     results.replaceChildren();
     downloadButton.disabled = !loaded || loading || downloadBusy || !filteredMaterials().length;
     if (!loaded) {
@@ -74,7 +78,7 @@
           var row = el('article', 'ni-file');
           row.setAttribute('data-material-id', entry.id);
           row.appendChild(el('p', 'ni-file-name', entry.name));
-          row.appendChild(el('div', 'ni-file-meta', county.city + ' · ' + county.label + ' ｜ ' + batch.label));
+          row.appendChild(el('div', 'ni-file-meta', county.city + ' · ' + county.label + ' ｜ ' + batch.label + ' ｜ ' + versionText(entry)));
           var open = button('预览文件', '', function () { preview(entry); });
           open.setAttribute('aria-label', '预览：' + entry.name + '，' + county.city + county.label + '，' + batch.label);
           row.appendChild(open);
@@ -85,6 +89,94 @@
     });
     results.appendChild(columns);
     if (!downloadBusy && !loading) notify('当前专题筛选结果：' + countText(entries) + '。文件默认先预览，预览内可下载。');
+  }
+  function versionText(entry) { return entry.version ? 'v' + entry.version : '原件未标版本'; }
+  function closePopup(restoreFocus) {
+    if (!popup) return;
+    popup.remove(); popup = null;
+    popupAnchor.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) popupAnchor.focus({preventScroll:true});
+    popupAnchor = null;
+  }
+  function openPopup(anchor, entries, label) {
+    var same = popupAnchor === anchor;
+    closePopup(false);
+    if (same) return;
+    popupAnchor = anchor; anchor.setAttribute('aria-expanded', 'true');
+    popup = el('div', 'ni-popover'); popup.id = 'ni-file-popover';
+    popup.setAttribute('role', 'dialog'); popup.setAttribute('aria-label', label);
+    var head = el('div', 'ni-popover-head'); head.appendChild(el('strong', '', label));
+    head.appendChild(button('关闭', '', function () { closePopup(true); })); popup.appendChild(head);
+    var list = el('div', 'ni-popover-list');
+    if (!entries.length) list.appendChild(el('p', 'ni-popover-empty', '暂无材料'));
+    entries.forEach(function (entry) {
+      var item = el('article', 'ni-popover-file'); item.setAttribute('data-material-id', entry.id);
+      item.appendChild(el('div', 'ni-file-meta', lookup(data.batches, entry.batchId).label + ' ｜ ' + versionText(entry)));
+      item.appendChild(el('p', 'ni-file-name', entry.name));
+      item.appendChild(button('预览文件', '', function () { preview(entry); })); list.appendChild(item);
+    });
+    popup.appendChild(list); panel.appendChild(popup);
+    positionPopup();
+    head.querySelector('button').focus({preventScroll:true});
+  }
+  function positionPopup() {
+    if (!popup) return;
+    var box = popupAnchor.getBoundingClientRect(), width = Math.min(460, window.innerWidth - 16);
+    popup.style.width = width + 'px';
+    popup.style.left = Math.max(8, Math.min(box.left, window.innerWidth - width - 8)) + 'px';
+    var height = popup.getBoundingClientRect().height;
+    popup.style.top = Math.max(8, Math.min(box.bottom + 4, window.innerHeight - height - 8)) + 'px';
+  }
+  function renderMatrix() {
+    if (!matrixPanel) return;
+    matrixPanel.replaceChildren();
+    if (!loaded) { matrixPanel.appendChild(el('p', 'ni-load-message', loading ? '正在读取国家抽查材料清单…' : '材料清单尚未读取，请切换专题视图重试。')); return; }
+    var table = el('table', 'ni-matrix'); table.setAttribute('aria-label', '区县 × 成果类型，文件数按物理文件去重');
+    var caption = el('caption', '', '区县 × 成果类型'); table.appendChild(caption);
+    var thead = el('thead'), header = el('tr'), corner = el('th', '', '区县'); corner.setAttribute('scope', 'col'); header.appendChild(corner);
+    var shortNames = ['类型图','属性图','耕评','退化障碍','土特产','农适','资源评价','三报告'];
+    C.topics.forEach(function (topic, i) {
+      var th = el('th'); th.setAttribute('scope', 'col'); th.setAttribute('title', topic.label);
+      th.appendChild(el('span', 'ni-col-full', topic.label));
+      var short = el('span', 'ni-col-short', shortNames[i]); short.setAttribute('aria-hidden', 'true'); th.appendChild(short);
+      th.appendChild(el('span', 'ni-matrix-count', String(C.summary(C.query(data, {topicId:topic.id})).files))); header.appendChild(th);
+    });
+    thead.appendChild(header); table.appendChild(thead);
+    var tbody = el('tbody');
+    C.counties.forEach(function (county) {
+      var tr = el('tr'); tr.setAttribute('data-county', county.id);
+      var th = el('th'); th.setAttribute('scope', 'row');
+      th.appendChild(el('span', 'ni-row-city', county.city + '·'));
+      th.appendChild(el('span', 'ni-row-county', county.label));
+      th.appendChild(el('span', 'ni-matrix-count', String(C.summary(C.query(data, {countyId:county.id})).files))); tr.appendChild(th);
+      C.topics.forEach(function (topic) {
+        var entries = C.query(data, {countyId:county.id, topicId:topic.id}), cell = el('td'); cell.setAttribute('data-topic', topic.id);
+        if (!entries.length) cell.appendChild(el('span', 'ni-cell-empty', '暂无材料'));
+        else {
+          var actions = el('div', 'ni-cell-actions');
+          C.kinds.forEach(function (kind) {
+            var matches = entries.filter(function (entry) { return entry.materialType === kind.id; });
+            var label = kind.id === 'quality' ? '质控' : '评分';
+            var control = button(label, 'ni-cell-button ' + kind.id, function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + topic.label + ' · ' + label); });
+            control.setAttribute('aria-label', county.city + '·' + county.label + '，' + topic.label + '，' + label + '，' + matches.length + ' 个文件');
+            control.setAttribute('aria-haspopup', 'dialog'); control.setAttribute('aria-controls', 'ni-file-popover'); control.setAttribute('aria-expanded', 'false');
+            if (!matches.length) control.classList.add('ni-no-files');
+            actions.appendChild(control);
+          });
+          cell.appendChild(actions);
+        }
+        tr.appendChild(cell);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody); matrixPanel.appendChild(table);
+    matrixPanel.appendChild(el('p', 'ni-matrix-note', '数字为实际文件数，质控与评分合并文件只计一次。点击质控或评分查看文件；预览内可下载。'));
+  }
+  function selectView(next) {
+    closePopup(false); view = next;
+    var matrix = view === 'matrix';
+    topicTabs.hidden = matrix; topicPanel.hidden = matrix; matrixPanel.hidden = !matrix;
+    viewButtons.forEach(function (node, i) { node.setAttribute('aria-pressed', String((i === 1) === matrix)); });
   }
   function rebuildBatchFilter() {
     var previous = filters.batch.value;
@@ -199,13 +291,14 @@
     navigation.appendChild(tab);
     panel = el('section', 'tab-content'); panel.id = 'tab-nationalInspection'; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id);
     var page = el('div', 'ni-page'), heading = el('div', 'ni-heading'), introduction = el('div');
-    introduction.appendChild(el('div', 'ni-kicker', '国家抽查 · 材料专栏'));
     introduction.appendChild(el('h2', '', '国家抽查'));
-    introduction.appendChild(el('p', 'ni-intro', '按专题查阅被抽查区县的质控材料与评分材料。区县作为材料归属和筛选条件，同一专题可保留多个批次。'));
+    introduction.className = 'ni-heading-title';
+    introduction.appendChild(el('div', 'ni-kicker', '国家抽查 · 材料专栏'));
     summary = el('div', 'ni-summary', '材料清单待读取'); heading.appendChild(introduction); heading.appendChild(summary); page.appendChild(heading);
-    var scope = el('div', 'ni-scope'); scope.setAttribute('aria-label', '本次抽查范围');
-    C.counties.forEach(function (county) { scope.appendChild(el('span', '', county.city + ' · ' + county.label)); }); page.appendChild(scope);
-    var topicTabs = el('div', 'ni-topic-tabs'); topicTabs.setAttribute('role', 'tablist'); topicTabs.setAttribute('aria-label', '国家抽查专题');
+    var switcher = el('div', 'ni-view-switch'); switcher.setAttribute('role', 'group'); switcher.setAttribute('aria-label', '材料查看方式');
+    viewButtons = [button('按专题', '', function () { selectView('topics'); }), button('区县 × 成果类型', '', function () { selectView('matrix'); })];
+    viewButtons.forEach(function (node) { switcher.appendChild(node); }); page.appendChild(switcher);
+    topicTabs = el('div', 'ni-topic-tabs'); topicTabs.setAttribute('role', 'tablist'); topicTabs.setAttribute('aria-label', '国家抽查专题');
     tabs = C.topics.map(function (topic) {
       var node = el('button', 'ni-topic', topic.label); node.type = 'button'; node.id = 'ni-topic-' + topic.id;
       node.setAttribute('role', 'tab'); node.setAttribute('aria-controls', 'ni-topic-panel');
@@ -225,6 +318,8 @@
     });
     page.appendChild(topicTabs);
     topicPanel = el('section'); topicPanel.id = 'ni-topic-panel'; topicPanel.setAttribute('role', 'tabpanel');
+    var scope = el('div', 'ni-scope'); scope.setAttribute('aria-label', '本次抽查范围');
+    C.counties.forEach(function (county) { scope.appendChild(el('span', '', county.city + ' · ' + county.label)); }); topicPanel.appendChild(scope);
     topicPanel.appendChild(el('h3', 'ni-topic-heading'));
     var toolbar = el('div', 'ni-toolbar'); filters = {county:el('select'), batch:el('select'), search:el('input')};
     var all = el('option', '', '全部区县'); all.value = ''; filters.county.appendChild(all);
@@ -241,8 +336,15 @@
     status = el('p', 'ni-status'); status.setAttribute('role', 'status'); status.setAttribute('aria-live', 'polite'); topicPanel.appendChild(status);
     results = el('div', 'ni-results'); topicPanel.appendChild(results);
     topicPanel.appendChild(el('p', 'ni-footnote', '此专栏仅展示已明确挂载的国家抽查材料，不自动搬入原质控区文件，也不计入原成果收缴统计。批量下载按当前专题及筛选条件打包，无需管理员密码。'));
-    page.appendChild(topicPanel); panel.appendChild(page); host.appendChild(panel);
+    page.appendChild(topicPanel);
+    matrixPanel = el('section', 'ni-matrix-panel'); matrixPanel.id = 'ni-matrix-panel'; page.appendChild(matrixPanel);
+    panel.appendChild(page); host.appendChild(panel);
+    document.addEventListener('click', function (event) { if (popup && event.target !== popupAnchor && event.target.closest('.ni-popover') !== popup) closePopup(false); });
+    document.addEventListener('keydown', function (event) { if (popup && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closePopup(true); } });
+    window.addEventListener('resize', positionPopup);
+    window.addEventListener('scroll', function (event) { if (popup && (!event.target.closest || event.target.closest('.ni-popover') !== popup)) positionPopup(); }, true);
     updateCounts(); selectTopic(topicId, false);
+    selectView(view);
   }
   window.SoilNationalInspection = {install:install, enter:enter, refresh:refresh};
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, {once:true}); else install();
