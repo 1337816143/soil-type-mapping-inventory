@@ -7,7 +7,7 @@
   var data = {schemaVersion:1, batches:[], materials:[]};
   var loaded = false, loading = false, downloadBusy = false;
   var topicId = C.topics[0].id, panel, tab, topicPanel, results, summary, status, tabs, filters, downloadButton, refreshButton;
-  var view = 'topics', matrixPanel, topicTabs, viewButtons, popup, popupAnchor;
+  var view = 'topics', matrixPanel, matrixStatus, topicTabs, viewButtons, popup, popupAnchor;
   function el(tag, className, value) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -24,6 +24,10 @@
   function notify(message, error) {
     status.textContent = message;
     status.classList.toggle('error', !!error);
+    if (matrixStatus) {
+      matrixStatus.hidden = !error;
+      matrixStatus.querySelector('span').textContent = error ? message : '';
+    }
   }
   function countText(materials) { var count = C.summary(materials); return count.files + ' 个文件 · ' + count.batches + ' 个批次标签'; }
   function currentFilters() {
@@ -130,6 +134,10 @@
   function renderMatrix() {
     if (!matrixPanel) return;
     matrixPanel.replaceChildren();
+    matrixStatus = el('div', 'ni-status error'); matrixStatus.setAttribute('role', 'alert');
+    matrixStatus.hidden = !status.classList.contains('error');
+    matrixStatus.appendChild(el('span', '', matrixStatus.hidden ? '' : status.textContent));
+    matrixStatus.appendChild(button('重新读取清单', '', function () { refresh(); })); matrixPanel.appendChild(matrixStatus);
     if (!loaded) { matrixPanel.appendChild(el('p', 'ni-load-message', loading ? '正在读取国家抽查材料清单…' : '材料清单尚未读取，请切换专题视图重试。')); return; }
     var table = el('table', 'ni-matrix'); table.setAttribute('aria-label', '区县 × 成果类型，文件数按物理文件去重');
     var caption = el('caption', '', '区县 × 成果类型'); table.appendChild(caption);
@@ -177,6 +185,7 @@
     var matrix = view === 'matrix';
     topicTabs.hidden = matrix; topicPanel.hidden = matrix; matrixPanel.hidden = !matrix;
     viewButtons.forEach(function (node, i) { node.setAttribute('aria-pressed', String((i === 1) === matrix)); });
+    if (matrix && window.innerWidth <= 600 && matrixPanel.scrollIntoView) matrixPanel.scrollIntoView({block:'start', behavior:'instant'});
   }
   function rebuildBatchFilter() {
     var previous = filters.batch.value;
