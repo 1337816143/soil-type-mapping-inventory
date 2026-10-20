@@ -122,6 +122,7 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   assert.equal(d.getElementById('ni-topic-panel').hidden,true);
   assert.equal(d.getElementById('ni-matrix-panel').hidden,false);
   assert.equal(d.querySelectorAll('.ni-matrix tbody tr').length,4);
+  assert.equal(d.querySelectorAll('.ni-cell-button').length,64,'Every county/topic cell retains quality and scoring controls, including empty cells');
   assert.equal(d.querySelector('.ni-matrix tbody tr .ni-matrix-count').textContent,'2');
   const trigger=d.querySelector('.ni-cell-button');trigger.click();
   assert.equal(d.querySelectorAll('.ni-popover').length,1);

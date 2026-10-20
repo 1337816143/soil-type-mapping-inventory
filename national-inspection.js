@@ -160,8 +160,7 @@
       C.topics.forEach(function (topic) {
         var entries = C.query(data, {countyId:county.id, topicId:topic.id}), cell = el('td'); cell.setAttribute('data-topic', topic.id);
         if (!entries.length) cell.appendChild(el('span', 'ni-cell-empty', '暂无材料'));
-        else {
-          var actions = el('div', 'ni-cell-actions');
+        var actions = el('div', 'ni-cell-actions');
           C.kinds.forEach(function (kind) {
             var matches = entries.filter(function (entry) { return entry.materialType === kind.id; });
             var label = kind.id === 'quality' ? '质控' : '评分';
@@ -172,7 +171,6 @@
             actions.appendChild(control);
           });
           cell.appendChild(actions);
-        }
         tr.appendChild(cell);
       });
       tbody.appendChild(tr);
