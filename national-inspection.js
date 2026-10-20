@@ -6,8 +6,8 @@
   if (!C) throw new Error('国家抽查清单模块未加载');
   var data = {schemaVersion:1, batches:[], materials:[]};
   var loaded = false, loading = false, downloadBusy = false;
-  var topicId = C.topics[0].id, panel, tab, topicPanel, results, summary, status, tabs, filters, downloadButton, refreshButton;
-  var view = 'topics', matrixPanel, matrixStatus, topicTabs, viewButtons, popup, popupAnchor;
+  var topicId = C.topics[0].id, panel, tab, topicPanel, results, status, tabs, filters, downloadButton, refreshButton;
+  var view = 'matrix', matrixPanel, matrixStatus, topicTabs, viewButtons, popup, popupAnchor;
   function el(tag, className, value) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -29,13 +29,12 @@
       matrixStatus.querySelector('span').textContent = error ? message : '';
     }
   }
-  function countText(materials) { var count = C.summary(materials); return count.files + ' 个文件 · ' + count.batches + ' 个批次标签'; }
+  function countText(materials) { return C.summary(materials).files + ' 个文件'; }
   function currentFilters() {
     return {topicId:topicId, countyId:filters.county.value, batchId:filters.batch.value, search:filters.search.value};
   }
   function filteredMaterials() { return C.query(data, currentFilters()); }
   function updateCounts() {
-    summary.textContent = loaded ? countText(data.materials) : '材料清单待读取';
     tabs.forEach(function (node, i) {
       node.querySelector('.ni-topic-count').textContent = loaded ? String(C.summary(C.query(data, {topicId:C.topics[i].id})).files) : '—';
     });
@@ -50,6 +49,22 @@
     } else {
       notify('文件预览组件尚未就绪，请刷新页面后重试。', true);
     }
+  }
+  function fileActions(entry) {
+    var actions = el('div', 'ni-file-actions');
+    var open = button('预览文件', 'ni-preview', function () { preview(entry); });
+    open.setAttribute('aria-label', '预览：' + entry.name);
+    var download = el('a', 'ni-button ni-download', '下载文件');
+    download.href = C.sourceUrl(entry.path); download.download = entry.name;
+    download.setAttribute('aria-label', '下载：' + entry.name);
+    actions.appendChild(open); actions.appendChild(download);
+    return actions;
+  }
+  function materialMeta(entry) {
+    var parts = [lookup(data.batches, entry.batchId).label];
+    if (entry.version) parts.push('v' + entry.version);
+    if (entry.score != null) parts.push(entry.score + ' 分');
+    return parts.join(' ｜ ');
   }
   function renderMaterials() {
     if (!results) return;
@@ -78,23 +93,20 @@
         group.appendChild(empty);
       } else {
         groupEntries.forEach(function (entry) {
-          var county = lookup(C.counties, entry.countyId), batch = lookup(data.batches, entry.batchId);
+          var county = lookup(C.counties, entry.countyId);
           var row = el('article', 'ni-file');
           row.setAttribute('data-material-id', entry.id);
           row.appendChild(el('p', 'ni-file-name', entry.name));
-          row.appendChild(el('div', 'ni-file-meta', county.city + ' · ' + county.label + ' ｜ ' + batch.label + ' ｜ ' + versionText(entry)));
-          var open = button('预览文件', '', function () { preview(entry); });
-          open.setAttribute('aria-label', '预览：' + entry.name + '，' + county.city + county.label + '，' + batch.label);
-          row.appendChild(open);
+          row.appendChild(el('div', 'ni-file-meta', county.city + ' · ' + county.label + ' ｜ ' + materialMeta(entry)));
+          row.appendChild(fileActions(entry));
           group.appendChild(row);
         });
       }
       columns.appendChild(group);
     });
     results.appendChild(columns);
-    if (!downloadBusy && !loading) notify('当前专题筛选结果：' + countText(entries) + '。文件默认先预览，预览内可下载。');
+    if (!downloadBusy && !loading) notify('当前专题筛选结果：' + countText(entries) + '。可预览或直接下载。');
   }
-  function versionText(entry) { return entry.version ? 'v' + entry.version : '原件未标版本'; }
   function closePopup(restoreFocus) {
     if (!popup) return;
     popup.remove(); popup = null;
@@ -112,12 +124,11 @@
     var head = el('div', 'ni-popover-head'); head.appendChild(el('strong', '', label));
     head.appendChild(button('关闭', '', function () { closePopup(true); })); popup.appendChild(head);
     var list = el('div', 'ni-popover-list');
-    if (!entries.length) list.appendChild(el('p', 'ni-popover-empty', '暂无材料'));
     entries.forEach(function (entry) {
       var item = el('article', 'ni-popover-file'); item.setAttribute('data-material-id', entry.id);
-      item.appendChild(el('div', 'ni-file-meta', lookup(data.batches, entry.batchId).label + ' ｜ ' + versionText(entry)));
+      item.appendChild(el('div', 'ni-file-meta', materialMeta(entry)));
       item.appendChild(el('p', 'ni-file-name', entry.name));
-      item.appendChild(button('预览文件', '', function () { preview(entry); })); list.appendChild(item);
+      item.appendChild(fileActions(entry)); list.appendChild(item);
     });
     popup.appendChild(list); panel.appendChild(popup);
     positionPopup();
@@ -159,15 +170,17 @@
       th.appendChild(el('span', 'ni-matrix-count', String(C.summary(C.query(data, {countyId:county.id})).files))); tr.appendChild(th);
       C.topics.forEach(function (topic) {
         var entries = C.query(data, {countyId:county.id, topicId:topic.id}), cell = el('td'); cell.setAttribute('data-topic', topic.id);
-        if (!entries.length) cell.appendChild(el('span', 'ni-cell-empty', '暂无材料'));
         var actions = el('div', 'ni-cell-actions');
           C.kinds.forEach(function (kind) {
             var matches = entries.filter(function (entry) { return entry.materialType === kind.id; });
             var label = kind.id === 'quality' ? '质控' : '评分';
-            var control = button(label, 'ni-cell-button ' + kind.id, function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + topic.label + ' · ' + label); });
-            control.setAttribute('aria-label', county.city + '·' + county.label + '，' + topic.label + '，' + label + '，' + matches.length + ' 个文件');
+            var score = kind.id === 'scoring' ? C.latestScore(data, {countyId:county.id, topicId:topic.id}) : null;
+            var control = button(score ? String(score.score) : label, 'ni-cell-button ' + kind.id, function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + topic.label + ' · ' + label); });
+            control.setAttribute('aria-label', county.city + '·' + county.label + '，' + topic.label + '，' + label + (score ? ' ' + score.score + ' 分' : '') + '，' + matches.length + ' 个文件');
+            if (score) control.setAttribute('title', '最新完整评分：' + score.score + ' 分；' + score.scoreEvidence);
+            else if (kind.id === 'scoring' && matches.length) control.setAttribute('title', '未形成同口径完整评分，点击查看原件');
             control.setAttribute('aria-haspopup', 'dialog'); control.setAttribute('aria-controls', 'ni-file-popover'); control.setAttribute('aria-expanded', 'false');
-            if (!matches.length) control.classList.add('ni-no-files');
+            if (!matches.length) { control.classList.add('ni-no-files'); control.disabled = true; }
             actions.appendChild(control);
           });
           cell.appendChild(actions);
@@ -176,13 +189,13 @@
       tbody.appendChild(tr);
     });
     table.appendChild(tbody); matrixPanel.appendChild(table);
-    matrixPanel.appendChild(el('p', 'ni-matrix-note', '数字为实际文件数，质控与评分合并文件只计一次。点击质控或评分查看文件；预览内可下载。'));
+    matrixPanel.appendChild(el('p', 'ni-matrix-note', '行列计数按文件去重。分数为最新完整评分；点击查看、下载原件。'));
   }
   function selectView(next) {
     closePopup(false); view = next;
     var matrix = view === 'matrix';
     topicTabs.hidden = matrix; topicPanel.hidden = matrix; matrixPanel.hidden = !matrix;
-    viewButtons.forEach(function (node, i) { node.setAttribute('aria-pressed', String((i === 1) === matrix)); });
+    viewButtons.forEach(function (node, i) { node.setAttribute('aria-pressed', String((i === 0) === matrix)); });
     if (matrix && window.innerWidth <= 600 && matrixPanel.scrollIntoView) matrixPanel.scrollIntoView({block:'start', behavior:'instant'});
   }
   function rebuildBatchFilter() {
@@ -301,9 +314,9 @@
     introduction.appendChild(el('h2', '', '国家抽查'));
     introduction.className = 'ni-heading-title';
     introduction.appendChild(el('div', 'ni-kicker', '国家抽查 · 材料专栏'));
-    summary = el('div', 'ni-summary', '材料清单待读取'); heading.appendChild(introduction); heading.appendChild(summary); page.appendChild(heading);
+    heading.appendChild(introduction); page.appendChild(heading);
     var switcher = el('div', 'ni-view-switch'); switcher.setAttribute('role', 'group'); switcher.setAttribute('aria-label', '材料查看方式');
-    viewButtons = [button('按专题', '', function () { selectView('topics'); }), button('区县 × 成果类型', '', function () { selectView('matrix'); })];
+    viewButtons = [button('区县 × 成果类型', '', function () { selectView('matrix'); }), button('按专题检索', '', function () { selectView('topics'); })];
     viewButtons.forEach(function (node) { switcher.appendChild(node); }); page.appendChild(switcher);
     topicTabs = el('div', 'ni-topic-tabs'); topicTabs.setAttribute('role', 'tablist'); topicTabs.setAttribute('aria-label', '国家抽查专题');
     tabs = C.topics.map(function (topic) {

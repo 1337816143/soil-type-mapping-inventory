@@ -68,7 +68,12 @@
       if (relations.has(relation)) fail('相同材料关联重复');
       relations.add(relation);
       if (entry.version != null && (!Number.isSafeInteger(entry.version) || entry.version < 1)) fail('文件版本无效');
-      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null};
+      var score = null, scoreEvidence = '';
+      if (entry.score != null) {
+        if (entry.materialType !== 'scoring' || typeof entry.score !== 'number' || !Number.isFinite(entry.score) || entry.score < 0 || entry.score > 100) fail('完整评分无效');
+        score = entry.score; scoreEvidence = text(entry.scoreEvidence, '完整评分原件依据');
+      }
+      return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null, score:score, scoreEvidence:scoreEvidence};
     });
     batches.forEach(function (batch) {
       if (!materials.some(function (entry) { return entry.batchId === batch.id; })) fail('不得登记没有真实材料的空批次');
@@ -98,5 +103,8 @@
     return {files:uniqueFiles(materials).length, batches:new Set(materials.map(function (entry) { return entry.batchId; })).size};
   }
   function sourceUrl(path) { return './' + filePath(path).split('/').map(encodeURIComponent).join('/'); }
-  return {topics:TOPICS, counties:COUNTIES, kinds:KINDS, fileRoot:FILE_ROOT, catalog:catalog, query:query, uniqueFiles:uniqueFiles, summary:summary, sourceUrl:sourceUrl};
+  function latestScore(data, filters) {
+    return query(data, filters).find(function (entry) { return entry.materialType === 'scoring' && entry.score != null; }) || null;
+  }
+  return {topics:TOPICS, counties:COUNTIES, kinds:KINDS, fileRoot:FILE_ROOT, catalog:catalog, query:query, uniqueFiles:uniqueFiles, summary:summary, sourceUrl:sourceUrl, latestScore:latestScore};
 });

@@ -35,7 +35,7 @@ def check_national_inspection_ui(page, out, prefix):
       return district && district.docs.some(d=>d.file===e.file && d.batch===e.batch);
     })""", arg=associations, timeout=remaining_ms)
     viewport = dict(page.viewport_size)
-    summary_text = lambda entries: f"{len({m['path'] for m in entries})} 个文件 · {len({m['batchId'] for m in entries})} 个批次标签"
+    summary_text = lambda entries: f"{len({m['path'] for m in entries})} 个文件"
     report = {'mode': 'read-only; actual deployed catalog, no injected materials', 'initialization': 'actual original index associations present before data snapshot', 'checks': []}
     original = page.evaluate("""() => {
       const tabs = Array.from(document.querySelectorAll('header .tabs .tab'));
@@ -49,7 +49,10 @@ def check_national_inspection_ui(page, out, prefix):
     expect(page.locator('#tab-nationalInspection')).to_be_visible()
     expect(page.locator('#missingBanner')).to_be_hidden()
     expect(tab).to_have_attribute('aria-selected', 'true')
-    expect(page.locator('.ni-summary')).to_contain_text('个文件', timeout=20000)
+    expect(page.locator('.ni-matrix')).to_be_visible(timeout=20000)
+    expect(page.get_by_role('button', name='区县 × 成果类型', exact=True)).to_have_attribute('aria-pressed', 'true')
+    assert page.locator('.ni-view-switch button').all_text_contents() == ['区县 × 成果类型', '按专题检索']
+    expect(page.locator('.ni-summary,.ni-cell-empty')).to_have_count(0)
     assert not page.locator('.ni-status').evaluate('(n)=>n.classList.contains("error")'), 'Catalog must load successfully'
     manifest = page.evaluate("""async () => {
       const r = await fetch('./data/national-inspection.json?v='+encodeURIComponent(String(window.SOIL_RELEASE_VERSION||'')), {cache:'no-cache',credentials:'omit'});
@@ -58,7 +61,8 @@ def check_national_inspection_ui(page, out, prefix):
     }""")
     assert manifest['schemaVersion'] == 1
     materials = manifest['materials']
-    expect(page.locator('.ni-summary')).to_have_text(summary_text(materials))
+    page.get_by_role('button', name='按专题检索', exact=True).click()
+    expect(page.locator('#ni-topic-panel')).to_be_visible()
     expect(page.locator('.ni-material-group')).to_have_count(2)
     expect(page.locator('.ni-load-message')).to_have_count(0)
     expect(page.get_by_role('button', name='刷新清单', exact=True)).to_be_enabled()
@@ -80,6 +84,7 @@ def check_national_inspection_ui(page, out, prefix):
         assert page.locator('.ni-topic[tabindex="0"]').count() == 1
         entries = [m for m in materials if m['topicId'] == key]
         assert page.locator('.ni-file').count() == len(entries)
+        assert page.locator('.ni-file .ni-download').count() == len(entries)
         expect(page.locator('.ni-material-group')).to_have_count(2)
         expect(page.locator('.ni-material-group.quality .ni-material-title')).to_contain_text('质控材料')
         expect(page.locator('.ni-material-group.scoring .ni-material-title')).to_contain_text('评分材料')

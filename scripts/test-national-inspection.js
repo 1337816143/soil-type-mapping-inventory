@@ -25,6 +25,16 @@ const valid = C.catalog(sample);
 const ordered = C.catalog({schemaVersion:1,batches:[{id:'batch-a',label:'同批次',order:2},{id:'batch-b',label:'后批次',order:3}],materials:[first,{...first,id:'v2',version:2,path:first.path.replace('.pdf','_v2.pdf'),name:'质控材料_v2.pdf'},{...first,id:'v3',version:3,path:first.path.replace('.pdf','_v3.pdf'),name:'质控材料_v3.pdf'},second]});
 assert.deepEqual(C.query(ordered).map(m=>m.id),['material-b','v3','v2','material-a'],'Batch order first, then versions descending within the same batch');
 assert.equal(C.query(ordered,{batchId:'batch-a'}).length,3,'Versions must not create batches');
+const scored = C.catalog({schemaVersion:1,batches:ordered.batches,materials:[
+  {...first,id:'scored-old',materialType:'scoring',score:80,scoreEvidence:'原表总分80'},
+  {...first,id:'scored-new',materialType:'scoring',version:2,score:0,scoreEvidence:'原表总分0',path:'national-inspection-files/new.pdf',name:'new.pdf'},
+  {...second,id:'partial-newer',score:null}
+]});
+assert.equal(C.latestScore(scored,{countyId:'jinzhou',topicId:'soilType'}).score,0,'Latest complete score can be zero; incomplete newer files cannot supply a total');
+assert.equal(C.latestScore(scored,{countyId:'bazhou'}),null,'No score is manufactured for missing materials');
+assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'landUse'}).score,79.4,'Use original converted total, not 71.5 subtotal');
+assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'reports'}),null,'Different report scopes and partial physical-data scoring must not become one full score');
+assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).score,76);
 for (const county of C.counties) {
   const entries=C.query(deployed,{countyId:county.id});
   assert.equal(C.summary(entries).files,new Set(entries.map(m=>m.path)).size,'Row counts deduplicate shared QC/scoring files');
@@ -59,6 +69,9 @@ invalid(d => d.batches.push({id:'placeholder',label:'不能伪造批次'}));
 invalid(d => d.materials[0].id = '../invalid');
 invalid(d => d.materials[0].version = -1);
 invalid(d => d.materials[0].version = 1.5);
+invalid(d => { d.materials[0].score = 80; d.materials[0].scoreEvidence = '原表'; });
+for (const score of [-1,101,NaN,Infinity,'80']) invalid(d => { d.materials[1].score = score; d.materials[1].scoreEvidence = '原表'; });
+invalid(d => d.materials[1].score = 80);
 invalid(d => d.batches[0].order = '2026');
 assert.throws(() => C.catalog({schemaVersion:1,batches:[{id:'empty',label:'空批次'}],materials:[]}));
 const source = fs.readFileSync('national-inspection.js','utf8');
