@@ -35,6 +35,13 @@ assert.equal(C.latestScore(scored,{countyId:'bazhou'}),null,'No score is manufac
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'landUse'}).score,79.4,'Use original converted total, not 71.5 subtotal');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'reports'}),null,'Different report scopes and partial physical-data scoring must not become one full score');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).score,76);
+for (const [countyId,topicId,score] of [['shexian','agriSuitability',71],['ningjin','soilAttr',78]]) {
+  const entry=C.latestScore(deployed,{countyId,topicId});
+  assert.equal(entry.score,score,'Supplement 3 uses the original score-table total');
+  assert.equal(entry.batchId,countyId+'-'+topicId+'-scoring-batch-unspecified','Undated score sheets must not inherit the QC PDF batch');
+  assert.equal(entry.version,null,'The supplement directory name must not create a report version');
+  assert(C.query(deployed,{countyId,topicId,materialType:'quality'}).some(m=>m.batchId==='2026-round2-batch1'));
+}
 const separate = C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports'});
 assert.equal(separate.version,3);
 assert.deepEqual(separate.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',88,'full'],['work',74,'full'],['work',75,'full'],['data',81,'content']]);

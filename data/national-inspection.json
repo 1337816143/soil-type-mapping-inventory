@@ -68,6 +68,14 @@
     {
       "id": "jinzhou-landUse-scoring-batch-unspecified",
       "label": "原件未注明批次：晋州土壤资源评价与利用评分"
+    },
+    {
+      "id": "shexian-agriSuitability-scoring-batch-unspecified",
+      "label": "原件未注明批次：涉县土壤农业利用适宜性评价评分"
+    },
+    {
+      "id": "ningjin-soilAttr-scoring-batch-unspecified",
+      "label": "原件未注明批次：宁晋土壤属性图评分"
     }
   ],
   "materials": [
@@ -633,6 +641,50 @@
       "batchId": "2026-round3-batch1",
       "path": "national-inspection-files/补充材料20261020-2/石家庄市_晋州市_土壤资源评价与利用报告_作业单位未明_2026年第三次第1批.pdf",
       "name": "石家庄市_晋州市_土壤资源评价与利用报告_作业单位未明_2026年第三次第1批.pdf"
+    },
+    {
+      "id": "ni-supplement3-f59283ede7f7254b-scoring",
+      "topicId": "soilAttr",
+      "countyId": "ningjin",
+      "cityId": "xingtai",
+      "materialType": "scoring",
+      "batchId": "ningjin-soilAttr-scoring-batch-unspecified",
+      "path": "national-inspection-files/补充材料3_20261021/邢台市_宁晋县_土壤属性与制图专题成果验收评分表.docx",
+      "name": "邢台市_宁晋县_土壤属性与制图专题成果验收评分表.docx",
+      "score": 78,
+      "scoreEvidence": "Word评分表“总分”列78分；37+15+12+6+8=78"
+    },
+    {
+      "id": "ni-supplement3-749af9020592d0c5-quality",
+      "topicId": "soilAttr",
+      "countyId": "ningjin",
+      "cityId": "xingtai",
+      "materialType": "quality",
+      "batchId": "2026-round2-batch1",
+      "path": "national-inspection-files/补充材料3_20261021/邢台市_宁晋县_土壤属性图_质控反馈_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf",
+      "name": "邢台市_宁晋县_土壤属性图_质控反馈_河北精鼎环境监测有限责任公司_2026年第二次第1批.pdf"
+    },
+    {
+      "id": "ni-supplement3-d6d9626acc4d4cfb-scoring",
+      "topicId": "agriSuitability",
+      "countyId": "shexian",
+      "cityId": "handan",
+      "materialType": "scoring",
+      "batchId": "shexian-agriSuitability-scoring-batch-unspecified",
+      "path": "national-inspection-files/补充材料3_20261021/邯郸市_涉县_土壤农业利用适宜性评价专题成果验收评分表.docx",
+      "name": "邯郸市_涉县_土壤农业利用适宜性评价专题成果验收评分表.docx",
+      "score": 71,
+      "scoreEvidence": "Word评分表“总分”列71分；22+10+25+7+7=71"
+    },
+    {
+      "id": "ni-supplement3-cb3b814ce17a850e-quality",
+      "topicId": "agriSuitability",
+      "countyId": "shexian",
+      "cityId": "handan",
+      "materialType": "quality",
+      "batchId": "2026-round2-batch1",
+      "path": "national-inspection-files/补充材料3_20261021/邯郸市_涉县_土壤农业利用适宜性评价成果质控表_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
+      "name": "邯郸市_涉县_土壤农业利用适宜性评价成果质控表_河北合众恩规划管理有限公司_2026年第二次第1批.pdf"
     }
   ]
 }
