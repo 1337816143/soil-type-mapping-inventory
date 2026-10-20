@@ -38,6 +38,7 @@ assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).sco
 const separate = C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports'});
 assert.equal(separate.version,3);
 assert.deepEqual(separate.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',88,'full'],['work',74,'full'],['work',75,'full'],['data',81,'content']]);
+assert.deepEqual(separate.reportScores.map(s=>s.basis),['2026版评分表','2026版评分表','2024版评分表','2024/2026版评分表']);
 assert.equal(C.latestReportScores(deployed,{countyId:'bazhou',topicId:'reports'}),null);
 const report = {...first,topicId:'reports',materialType:'scoring',reportScores:[{reportId:'data',value:0,basis:'2026版',scope:'content',evidence:'原表内容评分0'}]};
 const reportInput = {schemaVersion:1,batches:[sample.batches[0]],materials:[report,{...report,id:'report-v3',version:3,path:'national-inspection-files/report-v3.pdf',name:'report-v3.pdf'}]};

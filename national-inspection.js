@@ -69,18 +69,20 @@
   }
   var reportNames = {overall:'总体', work:'工作', data:'数据'};
   function reportScoreText(item) {
-    return reportNames[item.reportId] + ' ' + item.value + ' 分（' + item.basis + (item.scope === 'content' ? '，仅报告内容' : '') + '）';
+    return reportNames[item.reportId] + ' ' + item.value + ' 分（' + item.basis + (item.scope === 'content' ? '，仅根据报告内容打分，未收到完整数据库' : '') + '）';
   }
   function reportScoreControls(county, matches, source) {
     var group = el('div', 'ni-report-scores');
     ['overall','work','data'].forEach(function (id) {
       var scores = source.reportScores.filter(function (item) { return item.reportId === id; });
       if (!scores.length) return;
+      var preferred = id === 'work' ? scores.filter(function (item) { return item.basis === '2024版评分表'; }) : [];
+      var displayed = preferred.length ? preferred : scores;
       var control = button('', 'ni-cell-button scoring ni-report-score', function () { openPopup(control, matches, county.city + '·' + county.label + ' · ' + reportNames[id] + '报告评分'); });
       control.setAttribute('data-report', id);
       control.appendChild(el('span', 'ni-report-name', reportNames[id]));
-      control.appendChild(el('span', 'ni-report-value', scores.map(function (item) { return item.value; }).join('/') + (scores.some(function (item) { return item.scope === 'content'; }) ? '*' : '')));
-      var description = scores.map(reportScoreText).join('；');
+      control.appendChild(el('span', 'ni-report-value', displayed.map(function (item) { return item.value; }).join('/') + (displayed.some(function (item) { return item.scope === 'content'; }) ? '*' : '')));
+      var description = displayed.map(reportScoreText).join('；');
       control.setAttribute('aria-label', county.city + '·' + county.label + '，' + description + '，查看评分原件');
       control.setAttribute('title', scores.map(function (item) { return reportScoreText(item) + '；' + item.evidence; }).join('\n'));
       control.setAttribute('aria-haspopup', 'dialog'); control.setAttribute('aria-controls', 'ni-file-popover'); control.setAttribute('aria-expanded', 'false');
@@ -217,7 +219,7 @@
       tbody.appendChild(tr);
     });
     table.appendChild(tbody); matrixPanel.appendChild(table);
-    matrixPanel.appendChild(el('p', 'ni-matrix-note', '行列计数按文件去重。工作评分依次为2026版/2024版；数据分数带*表示仅报告内容评分。点击查看、下载原件。'));
+    matrixPanel.appendChild(el('p', 'ni-matrix-note', '行列计数按文件去重。工作默认显示2024版评分表分数；数据带*表示仅根据报告内容打分，未收到完整数据库。点击查看、下载原件。'));
   }
   function selectView(next) {
     closePopup(false); view = next;

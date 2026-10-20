@@ -162,11 +162,15 @@ function byText(doc,text){return doc.querySelectorAll('button').find(n=>n.textCo
   const real=await harness(JSON.parse(fs.readFileSync('data/national-inspection.json','utf8')));
   real.document.getElementById('glass-tab-nationalInspection').click();await tick();
   const parts=real.document.querySelectorAll('.ni-report-score');
-  assert.equal(parts.map(n=>n.textContent).join('|'),'总体88|工作74/75|数据81*','Three report scores stay in one existing column and retain scope distinctions');
+  assert.equal(parts.map(n=>n.textContent).join('|'),'总体88|工作75|数据81*','Three report scores stay in one column; the public work score defaults to the 2024 score sheet');
+  assert(parts[1].getAttribute('aria-label').includes('工作 75 分（2024版评分表）'));
+  assert(!parts[1].getAttribute('aria-label').includes('74'));
+  assert(parts[1].getAttribute('title').includes('工作 74 分（2026版评分表）'),'The other score sheet remains traceable in the original-file details');
+  assert(parts[2].getAttribute('aria-label').includes('数据 81 分（2024/2026版评分表，仅根据报告内容打分，未收到完整数据库）'));
   assert.equal(real.document.querySelectorAll('.ni-matrix thead th').length,9,'Report scores do not create additional outcome columns');
   parts[2].querySelector('.ni-report-name').click();
   assert(real.document.querySelector('.ni-popover').getAttribute('aria-label').includes('数据报告评分'));
-  assert(real.document.querySelector('.ni-popover-file .ni-file-meta').textContent.includes('仅报告内容'));
+  assert(real.document.querySelector('.ni-popover-file .ni-file-meta').textContent.includes('数据 81 分（2024/2026版评分表，仅根据报告内容打分，未收到完整数据库）'));
   assert(real.document.querySelector('.ni-popover-file .ni-file-name').textContent.includes('v3'));
   assert(real.document.querySelector('.ni-popover-file .ni-download'));
   console.log('National inspection DOM simulation passed: preserved main tabs/glass keyboard navigation, 8 accessible subtabs, honest empty/error states, filters, text safety, shared previews, deduplicated ZIP, async topic capture, retry and large-batch warning. No browser rendering or geometry claimed.');

@@ -499,28 +499,28 @@
         {
           "reportId": "overall",
           "value": 88,
-          "basis": "2026版",
+          "basis": "2026版评分表",
           "scope": "full",
           "evidence": "PDF第1页，总体报告总评88分"
         },
         {
           "reportId": "work",
           "value": 74,
-          "basis": "2026版",
+          "basis": "2026版评分表",
           "scope": "full",
           "evidence": "PDF第22页，2026版工作报告总评74分"
         },
         {
           "reportId": "work",
           "value": 75,
-          "basis": "2024版",
+          "basis": "2024版评分表",
           "scope": "full",
           "evidence": "PDF第21页，2024版工作报告总评75分"
         },
         {
           "reportId": "data",
           "value": 81,
-          "basis": "2024/2026版",
+          "basis": "2024/2026版评分表",
           "scope": "content",
           "evidence": "PDF第9至10页，两版报告内容总分81分，不代表全部数据库实物核验"
         }
