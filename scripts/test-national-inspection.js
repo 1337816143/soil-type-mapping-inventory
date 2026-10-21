@@ -35,6 +35,11 @@ assert.equal(C.latestScore(scored,{countyId:'bazhou'}),null,'No score is manufac
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'landUse'}).score,79.4,'Use original converted total, not 71.5 subtotal');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'reports'}),null,'Different report scopes and partial physical-data scoring must not become one full score');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).score,76);
+const jinzhouAgriculture=C.latestScore(deployed,{countyId:'jinzhou',topicId:'agriSuitability'});
+assert.equal(jinzhouAgriculture.score,82,'Supplement 4 uses the original PDF total');
+assert.equal(jinzhouAgriculture.batchId,'2026-round3-batch2','Use the explicitly named third-round second batch');
+assert.equal(C.query(deployed,{countyId:'jinzhou',topicId:'agriSuitability'}).filter(m=>m.materialType==='quality').length,1,'The byte-identical QC file must not create a duplicate relationship');
+assert.deepEqual(C.query(deployed,{countyId:'jinzhou',topicId:'agriSuitability'}).map(m=>m.batchId),['2026-round3-batch2','2026-round2-batch1'],'The new scoring batch precedes the older QC batch');
 for (const [countyId,topicId,score] of [['shexian','agriSuitability',71],['ningjin','soilAttr',78]]) {
   const entry=C.latestScore(deployed,{countyId,topicId});
   assert.equal(entry.score,score,'Supplement 3 uses the original score-table total');

@@ -76,6 +76,11 @@
     {
       "id": "ningjin-soilAttr-scoring-batch-unspecified",
       "label": "原件未注明批次：宁晋土壤属性图评分"
+    },
+    {
+      "id": "2026-round3-batch2",
+      "label": "2026年第三次第二批",
+      "order": 20260302
     }
   ],
   "materials": [
@@ -685,6 +690,18 @@
       "batchId": "2026-round2-batch1",
       "path": "national-inspection-files/补充材料3_20261021/邯郸市_涉县_土壤农业利用适宜性评价成果质控表_河北合众恩规划管理有限公司_2026年第二次第1批.pdf",
       "name": "邯郸市_涉县_土壤农业利用适宜性评价成果质控表_河北合众恩规划管理有限公司_2026年第二次第1批.pdf"
+    },
+    {
+      "id": "ni-supplement4-4d8c9e35cf398c6b-scoring",
+      "topicId": "agriSuitability",
+      "countyId": "jinzhou",
+      "cityId": "shijiazhuang",
+      "materialType": "scoring",
+      "batchId": "2026-round3-batch2",
+      "path": "national-inspection-files/补充材料4_20261021/石家庄市_晋州市_土壤农业利用适宜性评价_河北元图科技发展有限公司_2026年第三次第二批_评分情况.pdf",
+      "name": "石家庄市_晋州市_土壤农业利用适宜性评价_河北元图科技发展有限公司_2026年第三次第二批_评分情况.pdf",
+      "score": 82,
+      "scoreEvidence": "PDF第1页“总分”列82分；20+15+30+7+10=82"
     }
   ]
 }
