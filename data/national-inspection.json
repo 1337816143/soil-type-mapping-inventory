@@ -81,6 +81,10 @@
       "id": "2026-round3-batch2",
       "label": "2026年第三次第二批",
       "order": 20260302
+    },
+    {
+      "id": "ningjin-landUse-scoring-batch-unspecified",
+      "label": "原件未注明批次：宁晋土壤资源评价与利用评分"
     }
   ],
   "materials": [
@@ -702,6 +706,28 @@
       "name": "石家庄市_晋州市_土壤农业利用适宜性评价_河北元图科技发展有限公司_2026年第三次第二批_评分情况.pdf",
       "score": 82,
       "scoreEvidence": "PDF第1页“总分”列82分；20+15+30+7+10=82"
+    },
+    {
+      "id": "ni-supplement5-759d7c9cdd707e95-scoring",
+      "topicId": "landUse",
+      "countyId": "ningjin",
+      "cityId": "xingtai",
+      "materialType": "scoring",
+      "batchId": "ningjin-landUse-scoring-batch-unspecified",
+      "path": "national-inspection-files/补充材料5_20261022/宁晋县土壤资源评价与利用验收评分表(1).docx",
+      "name": "宁晋县土壤资源评价与利用验收评分表(1).docx",
+      "score": 76,
+      "scoreEvidence": "Word评分表“总分”列76分；章节得分合计68分，表下注明未开展土特产品章节按其他章合计除以0.9折合，沿用原表所列总分76分"
+    },
+    {
+      "id": "ni-supplement5-0be0143d0a932679-quality",
+      "topicId": "landUse",
+      "countyId": "ningjin",
+      "cityId": "xingtai",
+      "materialType": "quality",
+      "batchId": "2026-round2-batch1",
+      "path": "national-inspection-files/补充材料5_20261022/邢台市_宁晋县_土壤资源评价与利用_河北精鼎环境监测有限责任公司_2026年第二次第1批(2).pdf",
+      "name": "邢台市_宁晋县_土壤资源评价与利用_河北精鼎环境监测有限责任公司_2026年第二次第1批(2).pdf"
     }
   ]
 }

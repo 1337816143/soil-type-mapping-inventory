@@ -35,6 +35,11 @@ assert.equal(C.latestScore(scored,{countyId:'bazhou'}),null,'No score is manufac
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'landUse'}).score,79.4,'Use original converted total, not 71.5 subtotal');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'reports'}),null,'Different report scopes and partial physical-data scoring must not become one full score');
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'soilAttr'}).score,76);
+const ningjinResources=C.latestScore(deployed,{countyId:'ningjin',topicId:'landUse'});
+assert.equal(ningjinResources.score,76,'Supplement 5 uses the original printed converted total, not the chapter subtotal 68');
+assert.equal(ningjinResources.batchId,'ningjin-landUse-scoring-batch-unspecified','The score sheet must not inherit the QC filename batch');
+assert(C.query(deployed,{countyId:'ningjin',topicId:'landUse'}).every(m=>m.version===null),'The supplement v5 directory and filename copy suffixes must not create report versions');
+assert(C.query(deployed,{countyId:'ningjin',topicId:'landUse'}).some(m=>m.materialType==='quality'&&m.batchId==='2026-round2-batch1'));
 const jinzhouAgriculture=C.latestScore(deployed,{countyId:'jinzhou',topicId:'agriSuitability'});
 assert.equal(jinzhouAgriculture.score,82,'Supplement 4 uses the original PDF total');
 assert.equal(jinzhouAgriculture.batchId,'2026-round3-batch2','Use the explicitly named third-round second batch');
