@@ -52,10 +52,30 @@ for (const [countyId,topicId,score] of [['shexian','agriSuitability',71],['ningj
   assert.equal(entry.version,null,'The supplement directory name must not create a report version');
   assert(C.query(deployed,{countyId,topicId,materialType:'quality'}).some(m=>m.batchId==='2026-round2-batch1'));
 }
-const separate = C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports'});
+const separate = C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports',batchId:'2026-round3-batch1'});
 assert.equal(separate.version,3);
 assert.deepEqual(separate.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',88,'full'],['work',74,'full'],['work',75,'full'],['data',81,'content']]);
 assert.deepEqual(separate.reportScores.map(s=>s.basis),['2026版评分表','2026版评分表','2024版评分表','2024/2026版评分表']);
+const currentReports=C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports'});
+assert.equal(currentReports.batchId,'2026-round3-batch3');
+assert.equal(currentReports.version,null,'A new batch is not an invented report version');
+assert.deepEqual(currentReports.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',98,'full'],['work',85,'full'],['work',85,'full'],['data',88,'content']]);
+const previousReports=C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports',batchId:'2026-round3-batch2'});
+assert.deepEqual(previousReports.reportScores.map(s=>s.value),[90,77,78,91]);
+assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'degradation'}).score,93);
+assert.equal(C.latestScore(deployed,{countyId:'shexian',topicId:'specialty'}).score,87);
+const incremental=deployed.materials.filter(m=>m.path.startsWith('national-inspection-files/质控更新_20261023/'));
+assert.equal(incremental.length,14);
+assert.equal(C.uniqueFiles(incremental).length,8);
+for(const file of C.uniqueFiles(incremental)) {
+  const relations=incremental.filter(m=>m.path===file.path);
+  assert.equal(file.version,null,'Copy numbers and update labels cannot create versions');
+  if(file.name.endsWith('.pdf')&&file.countyId!=='ningjin') assert.deepEqual(new Set(relations.map(m=>m.materialType)),new Set(['quality','scoring']),'Combined feedback and score PDFs share both entrances');
+}
+assert.equal(C.latestReportScores(deployed,{countyId:'ningjin',topicId:'reports'}),null,'Blank report score template must not manufacture a Ningjin score');
+assert.equal(C.latestScore(deployed,{countyId:'ningjin',topicId:'degradation'}),null,'QC-only Word cannot supply a score');
+assert.deepEqual(C.counties.map(c=>C.summary(C.query(deployed,{countyId:c.id})).files),[30,13,14,0]);
+assert.deepEqual(C.topics.map(t=>C.summary(C.query(deployed,{topicId:t.id})).files),[8,6,8,5,4,6,11,9]);
 assert.equal(C.latestReportScores(deployed,{countyId:'bazhou',topicId:'reports'}),null);
 const report = {...first,topicId:'reports',materialType:'scoring',reportScores:[{reportId:'data',value:0,basis:'2026版',scope:'content',evidence:'原表内容评分0'}]};
 const reportInput = {schemaVersion:1,batches:[sample.batches[0]],materials:[report,{...report,id:'report-v3',version:3,path:'national-inspection-files/report-v3.pdf',name:'report-v3.pdf'}]};
