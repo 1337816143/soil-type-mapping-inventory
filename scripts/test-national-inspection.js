@@ -60,6 +60,8 @@ const currentReports=C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'
 assert.equal(currentReports.batchId,'2026-round3-batch3');
 assert.equal(currentReports.version,null,'A new batch is not an invented report version');
 assert.deepEqual(currentReports.reportScores.map(s=>[s.reportId,s.value,s.scope]),[['overall',98,'full'],['work',85,'full'],['work',85,'full'],['data',88,'content']]);
+assert.equal(currentReports.reportScores.find(s=>s.reportId==='data').scopeNote,'仅根据报告及关联文字成果评分，完整数据库实体未作核验');
+assert.equal(separate.reportScores.find(s=>s.reportId==='data').scopeNote,null,'Historic wording remains unchanged without a new original scope note');
 const previousReports=C.latestReportScores(deployed,{countyId:'jinzhou',topicId:'reports',batchId:'2026-round3-batch2'});
 assert.deepEqual(previousReports.reportScores.map(s=>s.value),[90,77,78,91]);
 assert.equal(C.latestScore(deployed,{countyId:'jinzhou',topicId:'degradation'}).score,93);
@@ -89,6 +91,8 @@ invalidReport(m=>m.reportScores[0].value=101);
 invalidReport(m=>m.reportScores[0].reportId='other');
 invalidReport(m=>m.reportScores[0].scope='database');
 invalidReport(m=>m.reportScores[0].evidence='');
+invalidReport(m=>m.reportScores[0].scopeNote='');
+invalidReport(m=>{m.reportScores[0].scope='full';m.reportScores[0].scopeNote='不得给完整评分套内容范围';});
 invalidReport(m=>m.reportScores.push({...m.reportScores[0]}));
 for (const county of C.counties) {
   const entries=C.query(deployed,{countyId:county.id});

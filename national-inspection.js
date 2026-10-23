@@ -68,23 +68,29 @@
     return parts.join(' ｜ ');
   }
   var reportNames = {overall:'总体', work:'工作', data:'数据'};
+  function contentScoreNote(item) {
+    return item.scopeNote || '仅根据报告内容打分，未收到完整数据库';
+  }
   function reportScoreText(item) {
-    return reportNames[item.reportId] + ' ' + item.value + ' 分（' + item.basis + (item.scope === 'content' ? '，仅根据报告内容打分，未收到完整数据库' : '') + '）';
+    return reportNames[item.reportId] + ' ' + item.value + ' 分（' + item.basis + (item.scope === 'content' ? '，' + contentScoreNote(item) : '') + '）';
   }
   function reportScoreControl(county, matches, source) {
-    var values = [], descriptions = [], partial = false;
+    var values = [], descriptions = [], partialNotes = [];
     ['overall','work','data'].forEach(function (id) {
       var scores = source.reportScores.filter(function (item) { return item.reportId === id; });
       if (!scores.length) { values.push('—'); return; }
       var preferred = id === 'work' ? scores.filter(function (item) { return item.basis === '2024版评分表'; }) : [];
       var displayed = preferred.length ? preferred : scores;
       var contentOnly = displayed.some(function (item) { return item.scope === 'content'; });
-      partial = partial || contentOnly;
+      displayed.filter(function (item) { return item.scope === 'content'; }).forEach(function (item) {
+        var note = contentScoreNote(item);
+        if (!partialNotes.includes(note)) partialNotes.push(note);
+      });
       values.push(displayed.map(function (item) { return item.value; }).join('/') + (contentOnly ? '*' : ''));
       descriptions.push(displayed.map(reportScoreText).join('；'));
     });
     var control = button(values.join(' | '), 'ni-cell-button scoring ni-report-score', function () {
-      openPopup(control, matches, county.city + '·' + county.label + ' · 总体、工作、数据报告评分', '分数依次为总体、工作、数据。' + (partial ? '* 表示仅根据报告内容打分，未收到完整数据库。' : ''));
+      openPopup(control, matches, county.city + '·' + county.label + ' · 总体、工作、数据报告评分', '分数依次为总体、工作、数据。' + (partialNotes.length ? '* 表示' + partialNotes.join('；') + '。' : ''));
     });
     control.setAttribute('aria-label', county.city + '·' + county.label + '，' + descriptions.join('；') + '，查看评分原件');
     control.setAttribute('aria-haspopup', 'dialog'); control.setAttribute('aria-controls', 'ni-file-popover'); control.setAttribute('aria-expanded', 'false');

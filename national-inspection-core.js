@@ -79,9 +79,14 @@
         reportScores = entry.reportScores.map(function (item) {
           if (!item || !['overall','work','data'].includes(item.reportId) || typeof item.value !== 'number' || !Number.isFinite(item.value) || item.value < 0 || item.value > 100 || !['full','content'].includes(item.scope)) fail('分报告评分项目无效');
           var basis = text(item.basis, '评分口径'), key = item.reportId + '|' + basis;
+          var scopeNote = null;
+          if (item.scopeNote != null) {
+            if (item.scope !== 'content') fail('仅内容评分可登记范围说明');
+            scopeNote = text(item.scopeNote, '内容评分原件范围说明');
+          }
           if (reportKeys.has(key)) fail('分报告评分口径重复');
           reportKeys.add(key);
-          return {reportId:item.reportId, value:item.value, basis:basis, scope:item.scope, evidence:text(item.evidence, '分报告评分原件依据')};
+          return {reportId:item.reportId, value:item.value, basis:basis, scope:item.scope, scopeNote:scopeNote, evidence:text(item.evidence, '分报告评分原件依据')};
         });
       }
       return {id:id, topicId:entry.topicId, countyId:entry.countyId, cityId:entry.cityId, materialType:entry.materialType, batchId:entry.batchId, path:path, name:name, version:entry.version || null, score:score, scoreEvidence:scoreEvidence, reportScores:reportScores};
