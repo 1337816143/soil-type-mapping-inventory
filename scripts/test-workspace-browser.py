@@ -131,6 +131,9 @@ with sync_playwright() as p:
             assert remote['records'][0].get('deletedAt')
             assert not errors,errors
             # Real application smoke check with network writes intercepted above.
+            # Isolate full-app startup from the synthetic harness page lifecycle;
+            # retain this context's storage and network-write interception.
+            page.close();page=ctx.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             # WebKit may keep the global load event pending after the app has
             # rendered. Gate on the application's strict readiness flag below,
             # not unrelated resource completion; retain every UI assertion.
